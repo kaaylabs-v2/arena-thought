@@ -263,6 +263,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setUserProfile((prev) => ({ ...prev, ...updates }));
   }, []);
 
+  const [appSettings, setAppSettings] = useState<AppSettings>({ compactMode: false, fontSize: "medium" });
+  const updateAppSettings = useCallback((updates: Partial<AppSettings>) => {
+    setAppSettings((prev) => ({ ...prev, ...updates }));
+  }, []);
+
   return (
     <WorkspaceContext.Provider
       value={{
@@ -278,6 +283,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         addReflection,
         userProfile,
         updateUserProfile,
+        appSettings,
+        updateAppSettings,
       }}
     >
       {children}

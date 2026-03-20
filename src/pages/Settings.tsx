@@ -5,14 +5,13 @@ import { toast } from "sonner";
 
 const Settings = () => {
   const { theme, toggleTheme } = useTheme();
+  const { appSettings, updateAppSettings } = useWorkspace();
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
-  const [compactMode, setCompactMode] = useState(false);
   const [notifications, setNotifications] = useState(false);
   const [analyticsOptOut, setAnalyticsOptOut] = useState(true);
   const [localOnly, setLocalOnly] = useState(true);
   const [nexiTone, setNexiTone] = useState<"concise" | "detailed" | "socratic">("detailed");
-  const [fontSize, setFontSize] = useState<"small" | "medium" | "large">("medium");
   const [citationsVisible, setCitationsVisible] = useState(true);
   const [followUpChips, setFollowUpChips] = useState(true);
   const [autoExpandSources, setAutoExpandSources] = useState(true);
