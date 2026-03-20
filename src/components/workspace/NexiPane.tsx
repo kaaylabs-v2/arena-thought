@@ -10,8 +10,12 @@ import {
   Lightbulb,
   ArrowRightLeft,
   ListChecks,
+  Mic,
+  MicOff,
+  X,
 } from "lucide-react";
 import { useWorkspace, simulatedResponses } from "@/context/WorkspaceContext";
+import { toast } from "sonner";
 
 interface NexiPaneProps {
   courseId: string;
@@ -33,6 +37,8 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
   const [savedMessages, setSavedMessages] = useState<Set<string>>(new Set());
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceTranscript, setVoiceTranscript] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -89,11 +95,13 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
       source: "Nexi response",
       savedFrom: "nexi",
     });
+    toast.success("Saved to Notebook", { description: title.slice(0, 40) + "…" });
   };
 
   const handleCopy = (msgId: string, content: string) => {
     navigator.clipboard.writeText(content);
     setCopiedId(msgId);
+    toast.success("Copied to clipboard");
     setTimeout(() => setCopiedId(null), 1500);
   };
 
@@ -102,12 +110,44 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
     simulateResponse(label);
   };
 
+  // Voice input simulation
+  const handleVoiceToggle = () => {
+    if (isListening) {
+      // Stop listening — use transcript
+      setIsListening(false);
+      if (voiceTranscript.trim()) {
+        setInput(voiceTranscript);
+      }
+      setVoiceTranscript("");
+    } else {
+      // Start listening
+      setIsListening(true);
+      setVoiceTranscript("");
+      // Simulate transcription appearing
+      const phrases = ["How does", "How does backpropagation", "How does backpropagation handle", "How does backpropagation handle vanishing gradients?"];
+      let idx = 0;
+      const interval = setInterval(() => {
+        if (idx < phrases.length) {
+          setVoiceTranscript(phrases[idx]);
+          idx++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 600);
+    }
+  };
+
+  const handleVoiceCancel = () => {
+    setIsListening(false);
+    setVoiceTranscript("");
+  };
+
   return (
     <div className="h-full flex flex-col bg-background">
-      {/* Header — Readwise-inspired clean context bar */}
+      {/* Header */}
       <div className="flex items-center justify-between px-8 py-3.5 border-b border-border">
         <div className="min-w-0">
-          <h2 className="font-serif text-[1.1rem] text-foreground leading-snug truncate">{courseTitle}</h2>
+          <h2 className="font-serif text-[1.1rem] text-foreground leading-snug truncate font-medium">{courseTitle}</h2>
           <p className="text-[11px] font-sans text-muted-foreground/80 mt-0.5 tracking-[-0.01em]">
             {activeSource ? `Grounded in: ${activeSource.title}` : currentModule}
           </p>
@@ -118,7 +158,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
         </span>
       </div>
 
-      {/* Messages — controlled reading width */}
+      {/* Messages */}
       <div className="flex-1 overflow-y-auto px-8 py-8 scrollbar-thin">
         <div className="max-w-[640px] mx-auto space-y-7">
           {messages.map((msg) => (
@@ -136,7 +176,6 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                 </div>
               ) : (
                 <div className="max-w-full">
-                  {/* Nexi response — Granola-inspired calm card */}
                   <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-5 py-4 shadow-soft">
                     <div className="text-[13.5px] font-sans text-foreground leading-[1.7] whitespace-pre-line">
                       {msg.content.split(/(\*\*.*?\*\*|\*.*?\*)/g).map((part, i) => {
@@ -150,7 +189,6 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                       })}
                     </div>
 
-                    {/* Citations — Readwise-inspired source pills */}
                     {msg.citations && msg.citations.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-border/60">
                         {msg.citations.map((cite, i) => (
@@ -166,7 +204,6 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                     )}
                   </div>
 
-                  {/* Action row — Granola restraint */}
                   <div className="flex items-center gap-1 mt-1.5 ml-1">
                     <button
                       onClick={() => handleSave(msg.id, msg.content)}
@@ -233,9 +270,38 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
         </div>
       </div>
 
-      {/* Input — Craft-inspired clean console */}
+      {/* Input area */}
       <div className="px-8 pb-6 pt-3">
         <div className="max-w-[640px] mx-auto">
+          {/* Voice listening overlay */}
+          {isListening && (
+            <div className="mb-3 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 animate-fade-in-fast">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+                  <span className="text-[11px] font-sans text-accent font-medium">Listening...</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={handleVoiceCancel}
+                    className="h-6 w-6 flex items-center justify-center rounded-md hover:bg-accent/10 transition-colors"
+                  >
+                    <X className="h-3 w-3 text-muted-foreground" strokeWidth={1.5} />
+                  </button>
+                  <button
+                    onClick={handleVoiceToggle}
+                    className="h-6 px-2 flex items-center gap-1 rounded-md bg-accent text-accent-foreground text-[10px] font-sans font-medium hover:bg-accent/90 transition-colors"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+              <p className="text-[13px] font-sans text-foreground/80 min-h-[20px]">
+                {voiceTranscript || <span className="text-muted-foreground/40">Speak now…</span>}
+              </p>
+            </div>
+          )}
+
           <div className="flex items-end gap-3 bg-card border border-border rounded-xl px-4 py-3 shadow-soft focus-within:shadow-lifted focus-within:border-ring/30 transition-all duration-200">
             <textarea
               ref={textareaRef}
@@ -251,6 +317,18 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                 target.style.height = Math.min(target.scrollHeight, 120) + "px";
               }}
             />
+            {/* Mic button */}
+            <button
+              onClick={handleVoiceToggle}
+              className={`h-8 w-8 flex items-center justify-center rounded-lg transition-all duration-200 shrink-0 active:scale-95 ${
+                isListening
+                  ? "bg-accent text-accent-foreground"
+                  : "text-muted-foreground/50 hover:text-foreground hover:bg-muted/50"
+              }`}
+            >
+              {isListening ? <MicOff className="h-3.5 w-3.5" strokeWidth={1.5} /> : <Mic className="h-3.5 w-3.5" strokeWidth={1.5} />}
+            </button>
+            {/* Send button */}
             <button
               onClick={handleSend}
               className="h-8 w-8 flex items-center justify-center rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 shrink-0 disabled:opacity-30 active:scale-95"

@@ -7,6 +7,13 @@ const recentCourses = [
   { id: "3", title: "Philosophy of Mind", lastActive: "3 days ago", progress: 85, module: "Section 12: Consciousness" },
 ];
 
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+}
+
 const Index = () => {
   const activeCourse = recentCourses[0];
 
@@ -14,7 +21,7 @@ const Index = () => {
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl">
       {/* Greeting */}
       <div className="mb-14 animate-fade-in">
-        <h1 className="font-serif text-4xl lg:text-[2.75rem] text-foreground mb-2 leading-[1.1]">Welcome back</h1>
+        <h1 className="font-serif text-4xl lg:text-[2.75rem] text-foreground mb-2 leading-[1.15] font-medium">{getGreeting()}</h1>
         <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Continue where you left off.</p>
       </div>
 
@@ -31,7 +38,7 @@ const Index = () => {
             </div>
             <ArrowRight className="h-4 w-4 text-muted-foreground/60 group-hover:text-foreground group-hover:translate-x-0.5 transition-all duration-200" strokeWidth={1.5} />
           </div>
-          <h2 className="font-serif text-2xl lg:text-[1.75rem] text-foreground mb-1.5 leading-snug">{activeCourse.title}</h2>
+          <h2 className="font-serif text-2xl lg:text-[1.75rem] text-foreground mb-1.5 leading-snug font-medium">{activeCourse.title}</h2>
           <p className="text-muted-foreground font-sans text-sm mb-6 tracking-[-0.01em]">{activeCourse.module}</p>
           <div className="flex items-center gap-3">
             <div className="flex-1 h-[5px] bg-secondary rounded-full overflow-hidden">
@@ -57,7 +64,7 @@ const Index = () => {
               style={{ animationDelay: `${200 + i * 60}ms` }}
             >
               <div className="flex-1 min-w-0">
-                <h3 className="font-serif text-base text-foreground truncate leading-snug">{course.title}</h3>
+                <h3 className="font-serif text-base text-foreground truncate leading-snug font-medium">{course.title}</h3>
                 <p className="text-[12px] text-muted-foreground font-sans mt-0.5 tracking-[-0.01em]">{course.module}</p>
               </div>
               <div className="flex items-center gap-4 ml-4 shrink-0">

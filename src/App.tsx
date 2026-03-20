@@ -11,6 +11,8 @@ import Workspace from "./pages/Workspace";
 import Notebook from "./pages/Notebook";
 import Reflections from "./pages/Reflections";
 import Progress from "./pages/Progress";
+import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,7 +32,8 @@ const App = () => (
               <Route path="/notebook" element={<Notebook />} />
               <Route path="/reflections" element={<Reflections />} />
               <Route path="/progress" element={<Progress />} />
-              <Route path="/settings" element={<div className="p-8"><h1 className="font-serif text-3xl">Settings</h1><p className="text-muted-foreground mt-2 font-sans text-sm">Coming soon.</p></div>} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

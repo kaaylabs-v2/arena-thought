@@ -4,9 +4,12 @@ import {
   FileText,
   BookOpen,
   Video,
-  File,
+  FileType,
   ArrowLeft,
   Check,
+  Presentation,
+  Link as LinkIcon,
+  StickyNote,
 } from "lucide-react";
 import type { PaneState } from "@/pages/Workspace";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -58,11 +61,22 @@ const modules = [
   },
 ];
 
+// Accurate icons per document type
 const typeIcon = {
   video: Video,
   lecture: BookOpen,
   reading: FileText,
-  pdf: File,
+  pdf: FileType,
+  slides: Presentation,
+  link: LinkIcon,
+  note: StickyNote,
+};
+
+const typeLabel = {
+  video: "Video",
+  lecture: "Lecture",
+  reading: "Reading",
+  pdf: "PDF",
 };
 
 const focusedSourceContent: Record<string, { title: string; type: string; preview: string }> = {
@@ -97,13 +111,16 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
   };
 
   if (isMini) {
+    const allItems: { id: string; title: string; type: "video" | "lecture" | "reading" | "pdf" }[] = modules.flatMap((m) =>
+      m.items.map((item) => ({ id: item.id, title: item.title, type: item.type }))
+    );
     return (
-      <div className="h-full flex flex-col items-center py-4 gap-2">
+      <div className="h-full flex flex-col items-center py-4 gap-1.5">
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               onClick={onToggle}
-              className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200"
+              className="h-9 w-9 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200"
             >
               <ChevronRight className="h-4 w-4 text-muted-foreground/70" strokeWidth={1.5} />
             </button>
@@ -111,16 +128,29 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
           <TooltipContent side="right" className="font-sans text-xs">Sources</TooltipContent>
         </Tooltip>
         <div className="flex flex-col gap-1 mt-3">
-          {modules.map((m) => (
-            <Tooltip key={m.id}>
-              <TooltipTrigger asChild>
-                <button className="h-7 w-7 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200">
-                  <BookOpen className="h-3.5 w-3.5 text-muted-foreground/60" strokeWidth={1.5} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="font-sans text-xs">{m.title}</TooltipContent>
-            </Tooltip>
-          ))}
+          {allItems.slice(0, 8).map((item) => {
+            const Icon = typeIcon[item.type];
+            return (
+              <Tooltip key={item.id}>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => {
+                      handleSelectSource(item.id);
+                      onToggle();
+                    }}
+                    className={`h-8 w-8 flex items-center justify-center rounded-lg transition-colors duration-200 ${
+                      selectedSource === item.id
+                        ? "bg-secondary text-foreground"
+                        : "hover:bg-secondary/70 text-muted-foreground/60"
+                    }`}
+                  >
+                    <Icon className="h-3.5 w-3.5" strokeWidth={1.5} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" className="font-sans text-xs">{item.title}</TooltipContent>
+              </Tooltip>
+            );
+          })}
         </div>
       </div>
     );
@@ -128,9 +158,10 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
 
   // Focused source — Readwise Reader-inspired reading surface
   if (selectedSource) {
+    const sourceItem = findSourceItem(selectedSource);
     const focused = focusedSourceContent[selectedSource] || {
-      title: findSourceItem(selectedSource)?.title || "Source Material",
-      type: "Document",
+      title: sourceItem?.title || "Source Material",
+      type: sourceItem ? typeLabel[sourceItem.type] : "Document",
       preview: "Select a source to view its content and context. This material serves as grounding for your learning conversations with Nexi.",
     };
 
@@ -154,6 +185,18 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
             <ChevronLeft className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
           </button>
         </div>
+
+        {/* Source metadata bar */}
+        {sourceItem && (
+          <div className="px-4 py-2.5 border-b border-border/60 bg-muted/30">
+            <div className="flex items-center gap-2 text-[10px] font-sans text-muted-foreground/60">
+              <span className="uppercase tracking-wider">{sourceItem.moduleName}</span>
+              <span>·</span>
+              <span>{typeLabel[sourceItem.type]}</span>
+            </div>
+          </div>
+        )}
+
         <div className="flex-1 overflow-y-auto p-5 scrollbar-thin">
           <p className="text-[13px] font-sans text-foreground/90 leading-[1.75] whitespace-pre-line">{focused.preview}</p>
         </div>
@@ -161,7 +204,7 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
     );
   }
 
-  // Expanded module tree — Heptabase-inspired structure
+  // Expanded module tree
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between px-4 py-3.5 border-b border-border">
