@@ -1,5 +1,6 @@
 import { ArrowRight, BookOpen, Library, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useWorkspace } from "@/context/WorkspaceContext";
 
 const recentCourses = [
   { id: "1", title: "Foundations of Machine Learning", lastActive: "2 hours ago", progress: 68, module: "Week 4: Neural Networks" },
@@ -15,13 +16,16 @@ function getGreeting(): string {
 }
 
 const Index = () => {
+  const { userProfile } = useWorkspace();
   const activeCourse = recentCourses[0];
 
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl">
       {/* Greeting */}
       <div className="mb-14 animate-fade-in">
-        <h1 className="font-serif text-4xl lg:text-[2.75rem] text-foreground mb-2 leading-[1.15] font-medium">{getGreeting()}</h1>
+        <h1 className="font-serif text-4xl lg:text-[2.75rem] text-foreground mb-2 leading-[1.15] font-medium">
+          {getGreeting()}, {userProfile.name}
+        </h1>
         <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Continue where you left off.</p>
       </div>
 
