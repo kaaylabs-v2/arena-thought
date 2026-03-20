@@ -150,27 +150,27 @@ const Settings = () => {
 
         {/* Data & Export */}
         <SettingSection icon={Download} label="Data & Export" delay={480}>
-          <div className="flex items-center justify-between px-5 py-4">
+          <div className="flex items-center justify-between px-5 py-4 setting-row">
             <div>
               <p className="text-[13px] font-sans font-medium text-foreground">Export all data</p>
               <p className="text-[11px] font-sans text-muted-foreground/70 mt-0.5">Download notes, reflections, and progress as JSON</p>
             </div>
             <button
               onClick={handleExport}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-foreground hover:bg-muted/50 transition-all duration-200 active:scale-[0.97]"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-foreground btn-ghost"
             >
               <Download className="h-3.5 w-3.5" strokeWidth={1.5} />
               Export
             </button>
           </div>
-          <div className="flex items-center justify-between px-5 py-4">
+          <div className="flex items-center justify-between px-5 py-4 setting-row">
             <div>
               <p className="text-[13px] font-sans font-medium text-foreground">Clear local data</p>
               <p className="text-[11px] font-sans text-muted-foreground/70 mt-0.5">Reset all preferences and cached state</p>
             </div>
             <button
               onClick={handleClearData}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-destructive/30 text-[12px] font-sans text-destructive hover:bg-destructive/5 transition-all duration-200 active:scale-[0.97]"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-destructive/30 text-[12px] font-sans text-destructive btn-ghost hover:!bg-destructive/5"
             >
               <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.5} />
               Reset
