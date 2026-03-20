@@ -47,6 +47,8 @@ export interface UserProfile {
 interface WorkspaceState {
   notebookEntries: NotebookEntry[];
   addNotebookEntry: (entry: Omit<NotebookEntry, "id" | "date">) => void;
+  updateNotebookEntry: (id: string, updates: Partial<NotebookEntry>) => void;
+  deleteNotebookEntry: (id: string) => void;
   chatMessages: Record<string, ChatMessage[]>;
   addMessage: (courseId: string, message: Omit<ChatMessage, "id">) => void;
   activeSource: SourceItem | null;
