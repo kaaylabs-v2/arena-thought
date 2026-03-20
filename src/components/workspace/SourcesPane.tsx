@@ -111,9 +111,9 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
   };
 
   if (isMini) {
-    // Collect all items flat for mini-rail icons
-    const allItems = modules.flatMap((m) => m.items);
-    return (
+    const allItems: { id: string; title: string; type: "video" | "lecture" | "reading" | "pdf" }[] = modules.flatMap((m) =>
+      m.items.map((item) => ({ id: item.id, title: item.title, type: item.type }))
+    );
       <div className="h-full flex flex-col items-center py-4 gap-1.5">
         <Tooltip>
           <TooltipTrigger asChild>
