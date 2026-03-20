@@ -28,7 +28,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { toast } from "sonner";
 
 export function SidebarUserMenu() {
-  const { userProfile } = useWorkspace();
+  const { userProfile, appSettings, updateAppSettings } = useWorkspace();
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const navigate = useNavigate();
