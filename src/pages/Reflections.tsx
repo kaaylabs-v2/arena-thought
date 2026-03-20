@@ -6,17 +6,7 @@ import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
 import { toast } from "sonner";
 
 // Extend Window for speech recognition support
-interface SpeechRecognitionAPI {
-  new (): SpeechRecognition;
-  prototype: SpeechRecognition;
-}
-
-declare global {
-  interface Window {
-    SpeechRecognition: SpeechRecognitionAPI;
-    webkitSpeechRecognition: SpeechRecognitionAPI;
-  }
-}
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 const promptChips = [
   "What challenged me today",
