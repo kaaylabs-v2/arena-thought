@@ -183,32 +183,37 @@ const Settings = () => {
           <IntegrationRow
             name="Notion"
             description="Sync notes and reflections to Notion pages"
-            icon="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png"
+            icon="https://cdn.simpleicons.org/notion/000000"
           />
           <IntegrationRow
             name="Google Drive"
             description="Import sources and export notes to Drive"
-            icon="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
+            icon="https://cdn.simpleicons.org/googledrive"
+          />
+          <IntegrationRow
+            name="Google Calendar"
+            description="Connect Google Calendar for study scheduling"
+            icon="https://cdn.simpleicons.org/googlecalendar"
           />
           <IntegrationRow
             name="Zotero"
             description="Import academic references and citation data"
+            icon="https://cdn.simpleicons.org/zotero"
           />
           <IntegrationRow
             name="Readwise"
             description="Sync highlights and reading notes"
+            icon="https://cdn.simpleicons.org/readwise"
           />
           <IntegrationRow
             name="Anki"
             description="Export flashcards from Nexi quiz sessions"
+            icon="https://upload.wikimedia.org/wikipedia/commons/3/3d/Anki-icon.svg"
           />
           <IntegrationRow
             name="Obsidian"
             description="Export notebook entries as Markdown vault files"
-          />
-          <IntegrationRow
-            name="Calendar"
-            description="Connect Google Calendar for study scheduling"
+            icon="https://cdn.simpleicons.org/obsidian"
           />
         </SettingSection>
 
