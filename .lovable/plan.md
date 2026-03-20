@@ -1,46 +1,52 @@
-# Restructure Settings + Profile Pages
+# Sidebar Language Picker + Visual Settings Overhaul
 
-## New Architecture
+## My Thoughts
 
-**Profile** becomes a standalone full-page (accessed from sidebar user menu), no 2-pane layout. It keeps all profile-specific content: avatar, name, email, institution, bio, learning goal, learning stats, privacy notice.
+**Visual settings like the reference image**: The image shows a card-based visual picker (theme cards with mini-previews, font selector with "Aa" cards). This is a **good idea** — it's more engaging than toggle rows for visual preferences. However, I'd adapt it to fit our existing design system rather than copy it exactly. Specifically:
 
-**Settings** keeps the 2-pane layout but with reorganized tabs:
+- **Color mode**: 3 visual cards (Light / Auto / Dark) replacing the current toggle button — requires adding "auto" (system) support to ThemeProvider
+- **Font style**: Visual "Aa" cards (Default / Sans / Serif / Dyslexic-friendly) — replaces font size segmented control or sits alongside it
+- **Skip "Background animation"**: We don't have animations to toggle, so this doesn't apply
 
+## Plan
 
-| Tab            | Contents                                                                                                                                                 |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **General**    | Voice & Input, Reading & Sources, Appearance (theme, compact mode, font size) - (make sure you organize them in the correct apt order)                   |
-| **Nexi**       | Response style, citations, follow-up suggestions + new meaningful settings (memory/context window, language preference, explanation depth for code/math) |
-| **Account**    | Org ID (add a copy icon/button next to it)/name, sessions table, logout                                                                                  |
-| **Privacy**    | Local-only, analytics, data export, clear data                                                                                                           |
-| **Connectors** | All integrations                                                                                                                                         |
+### 1. Extend ThemeProvider to support "auto" mode
 
+- Change `Theme` type from `"light" | "dark"` to `"light" | "dark" | "auto"`
+- "Auto" follows `prefers-color-scheme` media query
+- Store preference in localStorage, resolve actual theme at runtime
 
-## File Changes
+### 2. Redesign GeneralPanel Appearance section
 
-### 1. `src/pages/Profile.tsx`
+Replace the current row-based appearance settings with visual card pickers:
 
-Keep as-is — it's already a dedicated full page with all profile fields, stats, and privacy notice. No changes needed.
+**Color mode** — 3 selectable cards with mini window illustrations:
 
-### 2. `src/pages/Settings.tsx`
+- Light (warm paper preview), Auto (split preview), Dark (charcoal preview)
 
-- Remove `"profile"` tab entirely
-- Rename `"appearance"` + split: merge appearance settings into a new **General** tab alongside Voice & Input and Reading & Sources
-- Rename `"ai-learning"` to `"nexi"` — keep only Nexi AI Companion settings, add 2-3 useful new ones (memory toggle, code explanation depth, language preference)
-- Keep Account, Privacy, Connectors as-is
-- New tab order: General, Nexi, Account, Privacy, Connectors
-- Default active tab: `"general"`
+Cards are `~120px` wide rounded-xl boxes with a border highlight on selection (accent color)  
+  
+**side note:** make sure the animations and how it interacts with mouse hover nice which adds character
 
-### 3. `src/components/SidebarUserMenu.tsx`
+**Font style** — 4 selectable "Aa" cards:
 
-No changes — Profile and Settings links already point to `/profile` and `/settings`.
+- Default (Instrument Serif), Sans (Inter), Serif, Dyslexic-friendly (OpenDyslexic)
+- Add font preference to `AppSettings` in WorkspaceContext
 
-### 4. `src/components/AppSidebar.tsx`
+**Font size** — Keep existing S/M/L segmented control below the cards
 
-No changes — Profile is accessed via user menu, not main nav.
+**Compact mode** — Keep as toggle row below
 
-## New Nexi Tab Settings (meaningful additions)
+### 3. Add font preference to WorkspaceContext
 
-- **Conversation memory**: Toggle whether Nexi remembers context across sessions
-- **Code explanations**: Segmented control (Beginner / Intermediate / Advanced)
-- **Preferred explanation language**: Dropdown or text input for natural language preference
+- Add `fontFamily: "default" | "sans" | "serif" | "dyslexic"` to `AppSettings`
+- Apply a class to `<body>` or root based on selection
+
+### 4. Sidebar Language submenu
+
+- Convert the "Language" `DropdownMenuItem` into a `DropdownMenuSub` with a submenu listing 10 languages (English, Español, Français, Deutsch, Português, 日本語, 中文, 한국어, العربية, हिन्दी)
+- Selected language shows a checkmark
+- Store selection in WorkspaceContext (add `language` field to AppSettings)
+- Do not Sync with the Nexi settings preferred language dropdown, as i want nexi responses langugae to be separate from the UI langugae   
+  
+side note: You do not have to implement system wide langugaae change as it can be very taxing 
