@@ -2,6 +2,7 @@ import { Moon, Sun, Shield, Volume2, Palette, RotateCcw, Eye, Bell, Keyboard, Bo
 import { useTheme } from "@/components/ThemeProvider";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useWorkspace } from "@/context/WorkspaceContext";
 
 const Settings = () => {
   const { theme, toggleTheme } = useTheme();
