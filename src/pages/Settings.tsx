@@ -43,7 +43,7 @@ const Settings = () => {
             action={
               <button
                 onClick={toggleTheme}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-foreground hover:bg-muted/50 transition-all duration-200 active:scale-[0.97]"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-foreground btn-ghost"
               >
                 {theme === "light" ? <Moon className="h-3.5 w-3.5" strokeWidth={1.5} /> : <Sun className="h-3.5 w-3.5" strokeWidth={1.5} />}
                 {theme === "light" ? "Dark" : "Light"}
