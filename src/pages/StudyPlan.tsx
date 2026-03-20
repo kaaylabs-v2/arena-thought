@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { GoogleCalendarLogo, AppleCalendarLogo, NotionLogo } from "@/components/IntegrationLogos";
 
 const priorityConfig: Record<TaskPriority, { label: string; color: string; dot: string }> = {
   high: { label: "High", color: "text-destructive", dot: "bg-destructive" },
@@ -21,9 +22,9 @@ const courseOptions = [
 ];
 
 const syncPlatforms = [
-  { id: "google-cal", name: "Google Calendar", icon: "https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_31_2x.png", connected: false },
-  { id: "apple-cal", name: "Apple Calendar", letter: "A", color: "bg-muted text-foreground", connected: false },
-  { id: "notion", name: "Notion", letter: "N", color: "bg-foreground/10 text-foreground", connected: false },
+  { id: "google-cal", name: "Google Calendar", logo: <GoogleCalendarLogo className="h-4 w-4" />, connected: false },
+  { id: "apple-cal", name: "Apple Calendar", logo: <AppleCalendarLogo className="h-4 w-4" />, connected: false },
+  { id: "notion", name: "Notion", logo: <NotionLogo className="h-4 w-4" />, connected: false },
 ];
 
 const StudyPlan = () => {
