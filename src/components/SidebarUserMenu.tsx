@@ -7,6 +7,7 @@ import {
   ChevronUp,
   User,
   Keyboard,
+  Check,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useWorkspace } from "@/context/WorkspaceContext";
