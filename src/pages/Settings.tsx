@@ -250,7 +250,7 @@ function SettingSection({ icon: Icon, label, delay, children }: { icon: React.El
         <Icon className="h-4 w-4 text-muted-foreground/60" strokeWidth={1.5} />
         <h2 className="text-[11px] font-sans uppercase tracking-widest text-muted-foreground">{label}</h2>
       </div>
-      <div className="rounded-xl border border-border bg-card divide-y divide-border">
+      <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
         {children}
       </div>
     </section>
@@ -259,7 +259,7 @@ function SettingSection({ icon: Icon, label, delay, children }: { icon: React.El
 
 function SettingRow({ label, description, action }: { label: string; description: string; action: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between px-5 py-4">
+    <div className="flex items-center justify-between px-5 py-4 setting-row">
       <div className="min-w-0 flex-1 mr-4">
         <p className="text-[13px] font-sans font-medium text-foreground">{label}</p>
         <p className="text-[11px] font-sans text-muted-foreground/70 mt-0.5">{description}</p>
@@ -273,10 +273,10 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
   return (
     <button
       onClick={() => onChange(!checked)}
-      className={`relative h-6 w-11 rounded-full transition-colors duration-200 ${checked ? "bg-accent" : "bg-muted"}`}
+      className={`toggle-apple h-[26px] w-[46px] ${checked ? "bg-accent" : "bg-muted"}`}
     >
       <span
-        className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-soft transition-transform duration-200 ${checked ? "translate-x-5" : "translate-x-0"}`}
+        className={`toggle-thumb top-[3px] left-[3px] h-5 w-5 ${checked ? "translate-x-5" : "translate-x-0"}`}
       />
     </button>
   );
@@ -284,12 +284,12 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
 
 function SegmentedControl({ value, options, onChange }: { value: string; options: { value: string; label: string }[]; onChange: (v: string) => void }) {
   return (
-    <div className="flex items-center rounded-lg border border-border bg-muted/30 p-0.5">
+    <div className="flex items-center rounded-lg border border-border bg-muted/30 p-0.5 gap-0.5">
       {options.map((opt) => (
         <button
           key={opt.value}
           onClick={() => onChange(opt.value)}
-          className={`px-2.5 py-1 rounded-md text-[11px] font-sans transition-all duration-200 ${
+          className={`segment-pill px-2.5 py-1 rounded-md text-[11px] font-sans ${
             value === opt.value
               ? "bg-card text-foreground shadow-soft font-medium"
               : "text-muted-foreground hover:text-foreground"

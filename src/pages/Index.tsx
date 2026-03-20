@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Library, Clock, ListChecks, Circle, Check, Calendar } from "lucide-react";
+import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useWorkspace } from "@/context/WorkspaceContext";
 
@@ -30,31 +30,31 @@ const Index = () => {
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl">
       {/* Greeting */}
       <div className="mb-14 animate-fade-in">
-        <h1 className="font-serif text-4xl lg:text-[2.75rem] text-foreground mb-2 leading-[1.15] font-medium">
+        <h1 className="font-serif text-4xl lg:text-[2.75rem] text-foreground mb-2 leading-[1.1] font-medium">
           {getGreeting()}, {userProfile.name}
         </h1>
         <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Continue where you left off.</p>
       </div>
 
       {/* Continue Learning */}
-      <section className="mb-14 animate-fade-in [animation-delay:80ms] [animation-fill-mode:backwards]">
+      <section className="mb-14 animate-fade-in [animation-delay:100ms] [animation-fill-mode:backwards]">
         <Link
           to={`/workspace/${activeCourse.id}`}
-          className="group block rounded-xl border border-border bg-card p-6 lg:p-8 hover:border-accent/30 hover:shadow-lifted transition-all duration-250 ease-out active:scale-[0.995]"
+          className="group block card-interactive p-6 lg:p-8"
         >
           <div className="flex items-start justify-between mb-5">
             <div className="flex items-center gap-2 text-[11px] text-muted-foreground font-sans uppercase tracking-widest">
               <Clock className="h-3 w-3" strokeWidth={1.5} />
               {activeCourse.lastActive}
             </div>
-            <ArrowRight className="h-4 w-4 text-muted-foreground/60 group-hover:text-foreground group-hover:translate-x-0.5 transition-all duration-200" strokeWidth={1.5} />
+            <ArrowRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-foreground icon-hover-rotate" strokeWidth={1.5} />
           </div>
           <h2 className="font-serif text-2xl lg:text-[1.75rem] text-foreground mb-1.5 leading-snug font-medium">{activeCourse.title}</h2>
           <p className="text-muted-foreground font-sans text-sm mb-6 tracking-[-0.01em]">{activeCourse.module}</p>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 progress-glow">
             <div className="flex-1 h-[5px] bg-secondary rounded-full overflow-hidden">
               <div
-                className="h-full bg-accent/80 rounded-full transition-all duration-700 ease-out"
+                className="h-full bg-accent/80 rounded-full transition-all duration-1000 ease-spring"
                 style={{ width: `${activeCourse.progress}%` }}
               />
             </div>
@@ -65,24 +65,28 @@ const Index = () => {
 
       {/* Upcoming Tasks Widget */}
       {upcomingTasks.length > 0 && (
-        <section className="mb-14 animate-fade-in [animation-delay:140ms] [animation-fill-mode:backwards]">
+        <section className="mb-14 animate-fade-in [animation-delay:200ms] [animation-fill-mode:backwards]">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground">Upcoming tasks</h2>
-            <Link to="/study-plan" className="text-[11px] font-sans text-accent hover:text-accent/80 transition-colors duration-200">
+            <Link to="/study-plan" className="text-[11px] font-sans text-accent hover:text-accent/80 transition-colors duration-250 ease-apple">
               View all →
             </Link>
           </div>
           <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-            {upcomingTasks.map((task) => (
-              <div key={task.id} className="flex items-center gap-3 px-4 py-3 hover:bg-muted/20 transition-colors duration-150">
+            {upcomingTasks.map((task, i) => (
+              <div
+                key={task.id}
+                className="flex items-center gap-3 px-4 py-3 setting-row"
+                style={{ animationDelay: `${200 + i * 60}ms` }}
+              >
                 <button
                   onClick={() => toggleTask(task.id)}
-                  className="h-4.5 w-4.5 rounded-full border-[1.5px] border-border hover:border-accent/50 flex items-center justify-center shrink-0 transition-all duration-200 active:scale-[0.9]"
+                  className="h-[18px] w-[18px] rounded-full border-[1.5px] border-border flex items-center justify-center shrink-0 checkbox-apple"
                 >
-                  {task.completed && <Check className="h-2.5 w-2.5 text-accent" strokeWidth={2.5} />}
+                  {task.completed && <Check className="h-2.5 w-2.5 text-accent animate-check-pop" strokeWidth={2.5} />}
                 </button>
                 <span className="flex-1 text-[13px] font-sans text-foreground truncate">{task.title}</span>
-                <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${priorityDot[task.priority]}`} />
+                <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${priorityDot[task.priority]} transition-transform duration-300 ease-spring group-hover:scale-125`} />
                 {task.dueDate && (
                   <span className="text-[10px] font-sans text-muted-foreground/50 shrink-0 flex items-center gap-1">
                     <Calendar className="h-2.5 w-2.5" strokeWidth={1.5} />
@@ -96,14 +100,15 @@ const Index = () => {
       )}
 
       {/* Recent Workspaces */}
-      <section className="mb-14 animate-fade-in [animation-delay:200ms] [animation-fill-mode:backwards]">
+      <section className="mb-14 animate-fade-in [animation-delay:300ms] [animation-fill-mode:backwards]">
         <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground mb-4">Recent workspaces</h2>
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           {recentCourses.slice(1).map((course, i) => (
             <Link
               key={course.id}
               to={`/workspace/${course.id}`}
-              className="group flex items-center justify-between rounded-lg border border-border bg-card px-5 py-4 hover:border-accent/20 hover:shadow-soft transition-all duration-200 ease-out active:scale-[0.998]"
+              className="group flex items-center justify-between card-interactive px-5 py-4"
+              style={{ animationDelay: `${300 + i * 80}ms` }}
             >
               <div className="flex-1 min-w-0">
                 <h3 className="font-serif text-base text-foreground truncate leading-snug font-medium">{course.title}</h3>
@@ -111,7 +116,7 @@ const Index = () => {
               </div>
               <div className="flex items-center gap-4 ml-4 shrink-0">
                 <span className="text-[11px] font-sans text-muted-foreground tabular-nums">{course.progress}%</span>
-                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-all duration-200" strokeWidth={1.5} />
+                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 opacity-0 group-hover:opacity-100 icon-hover-rotate" strokeWidth={1.5} />
               </div>
             </Link>
           ))}
@@ -119,29 +124,22 @@ const Index = () => {
       </section>
 
       {/* Quick Actions */}
-      <section className="animate-fade-in [animation-delay:280ms] [animation-fill-mode:backwards]">
+      <section className="animate-fade-in [animation-delay:400ms] [animation-fill-mode:backwards]">
         <div className="flex gap-2.5 flex-wrap">
-          <Link
-            to="/library"
-            className="flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-[13px] font-sans text-muted-foreground hover:text-foreground hover:border-accent/20 hover:shadow-soft transition-all duration-200 ease-out active:scale-[0.97]"
-          >
-            <Library className="h-3.5 w-3.5" strokeWidth={1.5} />
-            Open Library
-          </Link>
-          <Link
-            to="/notebook"
-            className="flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-[13px] font-sans text-muted-foreground hover:text-foreground hover:border-accent/20 hover:shadow-soft transition-all duration-200 ease-out active:scale-[0.97]"
-          >
-            <BookOpen className="h-3.5 w-3.5" strokeWidth={1.5} />
-            Review Notebook
-          </Link>
-          <Link
-            to="/study-plan"
-            className="flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-[13px] font-sans text-muted-foreground hover:text-foreground hover:border-accent/20 hover:shadow-soft transition-all duration-200 ease-out active:scale-[0.97]"
-          >
-            <ListChecks className="h-3.5 w-3.5" strokeWidth={1.5} />
-            Study Plan
-          </Link>
+          {[
+            { to: "/library", icon: Library, label: "Open Library" },
+            { to: "/notebook", icon: BookOpen, label: "Review Notebook" },
+            { to: "/study-plan", icon: ListChecks, label: "Study Plan" },
+          ].map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-[13px] font-sans text-muted-foreground btn-ghost hover:text-foreground hover:border-accent/20 hover:shadow-soft"
+            >
+              <item.icon className="h-3.5 w-3.5" strokeWidth={1.5} />
+              {item.label}
+            </Link>
+          ))}
         </div>
       </section>
     </div>
