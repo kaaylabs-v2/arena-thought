@@ -216,16 +216,34 @@ const Reflections = () => {
 
           <div className="flex items-center justify-between pt-3 border-t border-border/60">
             <span className="text-[10px] font-sans text-muted-foreground/40">
-              {newReflection.length > 0 ? `${newReflection.length} chars` : "Enter to save · Shift+Enter for newline"}
+              {isListening ? (
+                <span className="text-accent flex items-center gap-1">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                  Listening...
+                </span>
+              ) : newReflection.length > 0 ? `${newReflection.length} chars` : "Enter to save · Shift+Enter for newline"}
             </span>
-            <button
-              onClick={handleSave}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-[12px] font-sans font-medium hover:bg-primary/90 transition-all duration-200 disabled:opacity-30 active:scale-[0.97]"
-              disabled={!newReflection.trim()}
-            >
-              <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
-              Save reflection
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleVoice}
+                className={`flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200 active:scale-[0.95] ${
+                  isListening
+                    ? "bg-accent/15 text-accent border border-accent/30 shadow-[0_0_12px_hsl(var(--accent)/0.15)]"
+                    : "border border-border text-muted-foreground/50 hover:border-accent/20 hover:text-foreground"
+                }`}
+                title={isListening ? "Stop listening" : "Voice input"}
+              >
+                {isListening ? <MicOff className="h-3.5 w-3.5" strokeWidth={1.5} /> : <Mic className="h-3.5 w-3.5" strokeWidth={1.5} />}
+              </button>
+              <button
+                onClick={handleSave}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-[12px] font-sans font-medium hover:bg-primary/90 transition-all duration-200 disabled:opacity-30 active:scale-[0.97]"
+                disabled={!newReflection.trim()}
+              >
+                <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
+                Save reflection
+              </button>
+            </div>
           </div>
         </div>
       </div>
