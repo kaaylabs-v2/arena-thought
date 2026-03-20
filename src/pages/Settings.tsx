@@ -307,4 +307,52 @@ function ShortcutRow({ label, keys }: { label: string; keys: string[] }) {
   );
 }
 
+function IntegrationRow({ name, description, icon }: { name: string; description: string; icon?: string }) {
+  const [connected, setConnected] = useState(false);
+
+  const handleToggle = () => {
+    setConnected(!connected);
+    if (!connected) {
+      toast.success(`${name} connected`, { description: "Integration is now active." });
+    } else {
+      toast.success(`${name} disconnected`);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-between px-5 py-4">
+      <div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
+        <div className="h-8 w-8 rounded-lg bg-muted/50 border border-border/60 flex items-center justify-center shrink-0 overflow-hidden">
+          {icon ? (
+            <img src={icon} alt={name} className="h-5 w-5 object-contain" />
+          ) : (
+            <span className="text-[11px] font-sans font-bold text-muted-foreground/60">{name.charAt(0)}</span>
+          )}
+        </div>
+        <div className="min-w-0">
+          <p className="text-[13px] font-sans font-medium text-foreground">{name}</p>
+          <p className="text-[11px] font-sans text-muted-foreground/70 mt-0.5 truncate">{description}</p>
+        </div>
+      </div>
+      <button
+        onClick={handleToggle}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-sans transition-all duration-200 active:scale-[0.97] shrink-0 ${
+          connected
+            ? "border border-accent/30 text-accent bg-accent/5 hover:bg-accent/10"
+            : "border border-border text-muted-foreground hover:text-foreground hover:bg-muted/50"
+        }`}
+      >
+        {connected ? (
+          <>
+            <Check className="h-3 w-3" strokeWidth={2} />
+            Connected
+          </>
+        ) : (
+          "Connect"
+        )}
+      </button>
+    </div>
+  );
+}
+
 export default Settings;
