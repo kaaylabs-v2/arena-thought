@@ -178,7 +178,41 @@ const Settings = () => {
           </div>
         </SettingSection>
 
-        {/* Keyboard shortcuts reference */}
+        {/* Integrations */}
+        <SettingSection icon={Plug} label="Integrations" delay={540}>
+          <IntegrationRow
+            name="Notion"
+            description="Sync notes and reflections to Notion pages"
+            icon="https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png"
+          />
+          <IntegrationRow
+            name="Google Drive"
+            description="Import sources and export notes to Drive"
+            icon="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg"
+          />
+          <IntegrationRow
+            name="Zotero"
+            description="Import academic references and citation data"
+          />
+          <IntegrationRow
+            name="Readwise"
+            description="Sync highlights and reading notes"
+          />
+          <IntegrationRow
+            name="Anki"
+            description="Export flashcards from Nexi quiz sessions"
+          />
+          <IntegrationRow
+            name="Obsidian"
+            description="Export notebook entries as Markdown vault files"
+          />
+          <IntegrationRow
+            name="Calendar"
+            description="Connect Google Calendar for study scheduling"
+          />
+        </SettingSection>
+
+
         <section className="animate-fade-in [animation-delay:560ms] [animation-fill-mode:backwards]">
           <div className="flex items-center gap-2.5 mb-4">
             <Keyboard className="h-4 w-4 text-muted-foreground/60" strokeWidth={1.5} />
