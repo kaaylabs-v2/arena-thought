@@ -47,9 +47,13 @@ export interface UserProfile {
   timezone: string;
 }
 
+export type FontFamily = "default" | "sans" | "serif" | "dyslexic";
+
 export interface AppSettings {
   compactMode: boolean;
   fontSize: "small" | "medium" | "large";
+  fontFamily: FontFamily;
+  language: string;
 }
 
 export type TaskPriority = "high" | "medium" | "low";
