@@ -43,7 +43,7 @@ const Settings = () => {
             action={
               <button
                 onClick={toggleTheme}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-foreground hover:bg-muted/50 transition-all duration-200 active:scale-[0.97]"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-foreground btn-ghost"
               >
                 {theme === "light" ? <Moon className="h-3.5 w-3.5" strokeWidth={1.5} /> : <Sun className="h-3.5 w-3.5" strokeWidth={1.5} />}
                 {theme === "light" ? "Dark" : "Light"}
@@ -150,27 +150,27 @@ const Settings = () => {
 
         {/* Data & Export */}
         <SettingSection icon={Download} label="Data & Export" delay={480}>
-          <div className="flex items-center justify-between px-5 py-4">
+          <div className="flex items-center justify-between px-5 py-4 setting-row">
             <div>
               <p className="text-[13px] font-sans font-medium text-foreground">Export all data</p>
               <p className="text-[11px] font-sans text-muted-foreground/70 mt-0.5">Download notes, reflections, and progress as JSON</p>
             </div>
             <button
               onClick={handleExport}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-foreground hover:bg-muted/50 transition-all duration-200 active:scale-[0.97]"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-foreground btn-ghost"
             >
               <Download className="h-3.5 w-3.5" strokeWidth={1.5} />
               Export
             </button>
           </div>
-          <div className="flex items-center justify-between px-5 py-4">
+          <div className="flex items-center justify-between px-5 py-4 setting-row">
             <div>
               <p className="text-[13px] font-sans font-medium text-foreground">Clear local data</p>
               <p className="text-[11px] font-sans text-muted-foreground/70 mt-0.5">Reset all preferences and cached state</p>
             </div>
             <button
               onClick={handleClearData}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-destructive/30 text-[12px] font-sans text-destructive hover:bg-destructive/5 transition-all duration-200 active:scale-[0.97]"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-destructive/30 text-[12px] font-sans text-destructive btn-ghost hover:!bg-destructive/5"
             >
               <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.5} />
               Reset
@@ -250,7 +250,7 @@ function SettingSection({ icon: Icon, label, delay, children }: { icon: React.El
         <Icon className="h-4 w-4 text-muted-foreground/60" strokeWidth={1.5} />
         <h2 className="text-[11px] font-sans uppercase tracking-widest text-muted-foreground">{label}</h2>
       </div>
-      <div className="rounded-xl border border-border bg-card divide-y divide-border">
+      <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
         {children}
       </div>
     </section>
@@ -259,7 +259,7 @@ function SettingSection({ icon: Icon, label, delay, children }: { icon: React.El
 
 function SettingRow({ label, description, action }: { label: string; description: string; action: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between px-5 py-4">
+    <div className="flex items-center justify-between px-5 py-4 setting-row">
       <div className="min-w-0 flex-1 mr-4">
         <p className="text-[13px] font-sans font-medium text-foreground">{label}</p>
         <p className="text-[11px] font-sans text-muted-foreground/70 mt-0.5">{description}</p>
@@ -273,10 +273,10 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
   return (
     <button
       onClick={() => onChange(!checked)}
-      className={`relative h-6 w-11 rounded-full transition-colors duration-200 ${checked ? "bg-accent" : "bg-muted"}`}
+      className={`toggle-apple h-[26px] w-[46px] ${checked ? "bg-accent" : "bg-muted"}`}
     >
       <span
-        className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-soft transition-transform duration-200 ${checked ? "translate-x-5" : "translate-x-0"}`}
+        className={`toggle-thumb top-[3px] left-[3px] h-5 w-5 ${checked ? "translate-x-5" : "translate-x-0"}`}
       />
     </button>
   );
@@ -284,12 +284,12 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
 
 function SegmentedControl({ value, options, onChange }: { value: string; options: { value: string; label: string }[]; onChange: (v: string) => void }) {
   return (
-    <div className="flex items-center rounded-lg border border-border bg-muted/30 p-0.5">
+    <div className="flex items-center rounded-lg border border-border bg-muted/30 p-0.5 gap-0.5">
       {options.map((opt) => (
         <button
           key={opt.value}
           onClick={() => onChange(opt.value)}
-          className={`px-2.5 py-1 rounded-md text-[11px] font-sans transition-all duration-200 ${
+          className={`segment-pill px-2.5 py-1 rounded-md text-[11px] font-sans ${
             value === opt.value
               ? "bg-card text-foreground shadow-soft font-medium"
               : "text-muted-foreground hover:text-foreground"
@@ -330,9 +330,9 @@ function IntegrationRow({ name, description, icon, fallbackLetter, fallbackColor
   };
 
   return (
-    <div className="flex items-center justify-between px-5 py-4">
+    <div className="flex items-center justify-between px-5 py-4 setting-row">
       <div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
-        <div className={`h-8 w-8 rounded-lg border border-border/60 flex items-center justify-center shrink-0 overflow-hidden ${fallbackColor ? fallbackColor : 'bg-muted/50'}`}>
+        <div className={`h-8 w-8 rounded-lg border border-border/60 flex items-center justify-center shrink-0 overflow-hidden transition-transform duration-300 ease-spring group-hover:scale-105 ${fallbackColor ? fallbackColor : 'bg-muted/50'}`}>
           {icon ? (
             <img src={icon} alt={name} className="h-5 w-5 object-contain" />
           ) : (
@@ -346,15 +346,15 @@ function IntegrationRow({ name, description, icon, fallbackLetter, fallbackColor
       </div>
       <button
         onClick={handleToggle}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-sans transition-all duration-200 active:scale-[0.97] shrink-0 ${
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-sans shrink-0 btn-ghost ${
           connected
-            ? "border border-accent/30 text-accent bg-accent/5 hover:bg-accent/10"
-            : "border border-border text-muted-foreground hover:text-foreground hover:bg-muted/50"
+            ? "border border-accent/30 text-accent bg-accent/5 hover:!bg-accent/10"
+            : "border border-border text-muted-foreground hover:text-foreground"
         }`}
       >
         {connected ? (
           <>
-            <Check className="h-3 w-3" strokeWidth={2} />
+            <Check className="h-3 w-3 animate-check-pop" strokeWidth={2} />
             Connected
           </>
         ) : (
