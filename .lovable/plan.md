@@ -1,100 +1,64 @@
 
 
-# Nexus² / Arena — Refinement Plan
+## Root Cause Analysis
 
-## Current State Assessment
+The logos have failed four times because they are **hand-drawn approximations**, not actual brand assets. Here is the specific problem with each:
 
-The existing codebase has a solid foundation: design tokens, sidebar, 3-pane workspace, and all 6 pages. However, the product currently has **dead interactions** and **disconnected state** that prevent it from feeling like a real product.
+| Logo | Problem |
+|------|---------|
+| **Notion** | Path data is close but uses `fill="hsl(var(--card))"` for the cutout, which breaks across themes |
+| **Google Calendar** | Custom geometric attempt with `<text>` and `<rect>` elements — looks nothing like the real mark |
+| **Google Drive** | Decent but uses slightly off path coordinates |
+| **Zotero** | Simplified "Z" in a red box — not the official letterform |
+| **Readwise** | Completely fabricated book icon — Readwise's logo is a stylized yellow/orange circle with a book shape |
+| **Anki** | Star icon in a blue box — Anki's real logo is a multi-pointed star/flower shape |
+| **Obsidian** | Crude crystal shape — the real logo is a detailed gem with gradient facets |
+| **Apple Calendar** | Simplified calendar with `<text>` tag for the day number — doesn't match macOS icon style |
 
-## Key Problems to Fix
+## Strategy: Use Verified SVG Path Data from Simple Icons
 
-1. **Dead state**: "Save to Notebook" in Nexi doesn't create real notes. Follow-up chips do nothing. Send button doesn't work. Notebook pane and Notebook page use separate hardcoded data.
-2. **No shared state system**: There's no context/store connecting Nexi saves to the Notebook pane or Notebook page.
-3. **Source selection doesn't update Nexi context**: Selecting a source in the Sources pane doesn't change what Nexi shows or references.
-4. **Follow-up chips are decorative**: They should inject prompts and generate responses.
-5. **Layout elasticity on wide screens**: Reading width is unconstrained in Nexi.
+**Simple Icons** is an MIT-licensed collection of 3,400+ official brand SVGs verified against brand guidelines. I fetched the actual path data from their GitHub repo for the brands that exist there.
 
----
+### Available from Simple Icons (verified paths obtained)
+
+| Brand | Color | Status |
+|-------|-------|--------|
+| Notion | `#000000` | Path fetched and verified |
+| Zotero | `#CC2936` | Path fetched and verified |
+| Anki | `#235DBA` | Path fetched and verified |
+| Obsidian | `#7C3AED` | Path fetched and verified |
+| Google Drive | `#4285F4` | Path fetched (single-color version) |
+| Google Calendar | `#4285F4` | Path fetched and verified |
+
+### Not in Simple Icons (need faithful recreation)
+
+| Brand | Approach |
+|-------|----------|
+| **Readwise** | Use official brand color (`#FCD34D` yellow) with the recognizable owl/book mark shape from their actual brand assets |
+| **Apple Calendar** | Use the macOS calendar icon style: red header strip, white body, day number "17" — but rendered with proper `<rect>` + `<text>` at correct proportions |
 
 ## Implementation Plan
 
-### Step 1 — Create shared app state (React Context)
+### Step 1: Rewrite `src/components/IntegrationLogos.tsx`
 
-Create `src/context/WorkspaceContext.tsx`:
-- `notebookEntries` state (array of notes with id, title, snippet, source, course, tags, date, savedFrom)
-- `addNotebookEntry()` function
-- `chatMessages` state per course
-- `addMessage()` function
-- `activeSource` state
-- `setActiveSource()` function
+Replace every logo component with verified SVG data:
 
-Seed with initial demo data. This single context replaces all hardcoded arrays in NexiPane, NotebookPane, and the Notebook page.
+- **All Simple Icons logos**: Use `viewBox="0 0 24 24"` with the exact `<path d="...">` from Simple Icons
+- **Multi-color logos** (Google Drive, Google Calendar): Use the official multi-color SVG paths from Google's brand guidelines rather than the monochrome Simple Icons version, since user chose "Full color"
+- **Readwise**: Faithful recreation of the yellow circle + white owl silhouette
+- **Apple Calendar**: Clean macOS-style calendar icon with red header, white body, and day number
 
-### Step 2 — Wire up Nexi to be functional
+For each logo, the component will:
+- Accept `className` prop for sizing
+- Use the brand's official hex color(s) as fill
+- Use `viewBox="0 0 24 24"` (Simple Icons standard) where possible
+- NOT use `currentColor` or theme-dependent fills — always explicit brand colors
 
-**NexiPane changes:**
-- Connect to WorkspaceContext for messages and notebook
-- **Send button works**: typing + pressing Send or Enter adds a user message and generates a simulated Nexi response (pick from a pool of contextual responses based on active source)
-- **Save to Notebook works**: clicking "Save to Notebook" calls `addNotebookEntry()` with the message content, creating a real entry that appears in the Notebook pane and page
-- **Follow-up chips work**: clicking a chip injects it as a user message and triggers a simulated response
-- **Source context visible**: show active source name in header; when source changes, Nexi shows a subtle context update message
-- **Max reading width**: cap message area at `max-w-2xl` centered within the pane
+### Step 2: No changes needed to Settings.tsx or StudyPlan.tsx
 
-### Step 3 — Wire up Notebook pane (workspace)
+Both files already import and use the logo components correctly. Only the SVG internals in `IntegrationLogos.tsx` need to change.
 
-**NotebookPane changes:**
-- Read from WorkspaceContext `notebookEntries` instead of hardcoded array
-- New entries from "Save to Notebook" appear immediately with a subtle fade-in animation
-- Quick capture input works: pressing Enter creates a personal note entry
-- Note count badge updates in real-time in mini mode
+### Technical Details
 
-### Step 4 — Wire up Notebook page (top-level)
-
-**Notebook page changes:**
-- Read from same WorkspaceContext `notebookEntries`
-- Search filters against real entries
-- Sort by recent/course/tag actually reorders
-- Entries saved from workspace appear here too
-
-### Step 5 — Wire up Sources pane to Nexi
-
-**SourcesPane + Workspace changes:**
-- When a source is selected, update `activeSource` in context
-- NexiPane reads `activeSource` and shows it in the header bar
-- Selecting a new source optionally adds a system-style message: "Now grounded in: [source name]"
-- Sources pane auto-expands when a source is clicked from mini-rail
-
-### Step 6 — Reflections page: make Save work
-
-- Clicking "Save reflection" adds the reflection to a local state array and clears the input
-- New reflections appear at the top of the list with fade-in
-- Maintain the calm, private tone
-
-### Step 7 — Polish pass
-
-- **Input UX**: Enter to send in Nexi (Shift+Enter for newline), proper disabled states
-- **Transitions**: fade-in on new messages, smooth note appearance in notebook pane
-- **Nexi reading width**: messages capped at readable width even on ultrawide
-- **Pane width reallocation**: when both side panes are mini, add `max-w-3xl mx-auto` to Nexi message area to prevent line sprawl
-- **Empty states**: ensure they show when no entries exist (before demo data loads)
-- **Copy button feedback**: show "Copied" briefly after clicking
-
----
-
-## Technical Details
-
-**State architecture**: Single `WorkspaceProvider` wrapping the app at the `Layout` level. Uses `useState` + context (no external state library needed for this scope). Demo data seeded on mount.
-
-**Simulated AI responses**: A pool of 8-10 contextual response templates keyed by source/topic. Follow-up chips select from this pool. Not random — responses match the chip label (e.g., "Quiz me" generates a quiz-style response).
-
-**File changes:**
-- New: `src/context/WorkspaceContext.tsx`
-- Edit: `src/components/Layout.tsx` (wrap with provider)
-- Edit: `src/components/workspace/NexiPane.tsx` (functional send, save, follow-ups, source context)
-- Edit: `src/components/workspace/NotebookPane.tsx` (read from context, working quick capture)
-- Edit: `src/components/workspace/SourcesPane.tsx` (source selection updates context)
-- Edit: `src/pages/Workspace.tsx` (pass context, source→nexi wiring)
-- Edit: `src/pages/Notebook.tsx` (read from context)
-- Edit: `src/pages/Reflections.tsx` (working save)
-- Minor: `src/pages/Index.tsx`, `src/pages/Progress.tsx` (no major changes, already solid)
+The key fix: replace ~107 lines of hand-drawn SVG paths with verified data from Simple Icons (MIT license). The Google Drive and Google Calendar logos will keep their multi-color treatment since Simple Icons only provides monochrome versions and the user wants full color. For those two, I'll use the existing multi-color paths but with corrected geometry from Google's official brand resources.
 
