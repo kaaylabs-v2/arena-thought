@@ -138,6 +138,29 @@
   .font-serif {
     font-family: 'Source Serif 4', Georgia, serif;
   }
+
+  /* Font scaling — applies a multiplier to all text within .font-scaled */
+  .font-scaled {
+    font-size: calc(1em * var(--font-scale, 1));
+  }
+  .font-scaled * {
+    font-size: inherit;
+  }
+  /* Re-apply explicit sizes using scale factor */
+  .font-scaled h1 { font-size: calc(2.25rem * var(--font-scale, 1)); }
+  .font-scaled .text-4xl { font-size: calc(2.25rem * var(--font-scale, 1)); }
+  .font-scaled .text-3xl { font-size: calc(1.875rem * var(--font-scale, 1)); }
+  .font-scaled .text-2xl { font-size: calc(1.5rem * var(--font-scale, 1)); }
+  .font-scaled .text-xl { font-size: calc(1.25rem * var(--font-scale, 1)); }
+  .font-scaled .text-lg { font-size: calc(1.125rem * var(--font-scale, 1)); }
+  .font-scaled .text-base { font-size: calc(1rem * var(--font-scale, 1)); }
+  .font-scaled .text-sm { font-size: calc(0.875rem * var(--font-scale, 1)); }
+  .font-scaled .text-xs { font-size: calc(0.75rem * var(--font-scale, 1)); }
+  .font-scaled .text-\[14px\] { font-size: calc(14px * var(--font-scale, 1)); }
+  .font-scaled .text-\[13px\] { font-size: calc(13px * var(--font-scale, 1)); }
+  .font-scaled .text-\[12px\] { font-size: calc(12px * var(--font-scale, 1)); }
+  .font-scaled .text-\[11px\] { font-size: calc(11px * var(--font-scale, 1)); }
+  .font-scaled .text-\[10px\] { font-size: calc(10px * var(--font-scale, 1)); }
 }
 
 @layer components {
