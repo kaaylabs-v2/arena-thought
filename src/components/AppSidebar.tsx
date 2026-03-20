@@ -56,21 +56,27 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       {/* Header — logo + collapse toggle, same px as menu items */}
       <SidebarHeader className="px-2 py-3">
-        <div className="flex items-center justify-between px-1">
-          <span className="font-serif text-lg tracking-tight text-sidebar-foreground leading-none transition-all duration-300 ease-out overflow-hidden whitespace-nowrap">
-            {collapsed ? "N²" : "Nexus²"}
-          </span>
-          <button
-            onClick={toggleSidebar}
-            className="h-7 w-7 flex items-center justify-center rounded-lg text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors duration-200 shrink-0"
-          >
-            {collapsed ? (
+        {collapsed ? (
+          <div className="flex flex-col items-center gap-2">
+            <span className="font-serif text-base tracking-tight text-sidebar-foreground leading-none">N²</span>
+            <button
+              onClick={toggleSidebar}
+              className="h-8 w-8 flex items-center justify-center rounded-lg text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors duration-200"
+            >
               <ChevronsRight className="h-4 w-4" strokeWidth={1.5} />
-            ) : (
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between px-1">
+            <span className="font-serif text-lg tracking-tight text-sidebar-foreground leading-none">Nexus²</span>
+            <button
+              onClick={toggleSidebar}
+              className="h-7 w-7 flex items-center justify-center rounded-lg text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors duration-200 shrink-0"
+            >
               <ChevronsLeft className="h-4 w-4" strokeWidth={1.5} />
-            )}
-          </button>
-        </div>
+            </button>
+          </div>
+        )}
       </SidebarHeader>
 
       {/* Main nav */}
