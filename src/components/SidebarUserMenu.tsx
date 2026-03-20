@@ -6,6 +6,7 @@ import {
   ExternalLink,
   ChevronUp,
   User,
+  Keyboard,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useWorkspace } from "@/context/WorkspaceContext";
