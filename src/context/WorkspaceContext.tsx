@@ -74,7 +74,8 @@ interface WorkspaceState {
   activeSource: SourceItem | null;
   setActiveSource: (source: SourceItem | null) => void;
   reflections: Reflection[];
-  addReflection: (content: string, linkedCourse?: string) => void;
+  addReflection: (content: string, linkedCourse?: string, mood?: ReflectionMood) => void;
+  deleteReflection: (id: string) => void;
   userProfile: UserProfile;
   updateUserProfile: (updates: Partial<UserProfile>) => void;
   appSettings: AppSettings;
