@@ -19,11 +19,29 @@ export interface ChatMessage {
   citations?: string[];
 }
 
+export type SourceType = "video" | "lecture" | "reading" | "pdf" | "docx" | "txt" | "code" | "slides" | "link" | "note";
+
 export interface SourceItem {
   id: string;
   title: string;
-  type: "video" | "lecture" | "reading" | "pdf";
+  type: SourceType;
   moduleName: string;
+}
+
+export interface Reflection {
+  id: string;
+  date: string;
+  content: string;
+  linkedCourse?: string;
+}
+
+export interface UserProfile {
+  name: string;
+  email: string;
+  bio: string;
+  learningGoal: string;
+  institution: string;
+  timezone: string;
 }
 
 interface WorkspaceState {
@@ -35,16 +53,20 @@ interface WorkspaceState {
   setActiveSource: (source: SourceItem | null) => void;
   reflections: Reflection[];
   addReflection: (content: string, linkedCourse?: string) => void;
-}
-
-export interface Reflection {
-  id: string;
-  date: string;
-  content: string;
-  linkedCourse?: string;
+  userProfile: UserProfile;
+  updateUserProfile: (updates: Partial<UserProfile>) => void;
 }
 
 const WorkspaceContext = createContext<WorkspaceState | null>(null);
+
+const defaultProfile: UserProfile = {
+  name: "Alex",
+  email: "alex@university.edu",
+  bio: "Graduate student exploring the intersection of machine learning and cognitive science.",
+  learningGoal: "Build deep understanding of neural network architectures and their theoretical foundations.",
+  institution: "Stanford University",
+  timezone: "America/Los_Angeles",
+};
 
 // Seed data
 const seedNotebookEntries: NotebookEntry[] = [
@@ -163,7 +185,7 @@ const seedReflections: Reflection[] = [
   },
 ];
 
-// Simulated Nexi responses by follow-up type
+// Simulated Nexi responses
 const simulatedResponses: Record<string, { content: string; citations: string[] }> = {
   "Explain simply": {
     content: "Think of backpropagation like this: imagine you're adjusting dials on a mixing board to get the perfect sound.\n\n1. You play the current mix (forward pass)\n2. You hear what's wrong (compute the loss)\n3. You figure out which dials to turn and by how much (backward pass)\n4. You adjust (update weights)\n\nThe \"backward\" part is just math telling you: *for each dial, how much did it contribute to the error?* That's the gradient — and the chain rule lets you trace that contribution through every layer, no matter how deep the network.",
@@ -190,16 +212,12 @@ const simulatedResponses: Record<string, { content: string; citations: string[] 
 let idCounter = 100;
 const genId = () => `gen-${++idCounter}`;
 
-const formatTimeAgo = () => {
-  const now = new Date();
-  return `${now.getHours()}:${String(now.getMinutes()).padStart(2, "0")}`;
-};
-
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [notebookEntries, setNotebookEntries] = useState<NotebookEntry[]>(seedNotebookEntries);
   const [chatMessages, setChatMessages] = useState<Record<string, ChatMessage[]>>(seedChatMessages);
   const [activeSource, setActiveSource] = useState<SourceItem | null>(null);
   const [reflections, setReflections] = useState<Reflection[]>(seedReflections);
+  const [userProfile, setUserProfile] = useState<UserProfile>(defaultProfile);
 
   const addNotebookEntry = useCallback((entry: Omit<NotebookEntry, "id" | "date">) => {
     setNotebookEntries((prev) => [
@@ -222,6 +240,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     ]);
   }, []);
 
+  const updateUserProfile = useCallback((updates: Partial<UserProfile>) => {
+    setUserProfile((prev) => ({ ...prev, ...updates }));
+  }, []);
+
   return (
     <WorkspaceContext.Provider
       value={{
@@ -233,6 +255,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         setActiveSource,
         reflections,
         addReflection,
+        userProfile,
+        updateUserProfile,
       }}
     >
       {children}
