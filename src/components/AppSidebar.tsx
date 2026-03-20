@@ -10,6 +10,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   User,
+  ListChecks,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -31,6 +32,7 @@ import {
 const mainNav = [
   { title: "Home", url: "/", icon: Home },
   { title: "Library", url: "/library", icon: Library },
+  { title: "Study Plan", url: "/study-plan", icon: ListChecks },
   { title: "Notebook", url: "/notebook", icon: BookOpen },
   { title: "Reflections", url: "/reflections", icon: Sparkles },
   { title: "Progress", url: "/progress", icon: BarChart3 },
