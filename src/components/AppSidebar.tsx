@@ -33,8 +33,8 @@ const mainNav = [
   { title: "Library", url: "/library", icon: Library },
   { title: "Study Plan", url: "/study-plan", icon: ListChecks },
   { title: "Notebook", url: "/notebook", icon: BookOpen },
-  { title: "Reflections", url: "/reflections", icon: Sparkles },
   { title: "Progress", url: "/progress", icon: BarChart3 },
+  { title: "Reflections", url: "/reflections", icon: Sparkles },
 ];
 
 export function AppSidebar() {
