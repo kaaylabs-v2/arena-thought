@@ -49,6 +49,18 @@ export interface AppSettings {
   fontSize: "small" | "medium" | "large";
 }
 
+export type TaskPriority = "high" | "medium" | "low";
+
+export interface StudyTask {
+  id: string;
+  title: string;
+  course?: string;
+  priority: TaskPriority;
+  completed: boolean;
+  dueDate?: string;
+  createdAt: string;
+}
+
 interface WorkspaceState {
   notebookEntries: NotebookEntry[];
   addNotebookEntry: (entry: Omit<NotebookEntry, "id" | "date">) => void;
@@ -64,6 +76,11 @@ interface WorkspaceState {
   updateUserProfile: (updates: Partial<UserProfile>) => void;
   appSettings: AppSettings;
   updateAppSettings: (updates: Partial<AppSettings>) => void;
+  tasks: StudyTask[];
+  addTask: (task: Omit<StudyTask, "id" | "createdAt">) => void;
+  updateTask: (id: string, updates: Partial<StudyTask>) => void;
+  deleteTask: (id: string) => void;
+  toggleTask: (id: string) => void;
 }
 
 const WorkspaceContext = createContext<WorkspaceState | null>(null);
