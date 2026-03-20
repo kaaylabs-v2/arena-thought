@@ -6,15 +6,18 @@ import { WorkspaceProvider, useWorkspace } from "@/context/WorkspaceContext";
 function LayoutInner() {
   const { appSettings } = useWorkspace();
 
-  const fontSizeClass =
-    appSettings.fontSize === "small" ? "text-[13px]" :
-    appSettings.fontSize === "large" ? "text-[17px]" : "text-[15px]";
+  const fontScale =
+    appSettings.fontSize === "small" ? "0.9" :
+    appSettings.fontSize === "large" ? "1.12" : "1";
 
   return (
     <SidebarProvider>
-      <div className={`min-h-screen flex w-full ${appSettings.compactMode ? "compact-mode" : ""} ${fontSizeClass}`}>
+      <div
+        className={`min-h-screen flex w-full ${appSettings.compactMode ? "compact-mode" : ""}`}
+        style={{ '--font-scale': fontScale } as React.CSSProperties}
+      >
         <AppSidebar />
-        <main className="flex-1 min-w-0">
+        <main className="flex-1 min-w-0 font-scaled">
           <Outlet />
         </main>
       </div>

@@ -138,6 +138,11 @@
   .font-serif {
     font-family: 'Source Serif 4', Georgia, serif;
   }
+
+  /* Font scaling via CSS zoom — cleanly scales all text + spacing */
+  .font-scaled {
+    zoom: var(--font-scale, 1);
+  }
 }
 
 @layer components {
