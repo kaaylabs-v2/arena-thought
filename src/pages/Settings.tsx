@@ -1,5 +1,5 @@
 import { Moon, Sun, Shield, Volume2, Palette, RotateCcw, Eye, Bell, Keyboard, BookOpen, Brain, Download, Languages, Type, Plug, ExternalLink, Check } from "lucide-react";
-import { NotionLogo, ZoteroLogo, ReadwiseLogo, AnkiLogo, ObsidianLogo } from "@/components/IntegrationLogos";
+import { NotionLogo, ZoteroLogo, ReadwiseLogo, AnkiLogo, ObsidianLogo, GoogleDriveLogo, GoogleCalendarLogo } from "@/components/IntegrationLogos";
 import { useTheme } from "@/components/ThemeProvider";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -189,12 +189,12 @@ const Settings = () => {
           <IntegrationRow
             name="Google Drive"
             description="Import sources and export notes to Drive"
-            icon="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"
+            svgLogo={<GoogleDriveLogo className="h-5 w-5" />}
           />
           <IntegrationRow
             name="Google Calendar"
             description="Connect Google Calendar for study scheduling"
-            icon="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_31_2x.png"
+            svgLogo={<GoogleCalendarLogo className="h-5 w-5" />}
           />
           <IntegrationRow
             name="Zotero"
