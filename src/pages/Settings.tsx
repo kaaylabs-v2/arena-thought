@@ -183,7 +183,8 @@ const Settings = () => {
           <IntegrationRow
             name="Notion"
             description="Sync notes and reflections to Notion pages"
-            icon="https://www.notion.so/images/favicon.ico"
+            fallbackLetter="N"
+            fallbackColor="bg-foreground/10 text-foreground"
           />
           <IntegrationRow
             name="Google Drive"
@@ -198,7 +199,8 @@ const Settings = () => {
           <IntegrationRow
             name="Zotero"
             description="Import academic references and citation data"
-            icon="https://www.zotero.org/support/lib/exe/fetch.php?tok=b55a97&media=logo.png"
+            fallbackLetter="Z"
+            fallbackColor="bg-red-500/15 text-red-500"
           />
           <IntegrationRow
             name="Readwise"
@@ -215,7 +217,8 @@ const Settings = () => {
           <IntegrationRow
             name="Obsidian"
             description="Export notebook entries as Markdown vault files"
-            icon="https://obsidian.md/favicon.ico"
+            fallbackLetter="O"
+            fallbackColor="bg-purple-500/15 text-purple-500"
           />
         </SettingSection>
 
