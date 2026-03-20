@@ -1,4 +1,5 @@
 import { Moon, Sun, Shield, Volume2, Palette, RotateCcw, Eye, Bell, Keyboard, BookOpen, Brain, Download, Languages, Type, Plug, ExternalLink, Check } from "lucide-react";
+import { NotionLogo, ZoteroLogo, ReadwiseLogo, AnkiLogo, ObsidianLogo } from "@/components/IntegrationLogos";
 import { useTheme } from "@/components/ThemeProvider";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -183,8 +184,7 @@ const Settings = () => {
           <IntegrationRow
             name="Notion"
             description="Sync notes and reflections to Notion pages"
-            fallbackLetter="N"
-            fallbackColor="bg-foreground/10 text-foreground"
+            svgLogo={<NotionLogo className="h-5 w-5" />}
           />
           <IntegrationRow
             name="Google Drive"
@@ -199,26 +199,22 @@ const Settings = () => {
           <IntegrationRow
             name="Zotero"
             description="Import academic references and citation data"
-            fallbackLetter="Z"
-            fallbackColor="bg-red-500/15 text-red-500"
+            svgLogo={<ZoteroLogo className="h-5 w-5" />}
           />
           <IntegrationRow
             name="Readwise"
             description="Sync highlights and reading notes"
-            fallbackLetter="R"
-            fallbackColor="bg-yellow-500/15 text-yellow-500"
+            svgLogo={<ReadwiseLogo className="h-5 w-5" />}
           />
           <IntegrationRow
             name="Anki"
             description="Export flashcards from Nexi quiz sessions"
-            fallbackLetter="A"
-            fallbackColor="bg-blue-500/15 text-blue-500"
+            svgLogo={<AnkiLogo className="h-5 w-5" />}
           />
           <IntegrationRow
             name="Obsidian"
             description="Export notebook entries as Markdown vault files"
-            fallbackLetter="O"
-            fallbackColor="bg-purple-500/15 text-purple-500"
+            svgLogo={<ObsidianLogo className="h-5 w-5" />}
           />
         </SettingSection>
 
@@ -317,7 +313,7 @@ function ShortcutRow({ label, keys }: { label: string; keys: string[] }) {
   );
 }
 
-function IntegrationRow({ name, description, icon, fallbackLetter, fallbackColor }: { name: string; description: string; icon?: string; fallbackLetter?: string; fallbackColor?: string }) {
+function IntegrationRow({ name, description, icon, svgLogo, fallbackLetter, fallbackColor }: { name: string; description: string; icon?: string; svgLogo?: React.ReactNode; fallbackLetter?: string; fallbackColor?: string }) {
   const [connected, setConnected] = useState(false);
 
   const handleToggle = () => {
@@ -333,7 +329,9 @@ function IntegrationRow({ name, description, icon, fallbackLetter, fallbackColor
     <div className="flex items-center justify-between px-5 py-4 setting-row">
       <div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
         <div className={`h-8 w-8 rounded-lg border border-border/60 flex items-center justify-center shrink-0 overflow-hidden transition-transform duration-300 ease-spring group-hover:scale-105 ${fallbackColor ? fallbackColor : 'bg-muted/50'}`}>
-          {icon ? (
+          {svgLogo ? (
+            svgLogo
+          ) : icon ? (
             <img src={icon} alt={name} className="h-5 w-5 object-contain" />
           ) : (
             <span className="text-[12px] font-sans font-bold">{fallbackLetter || name.charAt(0)}</span>
