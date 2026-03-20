@@ -5,7 +5,6 @@ import {
   Sparkles,
   BarChart3,
   Settings,
-  User,
   Moon,
   Sun,
   ChevronLeft,
@@ -48,19 +47,18 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
-      <SidebarHeader className="p-4">
+      <SidebarHeader className="p-4 pb-6">
         <div className="flex items-center justify-between">
-          {!collapsed && (
-            <div className="flex items-center gap-2">
-              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground text-xs font-bold font-sans">N²</span>
+          {!collapsed ? (
+            <div className="flex items-center gap-2.5">
+              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shadow-soft">
+                <span className="text-primary-foreground text-[10px] font-bold font-sans tracking-tight">N²</span>
               </div>
-              <span className="font-serif text-lg tracking-tight text-sidebar-foreground">Nexus²</span>
+              <span className="font-serif text-lg tracking-tight text-sidebar-foreground leading-none">Nexus²</span>
             </div>
-          )}
-          {collapsed && (
-            <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center mx-auto">
-              <span className="text-primary-foreground text-xs font-bold font-sans">N²</span>
+          ) : (
+            <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center mx-auto shadow-soft">
+              <span className="text-primary-foreground text-[10px] font-bold font-sans tracking-tight">N²</span>
             </div>
           )}
         </div>
@@ -69,7 +67,7 @@ export function AppSidebar() {
       <SidebarContent className="px-2">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-0.5">
               {mainNav.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <Tooltip>
@@ -77,17 +75,17 @@ export function AppSidebar() {
                       <SidebarMenuButton
                         asChild
                         isActive={isActive(item.url)}
-                        className="h-10 rounded-lg transition-colors duration-150"
+                        className="h-9 rounded-lg transition-all duration-200 ease-out"
                       >
                         <NavLink
                           to={item.url}
                           end={item.url === "/"}
-                          className="flex items-center gap-3 px-3 text-sidebar-foreground hover:bg-sidebar-accent"
+                          className="flex items-center gap-3 px-3 text-sidebar-foreground hover:bg-sidebar-accent/70"
                           activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                         >
-                          <item.icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} />
+                          <item.icon className="h-[17px] w-[17px] shrink-0" strokeWidth={1.5} />
                           {!collapsed && (
-                            <span className="text-sm font-sans">{item.title}</span>
+                            <span className="text-[13px] font-sans">{item.title}</span>
                           )}
                         </NavLink>
                       </SidebarMenuButton>
@@ -105,21 +103,21 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="px-2 pb-4 space-y-1">
+      <SidebarFooter className="px-2 pb-4 space-y-0.5">
         <SidebarMenu>
           <SidebarMenuItem>
             <Tooltip>
               <TooltipTrigger asChild>
                 <SidebarMenuButton
                   onClick={toggleTheme}
-                  className="h-10 rounded-lg flex items-center gap-3 px-3 text-sidebar-foreground hover:bg-sidebar-accent transition-colors duration-150"
+                  className="h-9 rounded-lg flex items-center gap-3 px-3 text-sidebar-foreground hover:bg-sidebar-accent/70 transition-all duration-200 ease-out"
                 >
                   {theme === "light" ? (
-                    <Moon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} />
+                    <Moon className="h-[17px] w-[17px] shrink-0" strokeWidth={1.5} />
                   ) : (
-                    <Sun className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} />
+                    <Sun className="h-[17px] w-[17px] shrink-0" strokeWidth={1.5} />
                   )}
-                  {!collapsed && <span className="text-sm font-sans">{theme === "light" ? "Dark mode" : "Light mode"}</span>}
+                  {!collapsed && <span className="text-[13px] font-sans">{theme === "light" ? "Dark mode" : "Light mode"}</span>}
                 </SidebarMenuButton>
               </TooltipTrigger>
               {collapsed && (
@@ -135,15 +133,15 @@ export function AppSidebar() {
               <TooltipTrigger asChild>
                 <SidebarMenuButton
                   asChild
-                  className="h-10 rounded-lg transition-colors duration-150"
+                  className="h-9 rounded-lg transition-all duration-200 ease-out"
                 >
                   <NavLink
                     to="/settings"
-                    className="flex items-center gap-3 px-3 text-sidebar-foreground hover:bg-sidebar-accent"
+                    className="flex items-center gap-3 px-3 text-sidebar-foreground hover:bg-sidebar-accent/70"
                     activeClassName="bg-sidebar-accent text-sidebar-accent-foreground"
                   >
-                    <Settings className="h-[18px] w-[18px] shrink-0" strokeWidth={1.5} />
-                    {!collapsed && <span className="text-sm font-sans">Settings</span>}
+                    <Settings className="h-[17px] w-[17px] shrink-0" strokeWidth={1.5} />
+                    {!collapsed && <span className="text-[13px] font-sans">Settings</span>}
                   </NavLink>
                 </SidebarMenuButton>
               </TooltipTrigger>
@@ -160,13 +158,13 @@ export function AppSidebar() {
               <TooltipTrigger asChild>
                 <SidebarMenuButton
                   onClick={toggleSidebar}
-                  className="h-10 rounded-lg flex items-center gap-3 px-3 text-sidebar-foreground hover:bg-sidebar-accent transition-colors duration-150"
+                  className="h-9 rounded-lg flex items-center gap-3 px-3 text-sidebar-foreground hover:bg-sidebar-accent/70 transition-all duration-200 ease-out"
                 >
                   <ChevronLeft
-                    className={`h-[18px] w-[18px] shrink-0 transition-transform duration-200 ${collapsed ? "rotate-180" : ""}`}
+                    className={`h-[17px] w-[17px] shrink-0 transition-transform duration-280 ease-out ${collapsed ? "rotate-180" : ""}`}
                     strokeWidth={1.5}
                   />
-                  {!collapsed && <span className="text-sm font-sans">Collapse</span>}
+                  {!collapsed && <span className="text-[13px] font-sans">Collapse</span>}
                 </SidebarMenuButton>
               </TooltipTrigger>
               {collapsed && (

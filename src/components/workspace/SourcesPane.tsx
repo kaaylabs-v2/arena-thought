@@ -83,14 +83,12 @@ function findSourceItem(sourceId: string): SourceItem | null {
 
 export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, courseTitle }: SourcesPaneProps) {
   const isMini = state === "mini";
-  const { setActiveSource, addMessage } = useWorkspace();
+  const { setActiveSource } = useWorkspace();
 
   const handleSelectSource = (id: string) => {
     onSelectSource(id);
     const source = findSourceItem(id);
-    if (source) {
-      setActiveSource(source);
-    }
+    if (source) setActiveSource(source);
   };
 
   const handleDeselectSource = () => {
@@ -100,24 +98,24 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
 
   if (isMini) {
     return (
-      <div className="h-full flex flex-col items-center py-4 gap-3">
+      <div className="h-full flex flex-col items-center py-4 gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               onClick={onToggle}
-              className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-secondary transition-colors"
+              className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200"
             >
-              <ChevronRight className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
+              <ChevronRight className="h-4 w-4 text-muted-foreground/70" strokeWidth={1.5} />
             </button>
           </TooltipTrigger>
           <TooltipContent side="right" className="font-sans text-xs">Sources</TooltipContent>
         </Tooltip>
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="flex flex-col gap-1 mt-3">
           {modules.map((m) => (
             <Tooltip key={m.id}>
               <TooltipTrigger asChild>
-                <button className="h-7 w-7 flex items-center justify-center rounded-md hover:bg-secondary transition-colors">
-                  <BookOpen className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
+                <button className="h-7 w-7 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200">
+                  <BookOpen className="h-3.5 w-3.5 text-muted-foreground/60" strokeWidth={1.5} />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="right" className="font-sans text-xs">{m.title}</TooltipContent>
@@ -128,7 +126,7 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
     );
   }
 
-  // Focused source mode
+  // Focused source — Readwise Reader-inspired reading surface
   if (selectedSource) {
     const focused = focusedSourceContent[selectedSource] || {
       title: findSourceItem(selectedSource)?.title || "Source Material",
@@ -137,73 +135,74 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
     };
 
     return (
-      <div className="h-full flex flex-col">
-        <div className="flex items-center gap-2 p-4 border-b border-border">
+      <div className="h-full flex flex-col animate-fade-in-gentle">
+        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-border">
           <button
             onClick={handleDeselectSource}
-            className="h-7 w-7 flex items-center justify-center rounded-md hover:bg-secondary transition-colors"
+            className="h-7 w-7 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200"
           >
-            <ArrowLeft className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
+            <ArrowLeft className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
           </button>
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-sans font-medium text-foreground truncate">{focused.title}</h3>
-            <span className="text-[10px] font-sans text-muted-foreground">{focused.type}</span>
+            <h3 className="text-[13px] font-sans font-medium text-foreground truncate">{focused.title}</h3>
+            <span className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-wider">{focused.type}</span>
           </div>
           <button
             onClick={onToggle}
-            className="h-7 w-7 flex items-center justify-center rounded-md hover:bg-secondary transition-colors"
+            className="h-7 w-7 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200"
           >
-            <ChevronLeft className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
+            <ChevronLeft className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto p-4">
-          <p className="text-sm font-sans text-foreground leading-relaxed whitespace-pre-line">{focused.preview}</p>
+        <div className="flex-1 overflow-y-auto p-5 scrollbar-thin">
+          <p className="text-[13px] font-sans text-foreground/90 leading-[1.75] whitespace-pre-line">{focused.preview}</p>
         </div>
       </div>
     );
   }
 
-  // Expanded module tree
+  // Expanded module tree — Heptabase-inspired structure
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between p-4 border-b border-border">
+      <div className="flex items-center justify-between px-4 py-3.5 border-b border-border">
         <div className="min-w-0 flex-1">
-          <h2 className="text-xs font-sans text-muted-foreground uppercase tracking-wider mb-0.5">Sources</h2>
-          <p className="text-sm font-sans font-medium text-foreground truncate">{courseTitle}</p>
+          <h2 className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest mb-0.5">Sources</h2>
+          <p className="text-[13px] font-sans font-medium text-foreground truncate">{courseTitle}</p>
         </div>
         <button
           onClick={onToggle}
-          className="h-7 w-7 flex items-center justify-center rounded-md hover:bg-secondary transition-colors shrink-0"
+          className="h-7 w-7 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200 shrink-0"
         >
-          <ChevronLeft className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
+          <ChevronLeft className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto py-2">
+      <div className="flex-1 overflow-y-auto py-3 scrollbar-thin">
         {modules.map((module) => (
           <div key={module.id} className="mb-1">
             <div className="px-4 py-2">
-              <h3 className="text-[11px] font-sans font-medium text-muted-foreground uppercase tracking-wider">
+              <h3 className="text-[10px] font-sans font-medium text-muted-foreground/60 uppercase tracking-widest">
                 {module.title}
               </h3>
             </div>
-            <div className="space-y-0.5 px-2">
+            <div className="space-y-px px-2">
               {module.items.map((item) => {
                 const Icon = typeIcon[item.type];
+                const isSelected = selectedSource === item.id;
                 return (
                   <button
                     key={item.id}
                     onClick={() => handleSelectSource(item.id)}
-                    className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-left transition-colors duration-150 ${
-                      selectedSource === item.id
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-[7px] rounded-lg text-left transition-all duration-200 ${
+                      isSelected
                         ? "bg-secondary text-foreground"
-                        : "text-foreground/80 hover:bg-secondary/60"
+                        : "text-foreground/75 hover:bg-muted/50 hover:text-foreground"
                     }`}
                   >
-                    <Icon className="h-3.5 w-3.5 text-muted-foreground shrink-0" strokeWidth={1.5} />
-                    <span className="text-xs font-sans flex-1 truncate">{item.title}</span>
+                    <Icon className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" strokeWidth={1.5} />
+                    <span className="text-[12px] font-sans flex-1 truncate">{item.title}</span>
                     {item.completed && (
-                      <Check className="h-3 w-3 text-accent shrink-0" strokeWidth={2} />
+                      <Check className="h-3 w-3 text-accent/60 shrink-0" strokeWidth={2} />
                     )}
                   </button>
                 );
