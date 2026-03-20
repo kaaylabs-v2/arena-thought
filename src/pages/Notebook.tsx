@@ -286,7 +286,7 @@ const Notebook = () => {
         </div>
         <button
           onClick={openNewNote}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-[13px] font-sans font-medium hover:bg-primary/90 transition-all duration-200 active:scale-[0.97] shrink-0"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-[13px] font-sans font-medium btn-apple shrink-0"
         >
           <Plus className="h-4 w-4" strokeWidth={1.5} />
           New note
