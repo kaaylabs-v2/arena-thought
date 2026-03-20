@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { GoogleCalendarLogo, AppleCalendarLogo, NotionLogo } from "@/components/IntegrationLogos";
+import { GoogleCalendarLogo, NotionLogo } from "@/components/IntegrationLogos";
 
 const priorityConfig: Record<TaskPriority, { label: string; color: string; dot: string }> = {
   high: { label: "High", color: "text-destructive", dot: "bg-destructive" },
