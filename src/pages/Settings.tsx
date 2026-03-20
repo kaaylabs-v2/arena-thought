@@ -183,37 +183,42 @@ const Settings = () => {
           <IntegrationRow
             name="Notion"
             description="Sync notes and reflections to Notion pages"
-            icon="https://cdn.simpleicons.org/notion/000000"
+            fallbackLetter="N"
+            fallbackColor="bg-foreground/10 text-foreground"
           />
           <IntegrationRow
             name="Google Drive"
             description="Import sources and export notes to Drive"
-            icon="https://cdn.simpleicons.org/googledrive"
+            icon="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"
           />
           <IntegrationRow
             name="Google Calendar"
             description="Connect Google Calendar for study scheduling"
-            icon="https://cdn.simpleicons.org/googlecalendar"
+            icon="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_31_2x.png"
           />
           <IntegrationRow
             name="Zotero"
             description="Import academic references and citation data"
-            icon="https://cdn.simpleicons.org/zotero"
+            fallbackLetter="Z"
+            fallbackColor="bg-red-500/15 text-red-500"
           />
           <IntegrationRow
             name="Readwise"
             description="Sync highlights and reading notes"
-            icon="https://cdn.simpleicons.org/readwise"
+            fallbackLetter="R"
+            fallbackColor="bg-yellow-500/15 text-yellow-500"
           />
           <IntegrationRow
             name="Anki"
             description="Export flashcards from Nexi quiz sessions"
-            icon="https://upload.wikimedia.org/wikipedia/commons/3/3d/Anki-icon.svg"
+            fallbackLetter="A"
+            fallbackColor="bg-blue-500/15 text-blue-500"
           />
           <IntegrationRow
             name="Obsidian"
             description="Export notebook entries as Markdown vault files"
-            icon="https://cdn.simpleicons.org/obsidian"
+            fallbackLetter="O"
+            fallbackColor="bg-purple-500/15 text-purple-500"
           />
         </SettingSection>
 
@@ -312,7 +317,7 @@ function ShortcutRow({ label, keys }: { label: string; keys: string[] }) {
   );
 }
 
-function IntegrationRow({ name, description, icon }: { name: string; description: string; icon?: string }) {
+function IntegrationRow({ name, description, icon, fallbackLetter, fallbackColor }: { name: string; description: string; icon?: string; fallbackLetter?: string; fallbackColor?: string }) {
   const [connected, setConnected] = useState(false);
 
   const handleToggle = () => {
@@ -327,11 +332,11 @@ function IntegrationRow({ name, description, icon }: { name: string; description
   return (
     <div className="flex items-center justify-between px-5 py-4">
       <div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
-        <div className="h-8 w-8 rounded-lg bg-muted/50 border border-border/60 flex items-center justify-center shrink-0 overflow-hidden">
+        <div className={`h-8 w-8 rounded-lg border border-border/60 flex items-center justify-center shrink-0 overflow-hidden ${fallbackColor ? fallbackColor : 'bg-muted/50'}`}>
           {icon ? (
             <img src={icon} alt={name} className="h-5 w-5 object-contain" />
           ) : (
-            <span className="text-[11px] font-sans font-bold text-muted-foreground/60">{name.charAt(0)}</span>
+            <span className="text-[12px] font-sans font-bold">{fallbackLetter || name.charAt(0)}</span>
           )}
         </div>
         <div className="min-w-0">
