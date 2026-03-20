@@ -195,20 +195,20 @@ const Notebook = () => {
 
         {/* Formatting toolbar */}
         <div className="flex items-center gap-1 px-6 lg:px-10 py-2 border-b border-border/50 shrink-0">
-          <button onClick={() => insertFormatting("**", "**")} className="h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 transition-colors duration-200">
+          <button onClick={() => insertFormatting("**", "**")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60">
             <Bold className="h-3.5 w-3.5" strokeWidth={2} />
           </button>
-          <button onClick={() => insertFormatting("*", "*")} className="h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 transition-colors duration-200">
+          <button onClick={() => insertFormatting("*", "*")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60">
             <Italic className="h-3.5 w-3.5" strokeWidth={2} />
           </button>
-          <button onClick={() => insertFormatting("__", "__")} className="h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 transition-colors duration-200">
+          <button onClick={() => insertFormatting("__", "__")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60">
             <Underline className="h-3.5 w-3.5" strokeWidth={2} />
           </button>
           <div className="h-4 w-px bg-border mx-1" />
-          <button onClick={() => insertFormatting("\n- ", "")} className="h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 transition-colors duration-200">
+          <button onClick={() => insertFormatting("\n- ", "")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60">
             <ListChecks className="h-3.5 w-3.5" strokeWidth={1.5} />
           </button>
-          <button onClick={() => insertFormatting("\n1. ", "")} className="h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 transition-colors duration-200">
+          <button onClick={() => insertFormatting("\n1. ", "")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60">
             <ListOrdered className="h-3.5 w-3.5" strokeWidth={1.5} />
           </button>
           <div className="h-4 w-px bg-border mx-1" />
