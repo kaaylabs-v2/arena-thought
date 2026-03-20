@@ -6,6 +6,7 @@ import {
   ExternalLink,
   ChevronUp,
   User,
+  Keyboard,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useWorkspace } from "@/context/WorkspaceContext";
@@ -151,6 +152,22 @@ export function SidebarUserMenu() {
                 onClick={() => window.open("#", "_blank")}
               >
                 <span className="text-[13px] font-sans">Tutorials</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="gap-2.5 px-3 py-2 cursor-pointer"
+                onClick={() => {
+                  toast.info(
+                    "Keyboard Shortcuts",
+                    {
+                      description: "⌘B Toggle sidebar · Enter Send message · ⇧Enter New line · ⌘S Save to notebook · ⌘⇧T Toggle theme",
+                      duration: 8000,
+                    }
+                  );
+                }}
+              >
+                <Keyboard className="h-4 w-4" strokeWidth={1.5} />
+                <span className="text-[13px] font-sans">Keyboard shortcuts</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
