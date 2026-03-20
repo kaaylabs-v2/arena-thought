@@ -1,4 +1,4 @@
-import { Moon, Sun, Shield, Volume2, Palette, RotateCcw, Eye, Bell, Keyboard, BookOpen, Brain, Download, Languages, Type } from "lucide-react";
+import { Moon, Sun, Shield, Volume2, Palette, RotateCcw, Eye, Bell, Keyboard, BookOpen, Brain, Download, Languages, Type, Plug, ExternalLink, Check } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import { useState } from "react";
 import { toast } from "sonner";
