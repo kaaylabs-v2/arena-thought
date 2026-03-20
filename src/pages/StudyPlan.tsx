@@ -1,7 +1,11 @@
 import { useState, useMemo } from "react";
 import { useWorkspace, type StudyTask, type TaskPriority } from "@/context/WorkspaceContext";
-import { Plus, Check, Trash2, Calendar, BookOpen, ChevronDown, ChevronRight } from "lucide-react";
+import { Plus, Check, Trash2, Calendar as CalendarIcon, BookOpen, ChevronRight, Clock, ExternalLink, Bell } from "lucide-react";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const priorityConfig: Record<TaskPriority, { label: string; color: string; dot: string }> = {
   high: { label: "High", color: "text-destructive", dot: "bg-destructive" },
@@ -16,6 +20,12 @@ const courseOptions = [
   "Philosophy of Mind",
 ];
 
+const syncPlatforms = [
+  { id: "google-cal", name: "Google Calendar", icon: "https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_31_2x.png", connected: false },
+  { id: "apple-cal", name: "Apple Calendar", letter: "A", color: "bg-muted text-foreground", connected: false },
+  { id: "notion", name: "Notion", letter: "N", color: "bg-foreground/10 text-foreground", connected: false },
+];
+
 const StudyPlan = () => {
   const { tasks, addTask, toggleTask, deleteTask } = useWorkspace();
 
@@ -23,8 +33,11 @@ const StudyPlan = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newCourse, setNewCourse] = useState("");
   const [newPriority, setNewPriority] = useState<TaskPriority>("medium");
-  const [newDue, setNewDue] = useState("");
+  const [newDueDate, setNewDueDate] = useState<Date | undefined>(undefined);
+  const [newDueTime, setNewDueTime] = useState("09:00");
   const [showCompleted, setShowCompleted] = useState(false);
+  const [showSync, setShowSync] = useState(false);
+  const [platformStates, setPlatformStates] = useState<Record<string, boolean>>({});
 
   const activeTasks = useMemo(() => tasks.filter((t) => !t.completed), [tasks]);
   const completedTasks = useMemo(() => tasks.filter((t) => t.completed), [tasks]);
@@ -36,19 +49,34 @@ const StudyPlan = () => {
 
   const handleAdd = () => {
     if (!newTitle.trim()) return;
+    const dueStr = newDueDate
+      ? `${format(newDueDate, "MMM d, yyyy")} at ${newDueTime}`
+      : undefined;
     addTask({
       title: newTitle.trim(),
       course: newCourse || undefined,
       priority: newPriority,
       completed: false,
-      dueDate: newDue || undefined,
+      dueDate: dueStr,
     });
     setNewTitle("");
     setNewCourse("");
     setNewPriority("medium");
-    setNewDue("");
+    setNewDueDate(undefined);
+    setNewDueTime("09:00");
     setShowAdd(false);
     toast.success("Task added");
+  };
+
+  const togglePlatform = (id: string) => {
+    const next = !platformStates[id];
+    setPlatformStates((prev) => ({ ...prev, [id]: next }));
+    const name = syncPlatforms.find((p) => p.id === id)?.name;
+    if (next) {
+      toast.success(`${name} sync enabled`, { description: "Tasks with due dates will sync automatically." });
+    } else {
+      toast.success(`${name} sync disabled`);
+    }
   };
 
   return (
@@ -61,14 +89,64 @@ const StudyPlan = () => {
             {activeTasks.length} task{activeTasks.length !== 1 ? "s" : ""} remaining
           </p>
         </div>
-        <button
-          onClick={() => setShowAdd(!showAdd)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-[13px] font-sans font-medium btn-apple"
-        >
-          <Plus className={`h-4 w-4 transition-transform duration-300 ease-spring ${showAdd ? "rotate-45" : ""}`} strokeWidth={1.5} />
-          Add task
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowSync(!showSync)}
+            className={cn(
+              "flex items-center gap-2 px-3 py-2 rounded-xl text-[13px] font-sans btn-ghost border border-border",
+              showSync && "bg-muted/50 border-accent/20"
+            )}
+          >
+            <Bell className="h-3.5 w-3.5" strokeWidth={1.5} />
+            Sync
+          </button>
+          <button
+            onClick={() => setShowAdd(!showAdd)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-[13px] font-sans font-medium btn-apple"
+          >
+            <Plus className={`h-4 w-4 transition-transform duration-300 ease-spring ${showAdd ? "rotate-45" : ""}`} strokeWidth={1.5} />
+            Add task
+          </button>
+        </div>
       </div>
+
+      {/* Sync panel */}
+      {showSync && (
+        <div className="mb-8 rounded-xl border border-border bg-card p-5 animate-slide-up">
+          <div className="flex items-center gap-2 mb-3">
+            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground/60" strokeWidth={1.5} />
+            <h3 className="text-[12px] font-sans font-medium text-foreground">Sync tasks to external platforms</h3>
+          </div>
+          <p className="text-[11px] font-sans text-muted-foreground/60 mb-4">
+            Connect a platform to automatically sync tasks with due dates. You'll receive reminders on your mobile device.
+          </p>
+          <div className="space-y-1.5">
+            {syncPlatforms.map((p) => {
+              const isOn = platformStates[p.id] || false;
+              return (
+                <div key={p.id} className="flex items-center justify-between py-2.5 px-3 rounded-lg setting-row">
+                  <div className="flex items-center gap-2.5">
+                    <div className={cn("h-7 w-7 rounded-md border border-border/60 flex items-center justify-center shrink-0 overflow-hidden", p.color || "bg-muted/50")}>
+                      {p.icon ? (
+                        <img src={p.icon} alt={p.name} className="h-4 w-4 object-contain" />
+                      ) : (
+                        <span className="text-[10px] font-sans font-bold">{p.letter}</span>
+                      )}
+                    </div>
+                    <span className="text-[12px] font-sans text-foreground">{p.name}</span>
+                  </div>
+                  <button
+                    onClick={() => togglePlatform(p.id)}
+                    className={`toggle-apple h-[24px] w-[42px] ${isOn ? "bg-accent" : "bg-muted"}`}
+                  >
+                    <span className={`toggle-thumb top-[2.5px] left-[2.5px] h-[19px] w-[19px] ${isOn ? "translate-x-[18px]" : "translate-x-0"}`} />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Add task form */}
       {showAdd && (
@@ -102,13 +180,45 @@ const StudyPlan = () => {
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
-            <input
-              type="text"
-              value={newDue}
-              onChange={(e) => setNewDue(e.target.value)}
-              placeholder="Due date (e.g. Friday)"
-              className="h-8 px-2.5 rounded-lg border border-border bg-background text-[11px] font-sans text-muted-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent/30 transition-all duration-200"
-            />
+
+            {/* Date picker */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <button
+                  className={cn(
+                    "h-8 px-2.5 rounded-lg border border-border bg-background text-[11px] font-sans flex items-center gap-1.5 btn-ghost",
+                    newDueDate ? "text-foreground" : "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="h-3 w-3" strokeWidth={1.5} />
+                  {newDueDate ? format(newDueDate, "MMM d, yyyy") : "Due date"}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={newDueDate}
+                  onSelect={setNewDueDate}
+                  initialFocus
+                  disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+
+            {/* Time picker */}
+            {newDueDate && (
+              <div className="flex items-center gap-1.5 h-8 px-2.5 rounded-lg border border-border bg-background animate-fade-in-fast">
+                <Clock className="h-3 w-3 text-muted-foreground" strokeWidth={1.5} />
+                <input
+                  type="time"
+                  value={newDueTime}
+                  onChange={(e) => setNewDueTime(e.target.value)}
+                  className="text-[11px] font-sans text-foreground bg-transparent border-none outline-none w-[70px] focus:outline-none"
+                />
+              </div>
+            )}
+
             <div className="flex gap-2 ml-auto">
               <button
                 onClick={() => setShowAdd(false)}
@@ -206,7 +316,7 @@ function TaskRow({ task, onToggle, onDelete, delay }: { task: StudyTask; onToggl
           )}
           {task.dueDate && (
             <span className="text-[10px] font-sans text-muted-foreground/50 flex items-center gap-1">
-              <Calendar className="h-2.5 w-2.5" strokeWidth={1.5} />
+              <CalendarIcon className="h-2.5 w-2.5" strokeWidth={1.5} />
               {task.dueDate}
             </span>
           )}
