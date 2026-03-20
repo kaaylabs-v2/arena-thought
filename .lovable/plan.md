@@ -1,52 +1,42 @@
-# Sidebar Language Picker + Visual Settings Overhaul
 
-## My Thoughts
 
-**Visual settings like the reference image**: The image shows a card-based visual picker (theme cards with mini-previews, font selector with "Aa" cards). This is a **good idea** — it's more engaging than toggle rows for visual preferences. However, I'd adapt it to fit our existing design system rather than copy it exactly. Specifically:
+# Generate Nexus² Product Walkthrough Report
 
-- **Color mode**: 3 visual cards (Light / Auto / Dark) replacing the current toggle button — requires adding "auto" (system) support to ThemeProvider
-- **Font style**: Visual "Aa" cards (Default / Sans / Serif / Dyslexic-friendly) — replaces font size segmented control or sits alongside it
-- **Skip "Background animation"**: We don't have animations to toggle, so this doesn't apply
+## What I'll Create
 
-## Plan
+A comprehensive ~30-page DOCX document covering every aspect of the Nexus² frontend, structured as a professional product walkthrough and architecture report.
 
-### 1. Extend ThemeProvider to support "auto" mode
+## Document Structure
 
-- Change `Theme` type from `"light" | "dark"` to `"light" | "dark" | "auto"`
-- "Auto" follows `prefers-color-scheme` media query
-- Store preference in localStorage, resolve actual theme at runtime
+1. **Executive Summary** — What Nexus² is, tech stack, current state
+2. **Product Identity** — Design philosophy, privacy-first approach, no-gamification stance
+3. **Global Design and App Shell** — Layout architecture, WorkspaceProvider, font scaling
+4. **Navigation and Sidebar** — 6-item nav (reordered today), collapse behavior, user menu with language submenu
+5. **Theme and Typography** — Light/Dark/Auto modes, Source Serif 4 + Inter + OpenDyslexic, font family selection
+6. **Page-by-Page Walkthrough** — Detailed coverage of all 8 pages:
+   - Home (greeting, continue learning, tasks, quick actions)
+   - Library (search, filters, course cards)
+   - Study Plan (task CRUD, calendar, sync panel)
+   - Notebook (editor, search, sort, view modes)
+   - Progress (hero summary, weekly chart, course cards, scroll reveal)
+   - Reflections (mood tags, voice input, date grouping, prompts)
+   - Settings (5 tabs redesigned today: General with visual cards, Nexi with new settings, Account, Privacy, Connectors)
+   - Profile (standalone page, edit mode, stats)
+7. **Core Workspace Walkthrough** — Detailed 3-pane layout: Sources (3 modes, 10 source types), Nexi (chat, citations, follow-ups, voice, save-to-notebook), Notebook pane
+8. **Interaction and State Logic** — WorkspaceContext, theme state, pane coordination, toasts
+9. **Motion and Polish** — Spring easing, scroll reveal, card hover, toggle animations, what's polished vs prototype
+10. **Today's Refinements** — Settings restructure, visual card pickers, auto theme, font system, Nexi settings, language submenu, sidebar reorder
+11. **Current Gaps and Next Priorities** — Status tables, missing features, recommended next steps
+12. **Final Summary**
 
-### 2. Redesign GeneralPanel Appearance section
+## Technical Approach
 
-Replace the current row-based appearance settings with visual card pickers:
+- Generate using `docx` (Node.js library) with proper headings, tables, bullet lists, and professional formatting
+- US Letter size, 1-inch margins, Arial font, header/footer with page numbers
+- Output to `/mnt/documents/Nexus2_Product_Walkthrough_Report.docx`
+- QA by converting to images and verifying layout
 
-**Color mode** — 3 selectable cards with mini window illustrations:
+## Source of Truth
 
-- Light (warm paper preview), Auto (split preview), Dark (charcoal preview)
+All content derived exclusively from the codebase files I've read (Settings.tsx, WorkspaceContext.tsx, all page files, all workspace pane files, ThemeProvider, AppSidebar, SidebarUserMenu, Layout, index.css, tailwind.config) and the conversation history. No invented features.
 
-Cards are `~120px` wide rounded-xl boxes with a border highlight on selection (accent color)  
-  
-**side note:** make sure the animations and how it interacts with mouse hover nice which adds character
-
-**Font style** — 4 selectable "Aa" cards:
-
-- Default (Instrument Serif), Sans (Inter), Serif, Dyslexic-friendly (OpenDyslexic)
-- Add font preference to `AppSettings` in WorkspaceContext
-
-**Font size** — Keep existing S/M/L segmented control below the cards
-
-**Compact mode** — Keep as toggle row below
-
-### 3. Add font preference to WorkspaceContext
-
-- Add `fontFamily: "default" | "sans" | "serif" | "dyslexic"` to `AppSettings`
-- Apply a class to `<body>` or root based on selection
-
-### 4. Sidebar Language submenu
-
-- Convert the "Language" `DropdownMenuItem` into a `DropdownMenuSub` with a submenu listing 10 languages (English, Español, Français, Deutsch, Português, 日本語, 中文, 한국어, العربية, हिन्दी)
-- Selected language shows a checkmark
-- Store selection in WorkspaceContext (add `language` field to AppSettings)
-- Do not Sync with the Nexi settings preferred language dropdown, as i want nexi responses langugae to be separate from the UI langugae   
-  
-side note: You do not have to implement system wide langugaae change as it can be very taxing 
