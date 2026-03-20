@@ -276,11 +276,15 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
-  const addReflection = useCallback((content: string, linkedCourse?: string) => {
+  const addReflection = useCallback((content: string, linkedCourse?: string, mood?: ReflectionMood) => {
     setReflections((prev) => [
-      { id: genId(), date: "Just now", content, linkedCourse },
+      { id: genId(), date: "Just now", content, linkedCourse, mood },
       ...prev,
     ]);
+  }, []);
+
+  const deleteReflection = useCallback((id: string) => {
+    setReflections((prev) => prev.filter((r) => r.id !== id));
   }, []);
 
   const updateUserProfile = useCallback((updates: Partial<UserProfile>) => {
