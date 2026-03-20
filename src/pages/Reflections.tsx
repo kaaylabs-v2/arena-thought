@@ -1,5 +1,5 @@
-import { Shield, Plus, Calendar, Lock, Trash2, Sparkles } from "lucide-react";
-import { useState, useRef } from "react";
+import { Shield, Plus, Calendar, Lock, Trash2, Sparkles, Mic, MicOff } from "lucide-react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import type { ReflectionMood } from "@/context/WorkspaceContext";
 import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
