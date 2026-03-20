@@ -358,8 +358,8 @@ const Notebook = () => {
             <div
               key={note.id}
               onClick={() => openNoteEditor(note)}
-              className="group rounded-xl border border-border bg-card p-5 hover:border-accent/20 hover:shadow-lifted transition-all duration-250 ease-out cursor-pointer animate-fade-in [animation-fill-mode:backwards]"
-              style={{ animationDelay: `${100 + i * 50}ms` }}
+              className="group card-interactive p-5 cursor-pointer animate-fade-in [animation-fill-mode:backwards]"
+              style={{ animationDelay: `${100 + i * 60}ms` }}
             >
               <div className="flex items-start justify-between mb-2">
                 <h3 className="font-serif text-base text-foreground flex-1 leading-snug">{note.title}</h3>
@@ -398,8 +398,27 @@ const Notebook = () => {
               <div
                 key={note.id}
                 onClick={() => openNoteEditor(note)}
-                className={`break-inside-avoid mb-3 group rounded-xl border p-4 hover:shadow-lifted transition-all duration-250 ease-out cursor-pointer animate-fade-in [animation-fill-mode:backwards] ${colorClass}`}
-                style={{ animationDelay: `${80 + i * 40}ms` }}
+                className={`break-inside-avoid mb-3 group rounded-xl border p-4 cursor-pointer animate-fade-in [animation-fill-mode:backwards] ${colorClass}`}
+                style={{
+                  animationDelay: `${80 + i * 50}ms`,
+                  transition: "transform 350ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 350ms cubic-bezier(0.22, 1, 0.36, 1), border-color 250ms ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px) scale(1.01)";
+                  e.currentTarget.style.boxShadow = "0 6px 20px -6px hsl(222 28% 14% / 0.1), 0 2px 6px -2px hsl(222 28% 14% / 0.05)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "";
+                  e.currentTarget.style.boxShadow = "";
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.transform = "translateY(0) scale(0.98)";
+                  e.currentTarget.style.transition = "transform 100ms cubic-bezier(0.22, 1, 0.36, 1)";
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px) scale(1.01)";
+                  e.currentTarget.style.transition = "transform 350ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 350ms cubic-bezier(0.22, 1, 0.36, 1), border-color 250ms ease";
+                }}
               >
                 <h3 className="font-serif text-[15px] text-foreground leading-snug mb-2">{note.title}</h3>
                 <p className="text-[12px] text-muted-foreground/75 font-sans leading-[1.7] mb-3 tracking-[-0.01em]">
