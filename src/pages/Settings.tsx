@@ -60,13 +60,13 @@ const Settings = () => {
             description="Adjust reading text size across the workspace"
             action={
               <SegmentedControl
-                value={fontSize}
+                value={appSettings.fontSize}
                 options={[
                   { value: "small", label: "S" },
                   { value: "medium", label: "M" },
                   { value: "large", label: "L" },
                 ]}
-                onChange={(v) => setFontSize(v as "small" | "medium" | "large")}
+                onChange={(v) => updateAppSettings({ fontSize: v as "small" | "medium" | "large" })}
               />
             }
           />
