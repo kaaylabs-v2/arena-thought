@@ -5,6 +5,14 @@ import type { ReflectionMood } from "@/context/WorkspaceContext";
 import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
 import { toast } from "sonner";
 
+// Extend Window for speech recognition support
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
+
 const promptChips = [
   "What challenged me today",
   "A moment of clarity",
