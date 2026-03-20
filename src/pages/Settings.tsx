@@ -329,11 +329,11 @@ function IntegrationRow({ name, description, icon, fallbackLetter, fallbackColor
   return (
     <div className="flex items-center justify-between px-5 py-4">
       <div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
-        <div className="h-8 w-8 rounded-lg bg-muted/50 border border-border/60 flex items-center justify-center shrink-0 overflow-hidden">
+        <div className={`h-8 w-8 rounded-lg border border-border/60 flex items-center justify-center shrink-0 overflow-hidden ${fallbackColor ? fallbackColor : 'bg-muted/50'}`}>
           {icon ? (
             <img src={icon} alt={name} className="h-5 w-5 object-contain" />
           ) : (
-            <span className="text-[11px] font-sans font-bold text-muted-foreground/60">{name.charAt(0)}</span>
+            <span className="text-[12px] font-sans font-bold">{fallbackLetter || name.charAt(0)}</span>
           )}
         </div>
         <div className="min-w-0">
