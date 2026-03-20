@@ -5,13 +5,12 @@ import {
   BookOpen,
   Video,
   File,
-  Pin,
-  Clock,
   ArrowLeft,
   Check,
 } from "lucide-react";
 import type { PaneState } from "@/pages/Workspace";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useWorkspace, type SourceItem } from "@/context/WorkspaceContext";
 
 interface SourcesPaneProps {
   state: PaneState;
@@ -66,7 +65,7 @@ const typeIcon = {
   pdf: File,
 };
 
-const focusedSourceContent = {
+const focusedSourceContent: Record<string, { title: string; type: string; preview: string }> = {
   s7: {
     title: "Backpropagation",
     type: "Lecture",
@@ -74,8 +73,30 @@ const focusedSourceContent = {
   },
 };
 
+function findSourceItem(sourceId: string): SourceItem | null {
+  for (const mod of modules) {
+    const item = mod.items.find((i) => i.id === sourceId);
+    if (item) return { id: item.id, title: item.title, type: item.type, moduleName: mod.title };
+  }
+  return null;
+}
+
 export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, courseTitle }: SourcesPaneProps) {
   const isMini = state === "mini";
+  const { setActiveSource, addMessage } = useWorkspace();
+
+  const handleSelectSource = (id: string) => {
+    onSelectSource(id);
+    const source = findSourceItem(id);
+    if (source) {
+      setActiveSource(source);
+    }
+  };
+
+  const handleDeselectSource = () => {
+    onSelectSource(null);
+    setActiveSource(null);
+  };
 
   if (isMini) {
     return (
@@ -109,8 +130,8 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
 
   // Focused source mode
   if (selectedSource) {
-    const focused = focusedSourceContent[selectedSource as keyof typeof focusedSourceContent] || {
-      title: "Source Material",
+    const focused = focusedSourceContent[selectedSource] || {
+      title: findSourceItem(selectedSource)?.title || "Source Material",
       type: "Document",
       preview: "Select a source to view its content and context. This material serves as grounding for your learning conversations with Nexi.",
     };
@@ -119,7 +140,7 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
       <div className="h-full flex flex-col">
         <div className="flex items-center gap-2 p-4 border-b border-border">
           <button
-            onClick={() => onSelectSource(null)}
+            onClick={handleDeselectSource}
             className="h-7 w-7 flex items-center justify-center rounded-md hover:bg-secondary transition-colors"
           >
             <ArrowLeft className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
@@ -172,7 +193,7 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
                 return (
                   <button
                     key={item.id}
-                    onClick={() => onSelectSource(item.id)}
+                    onClick={() => handleSelectSource(item.id)}
                     className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-left transition-colors duration-150 ${
                       selectedSource === item.id
                         ? "bg-secondary text-foreground"

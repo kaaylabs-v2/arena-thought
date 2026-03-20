@@ -1,23 +1,28 @@
-import { Search, BookOpen, Tag, Calendar, StickyNote, Filter } from "lucide-react";
-import { useState } from "react";
-
-const notes = [
-  { id: "1", title: "Key differences between supervised and unsupervised learning", snippet: "Supervised learning uses labeled data to learn mappings from inputs to outputs. Unsupervised learning discovers hidden patterns in unlabeled data...", course: "Foundations of Machine Learning", tags: ["core-concepts", "comparison"], date: "2 hours ago", source: "Nexi response" },
-  { id: "2", title: "Bayes' theorem intuition", snippet: "The posterior probability is proportional to the likelihood times the prior. This provides a principled way to update beliefs given new evidence...", course: "Advanced Statistical Methods", tags: ["bayesian", "fundamentals"], date: "Yesterday", source: "Personal note" },
-  { id: "3", title: "The hard problem of consciousness", snippet: "Chalmers distinguishes between the easy problems of consciousness (explaining behavior, integration of information) and the hard problem...", course: "Philosophy of Mind", tags: ["consciousness", "key-argument"], date: "3 days ago", source: "Nexi response" },
-  { id: "4", title: "Gradient descent variants", snippet: "Batch gradient descent computes the gradient using the entire dataset. Stochastic gradient descent uses a single sample. Mini-batch strikes a balance...", course: "Foundations of Machine Learning", tags: ["optimization"], date: "4 days ago", source: "Nexi response" },
-  { id: "5", title: "Notes on eigenvalue decomposition", snippet: "A square matrix A can be decomposed as A = QΛQ⁻¹ where Q contains eigenvectors and Λ is diagonal with eigenvalues...", course: "Linear Algebra for Data Science", tags: ["linear-algebra", "decomposition"], date: "2 weeks ago", source: "Personal note" },
-];
+import { Search, BookOpen, Tag, Calendar, StickyNote } from "lucide-react";
+import { useState, useMemo } from "react";
+import { useWorkspace } from "@/context/WorkspaceContext";
 
 type SortKey = "recent" | "course" | "tag";
 
 const Notebook = () => {
+  const { notebookEntries } = useWorkspace();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortKey>("recent");
 
-  const filteredNotes = notes.filter((n) =>
-    !search || n.title.toLowerCase().includes(search.toLowerCase()) || n.course.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredNotes = useMemo(() => {
+    let result = notebookEntries.filter((n) =>
+      !search || n.title.toLowerCase().includes(search.toLowerCase()) || n.course.toLowerCase().includes(search.toLowerCase())
+    );
+
+    if (sort === "course") {
+      result = [...result].sort((a, b) => a.course.localeCompare(b.course));
+    } else if (sort === "tag") {
+      result = [...result].sort((a, b) => (a.tags[0] || "").localeCompare(b.tags[0] || ""));
+    }
+    // "recent" keeps insertion order (already newest-first from context)
+
+    return result;
+  }, [notebookEntries, search, sort]);
 
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 max-w-4xl animate-fade-in">
@@ -64,7 +69,7 @@ const Notebook = () => {
           {filteredNotes.map((note) => (
             <div
               key={note.id}
-              className="group rounded-xl border border-border bg-card p-5 hover:border-accent/30 hover:shadow-sm transition-all duration-200 cursor-pointer"
+              className="group rounded-xl border border-border bg-card p-5 hover:border-accent/30 hover:shadow-sm transition-all duration-200 cursor-pointer animate-fade-in"
             >
               <div className="flex items-start justify-between mb-2">
                 <h3 className="font-serif text-base text-foreground flex-1">{note.title}</h3>
@@ -81,14 +86,16 @@ const Notebook = () => {
                 </span>
                 <span className="text-border">·</span>
                 <span className="text-[10px] font-sans text-muted-foreground">{note.source}</span>
-                <div className="flex gap-1.5 ml-auto">
-                  {note.tags.map((tag) => (
-                    <span key={tag} className="text-[10px] font-sans text-accent bg-accent/10 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                      <Tag className="h-2.5 w-2.5" strokeWidth={1.5} />
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                {note.tags.length > 0 && (
+                  <div className="flex gap-1.5 ml-auto">
+                    {note.tags.map((tag) => (
+                      <span key={tag} className="text-[10px] font-sans text-accent bg-accent/10 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                        <Tag className="h-2.5 w-2.5" strokeWidth={1.5} />
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ))}

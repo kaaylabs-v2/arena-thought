@@ -14,7 +14,8 @@ export type PaneState = "expanded" | "mini";
 
 const Workspace = () => {
   const { id } = useParams();
-  const course = courseData[id || "1"] || courseData["1"];
+  const courseId = id || "1";
+  const course = courseData[courseId] || courseData["1"];
 
   const [sourcesState, setSourcesState] = useState<PaneState>("expanded");
   const [notebookState, setNotebookState] = useState<PaneState>("mini");
@@ -39,7 +40,7 @@ const Workspace = () => {
 
       {/* Nexi Center Pane */}
       <div className="flex-1 min-w-0 flex flex-col">
-        <NexiPane courseTitle={course.title} currentModule={course.module} />
+        <NexiPane courseId={courseId} courseTitle={course.title} currentModule={course.module} />
       </div>
 
       {/* Notebook Pane */}
@@ -51,6 +52,7 @@ const Workspace = () => {
         <NotebookPane
           state={notebookState}
           onToggle={() => setNotebookState((s) => (s === "expanded" ? "mini" : "expanded"))}
+          courseTitle={course.title}
         />
       </div>
     </div>

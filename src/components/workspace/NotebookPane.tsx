@@ -5,55 +5,35 @@ import {
   BookOpen,
   Plus,
   Tag,
-  Calendar,
-  FileText,
 } from "lucide-react";
 import type { PaneState } from "@/pages/Workspace";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useWorkspace } from "@/context/WorkspaceContext";
 
 interface NotebookPaneProps {
   state: PaneState;
   onToggle: () => void;
+  courseTitle: string;
 }
 
-const savedNotes = [
-  {
-    id: "n1",
-    title: "Backpropagation step-by-step",
-    snippet: "Forward pass computes output, backward pass computes gradients using chain rule...",
-    source: "Nexi response",
-    tags: ["neural-networks"],
-    date: "Just now",
-  },
-  {
-    id: "n2",
-    title: "Key differences: SGD vs Mini-batch",
-    snippet: "Batch uses full dataset, SGD uses single sample, mini-batch balances both...",
-    source: "Nexi response",
-    tags: ["optimization"],
-    date: "2 hours ago",
-  },
-  {
-    id: "n3",
-    title: "Activation function comparison",
-    snippet: "ReLU solves vanishing gradient but has dying neuron problem. Sigmoid squashes to 0-1...",
-    source: "Personal note",
-    tags: ["neural-networks", "comparison"],
-    date: "Yesterday",
-  },
-  {
-    id: "n4",
-    title: "Regularization intuition",
-    snippet: "L1 promotes sparsity (feature selection), L2 promotes small weights (smoothness)...",
-    source: "Nexi response",
-    tags: ["regularization"],
-    date: "3 days ago",
-  },
-];
-
-export function NotebookPane({ state, onToggle }: NotebookPaneProps) {
+export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps) {
   const isMini = state === "mini";
   const [quickNote, setQuickNote] = useState("");
+  const { notebookEntries, addNotebookEntry } = useWorkspace();
+
+  const handleQuickCapture = () => {
+    const text = quickNote.trim();
+    if (!text) return;
+    addNotebookEntry({
+      title: text.slice(0, 60),
+      snippet: text,
+      course: courseTitle,
+      tags: [],
+      source: "Personal note",
+      savedFrom: "personal",
+    });
+    setQuickNote("");
+  };
 
   if (isMini) {
     return (
@@ -62,7 +42,7 @@ export function NotebookPane({ state, onToggle }: NotebookPaneProps) {
           <TooltipTrigger asChild>
             <button
               onClick={onToggle}
-              className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-secondary transition-colors relative"
+              className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-secondary transition-colors"
             >
               <ChevronLeft className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
             </button>
@@ -74,11 +54,11 @@ export function NotebookPane({ state, onToggle }: NotebookPaneProps) {
             <div className="h-7 w-7 flex items-center justify-center rounded-md bg-secondary relative">
               <BookOpen className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
               <span className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-accent text-[8px] text-accent-foreground flex items-center justify-center font-sans font-bold">
-                {savedNotes.length}
+                {notebookEntries.length}
               </span>
             </div>
           </TooltipTrigger>
-          <TooltipContent side="left" className="font-sans text-xs">{savedNotes.length} notes</TooltipContent>
+          <TooltipContent side="left" className="font-sans text-xs">{notebookEntries.length} notes</TooltipContent>
         </Tooltip>
       </div>
     );
@@ -97,7 +77,7 @@ export function NotebookPane({ state, onToggle }: NotebookPaneProps) {
           </button>
           <div>
             <h2 className="text-xs font-sans text-muted-foreground uppercase tracking-wider">Notebook</h2>
-            <p className="text-[10px] font-sans text-muted-foreground">{savedNotes.length} notes</p>
+            <p className="text-[10px] font-sans text-muted-foreground">{notebookEntries.length} notes</p>
           </div>
         </div>
       </div>
@@ -110,6 +90,7 @@ export function NotebookPane({ state, onToggle }: NotebookPaneProps) {
             type="text"
             value={quickNote}
             onChange={(e) => setQuickNote(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleQuickCapture()}
             placeholder="Quick capture..."
             className="flex-1 bg-transparent text-xs font-sans text-foreground placeholder:text-muted-foreground focus:outline-none"
           />
@@ -118,26 +99,33 @@ export function NotebookPane({ state, onToggle }: NotebookPaneProps) {
 
       {/* Notes list */}
       <div className="flex-1 overflow-y-auto py-2 px-2 space-y-1.5">
-        {savedNotes.map((note) => (
-          <div
-            key={note.id}
-            className="rounded-lg border border-border bg-background p-3 hover:border-accent/20 hover:shadow-sm transition-all duration-150 cursor-pointer"
-          >
-            <h4 className="text-xs font-sans font-medium text-foreground mb-1 line-clamp-1">{note.title}</h4>
-            <p className="text-[11px] font-sans text-muted-foreground leading-relaxed line-clamp-2 mb-2">{note.snippet}</p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                {note.tags.slice(0, 2).map((tag) => (
-                  <span key={tag} className="text-[9px] font-sans text-accent bg-accent/10 px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-                    <Tag className="h-2 w-2" strokeWidth={1.5} />
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <span className="text-[9px] font-sans text-muted-foreground">{note.date}</span>
-            </div>
+        {notebookEntries.length === 0 ? (
+          <div className="text-center py-12 px-4">
+            <BookOpen className="h-8 w-8 text-muted-foreground/30 mx-auto mb-2" strokeWidth={1} />
+            <p className="text-[11px] font-sans text-muted-foreground">Save insights from Nexi or capture your own notes.</p>
           </div>
-        ))}
+        ) : (
+          notebookEntries.map((note) => (
+            <div
+              key={note.id}
+              className="rounded-lg border border-border bg-background p-3 hover:border-accent/20 hover:shadow-sm transition-all duration-150 cursor-pointer animate-fade-in"
+            >
+              <h4 className="text-xs font-sans font-medium text-foreground mb-1 line-clamp-1">{note.title}</h4>
+              <p className="text-[11px] font-sans text-muted-foreground leading-relaxed line-clamp-2 mb-2">{note.snippet}</p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  {note.tags.slice(0, 2).map((tag) => (
+                    <span key={tag} className="text-[9px] font-sans text-accent bg-accent/10 px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
+                      <Tag className="h-2 w-2" strokeWidth={1.5} />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <span className="text-[9px] font-sans text-muted-foreground">{note.date}</span>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
