@@ -1,13 +1,22 @@
-import { Search, BookOpen, Tag, Calendar, StickyNote } from "lucide-react";
+import { Search, BookOpen, Tag, Calendar, StickyNote, LayoutGrid, List } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 
 type SortKey = "recent" | "course" | "tag";
+type ViewMode = "list" | "cards";
+
+// Assign a subtle color accent per course for card variety (Google Keep style)
+const courseColors: Record<string, string> = {
+  "Foundations of Machine Learning": "bg-accent/[0.06] border-accent/15",
+  "Advanced Statistical Methods": "bg-primary/[0.04] border-primary/10",
+  "Philosophy of Mind": "bg-muted border-border",
+};
 
 const Notebook = () => {
   const { notebookEntries } = useWorkspace();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortKey>("recent");
+  const [view, setView] = useState<ViewMode>("cards");
 
   const filteredNotes = useMemo(() => {
     let result = notebookEntries.filter((n) =>
@@ -22,13 +31,13 @@ const Notebook = () => {
   }, [notebookEntries, search, sort]);
 
   return (
-    <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-4xl">
+    <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-5xl">
       <div className="mb-10 animate-fade-in">
         <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1]">Notebook</h1>
         <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Your collected insights and knowledge.</p>
       </div>
 
-      {/* Search + Sort */}
+      {/* Search + Sort + View toggle */}
       <div className="flex flex-col sm:flex-row gap-3 mb-8 animate-fade-in [animation-delay:80ms] [animation-fill-mode:backwards]">
         <div className="relative flex-1">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" strokeWidth={1.5} />
@@ -40,18 +49,38 @@ const Notebook = () => {
             className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-[13px] font-sans placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring/40 transition-all duration-200"
           />
         </div>
-        <div className="flex gap-0.5 bg-muted/60 p-1 rounded-lg">
-          {(["recent", "course", "tag"] as SortKey[]).map((key) => (
+        <div className="flex gap-2">
+          <div className="flex gap-0.5 bg-muted/60 p-1 rounded-lg">
+            {(["recent", "course", "tag"] as SortKey[]).map((key) => (
+              <button
+                key={key}
+                onClick={() => setSort(key)}
+                className={`px-3.5 py-1.5 text-[12px] font-sans font-medium rounded-md capitalize transition-all duration-200 ${
+                  sort === key ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {key}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-0.5 bg-muted/60 p-1 rounded-lg">
             <button
-              key={key}
-              onClick={() => setSort(key)}
-              className={`px-3.5 py-1.5 text-[12px] font-sans font-medium rounded-md capitalize transition-all duration-200 ${
-                sort === key ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
+              onClick={() => setView("cards")}
+              className={`h-8 w-8 flex items-center justify-center rounded-md transition-all duration-200 ${
+                view === "cards" ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {key}
+              <LayoutGrid className="h-3.5 w-3.5" strokeWidth={1.5} />
             </button>
-          ))}
+            <button
+              onClick={() => setView("list")}
+              className={`h-8 w-8 flex items-center justify-center rounded-md transition-all duration-200 ${
+                view === "list" ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <List className="h-3.5 w-3.5" strokeWidth={1.5} />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -61,7 +90,8 @@ const Notebook = () => {
           <StickyNote className="h-10 w-10 text-muted-foreground/25 mx-auto mb-3" strokeWidth={1} />
           <p className="text-muted-foreground/70 font-sans text-sm">Your insights will appear here as you learn.</p>
         </div>
-      ) : (
+      ) : view === "list" ? (
+        /* ─── List View ─── */
         <div className="space-y-2.5">
           {filteredNotes.map((note, i) => (
             <div
@@ -97,6 +127,40 @@ const Notebook = () => {
               </div>
             </div>
           ))}
+        </div>
+      ) : (
+        /* ─── Cards View (Google Keep–style masonry) ─── */
+        <div className="columns-2 lg:columns-3 gap-3 [column-fill:_balance]">
+          {filteredNotes.map((note, i) => {
+            const colorClass = courseColors[note.course] || "bg-card border-border";
+            return (
+              <div
+                key={note.id}
+                className={`break-inside-avoid mb-3 group rounded-xl border p-4 hover:shadow-lifted transition-all duration-250 ease-out cursor-pointer animate-fade-in [animation-fill-mode:backwards] ${colorClass}`}
+                style={{ animationDelay: `${80 + i * 40}ms` }}
+              >
+                <h3 className="font-serif text-[15px] text-foreground leading-snug mb-2">{note.title}</h3>
+                <p className="text-[12px] text-muted-foreground/75 font-sans leading-[1.7] mb-3 tracking-[-0.01em]">
+                  {note.snippet}
+                </p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {note.tags.map((tag) => (
+                    <span key={tag} className="text-[10px] font-sans text-accent/70 bg-accent/8 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                      <Tag className="h-2.5 w-2.5" strokeWidth={1.5} />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-border/40">
+                  <span className="text-[10px] font-sans text-muted-foreground/50 flex items-center gap-1 truncate">
+                    <BookOpen className="h-3 w-3 shrink-0" strokeWidth={1.5} />
+                    <span className="truncate">{note.course}</span>
+                  </span>
+                  <span className="text-[10px] font-sans text-muted-foreground/40 ml-auto shrink-0">{note.date}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
