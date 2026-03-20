@@ -285,6 +285,32 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setAppSettings((prev) => ({ ...prev, ...updates }));
   }, []);
 
+  const seedTasks: StudyTask[] = [
+    { id: "t1", title: "Finish backpropagation problem set", course: "Foundations of Machine Learning", priority: "high", completed: false, dueDate: "Tomorrow", createdAt: "Today" },
+    { id: "t2", title: "Read Chapter 8 on MCMC methods", course: "Advanced Statistical Methods", priority: "medium", completed: false, dueDate: "Friday", createdAt: "Yesterday" },
+    { id: "t3", title: "Write reflection on consciousness debate", course: "Philosophy of Mind", priority: "low", completed: false, dueDate: "Next week", createdAt: "2 days ago" },
+    { id: "t4", title: "Review lecture notes on activation functions", course: "Foundations of Machine Learning", priority: "medium", completed: true, createdAt: "3 days ago" },
+    { id: "t5", title: "Complete sklearn regression lab", course: "Foundations of Machine Learning", priority: "high", completed: false, dueDate: "Wednesday", createdAt: "Today" },
+  ];
+
+  const [tasks, setTasks] = useState<StudyTask[]>(seedTasks);
+
+  const addTask = useCallback((task: Omit<StudyTask, "id" | "createdAt">) => {
+    setTasks((prev) => [{ ...task, id: genId(), createdAt: "Just now" }, ...prev]);
+  }, []);
+
+  const updateTask = useCallback((id: string, updates: Partial<StudyTask>) => {
+    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...updates } : t)));
+  }, []);
+
+  const deleteTask = useCallback((id: string) => {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  const toggleTask = useCallback((id: string) => {
+    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
+  }, []);
+
   return (
     <WorkspaceContext.Provider
       value={{
@@ -302,6 +328,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         updateUserProfile,
         appSettings,
         updateAppSettings,
+        tasks,
+        addTask,
+        updateTask,
+        deleteTask,
+        toggleTask,
       }}
     >
       {children}

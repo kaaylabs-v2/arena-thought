@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Library, Clock } from "lucide-react";
+import { ArrowRight, BookOpen, Library, Clock, ListChecks, Circle, Check, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useWorkspace } from "@/context/WorkspaceContext";
 
@@ -15,9 +15,16 @@ function getGreeting(): string {
   return "Good evening";
 }
 
+const priorityDot: Record<string, string> = {
+  high: "bg-destructive",
+  medium: "bg-accent",
+  low: "bg-muted-foreground/40",
+};
+
 const Index = () => {
-  const { userProfile } = useWorkspace();
+  const { userProfile, tasks, toggleTask } = useWorkspace();
   const activeCourse = recentCourses[0];
+  const upcomingTasks = tasks.filter((t) => !t.completed).slice(0, 4);
 
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl">
@@ -56,8 +63,40 @@ const Index = () => {
         </Link>
       </section>
 
+      {/* Upcoming Tasks Widget */}
+      {upcomingTasks.length > 0 && (
+        <section className="mb-14 animate-fade-in [animation-delay:140ms] [animation-fill-mode:backwards]">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground">Upcoming tasks</h2>
+            <Link to="/study-plan" className="text-[11px] font-sans text-accent hover:text-accent/80 transition-colors duration-200">
+              View all →
+            </Link>
+          </div>
+          <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+            {upcomingTasks.map((task) => (
+              <div key={task.id} className="flex items-center gap-3 px-4 py-3 hover:bg-muted/20 transition-colors duration-150">
+                <button
+                  onClick={() => toggleTask(task.id)}
+                  className="h-4.5 w-4.5 rounded-full border-[1.5px] border-border hover:border-accent/50 flex items-center justify-center shrink-0 transition-all duration-200 active:scale-[0.9]"
+                >
+                  {task.completed && <Check className="h-2.5 w-2.5 text-accent" strokeWidth={2.5} />}
+                </button>
+                <span className="flex-1 text-[13px] font-sans text-foreground truncate">{task.title}</span>
+                <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${priorityDot[task.priority]}`} />
+                {task.dueDate && (
+                  <span className="text-[10px] font-sans text-muted-foreground/50 shrink-0 flex items-center gap-1">
+                    <Calendar className="h-2.5 w-2.5" strokeWidth={1.5} />
+                    {task.dueDate}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Recent Workspaces */}
-      <section className="mb-14 animate-fade-in [animation-delay:160ms] [animation-fill-mode:backwards]">
+      <section className="mb-14 animate-fade-in [animation-delay:200ms] [animation-fill-mode:backwards]">
         <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground mb-4">Recent workspaces</h2>
         <div className="space-y-1.5">
           {recentCourses.slice(1).map((course, i) => (
@@ -65,7 +104,6 @@ const Index = () => {
               key={course.id}
               to={`/workspace/${course.id}`}
               className="group flex items-center justify-between rounded-lg border border-border bg-card px-5 py-4 hover:border-accent/20 hover:shadow-soft transition-all duration-200 ease-out active:scale-[0.998]"
-              style={{ animationDelay: `${200 + i * 60}ms` }}
             >
               <div className="flex-1 min-w-0">
                 <h3 className="font-serif text-base text-foreground truncate leading-snug font-medium">{course.title}</h3>
@@ -82,7 +120,7 @@ const Index = () => {
 
       {/* Quick Actions */}
       <section className="animate-fade-in [animation-delay:280ms] [animation-fill-mode:backwards]">
-        <div className="flex gap-2.5">
+        <div className="flex gap-2.5 flex-wrap">
           <Link
             to="/library"
             className="flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-[13px] font-sans text-muted-foreground hover:text-foreground hover:border-accent/20 hover:shadow-soft transition-all duration-200 ease-out active:scale-[0.97]"
@@ -96,6 +134,13 @@ const Index = () => {
           >
             <BookOpen className="h-3.5 w-3.5" strokeWidth={1.5} />
             Review Notebook
+          </Link>
+          <Link
+            to="/study-plan"
+            className="flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-[13px] font-sans text-muted-foreground hover:text-foreground hover:border-accent/20 hover:shadow-soft transition-all duration-200 ease-out active:scale-[0.97]"
+          >
+            <ListChecks className="h-3.5 w-3.5" strokeWidth={1.5} />
+            Study Plan
           </Link>
         </div>
       </section>
