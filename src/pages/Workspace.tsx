@@ -22,11 +22,11 @@ const Workspace = () => {
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
 
   return (
-    <div className="h-screen flex overflow-hidden">
+    <div className="h-screen flex overflow-hidden bg-background">
       {/* Sources Pane */}
       <div
-        className={`shrink-0 border-r border-border bg-card transition-all duration-300 ease-in-out overflow-hidden ${
-          sourcesState === "expanded" ? "w-72" : "w-14"
+        className={`shrink-0 border-r border-border bg-card pane-transition overflow-hidden ${
+          sourcesState === "expanded" ? "w-[280px]" : "w-14"
         }`}
       >
         <SourcesPane
@@ -38,15 +38,15 @@ const Workspace = () => {
         />
       </div>
 
-      {/* Nexi Center Pane */}
+      {/* Nexi Center Pane — always dominant */}
       <div className="flex-1 min-w-0 flex flex-col">
         <NexiPane courseId={courseId} courseTitle={course.title} currentModule={course.module} />
       </div>
 
       {/* Notebook Pane */}
       <div
-        className={`shrink-0 border-l border-border bg-card transition-all duration-300 ease-in-out overflow-hidden ${
-          notebookState === "expanded" ? "w-80" : "w-14"
+        className={`shrink-0 border-l border-border bg-card pane-transition overflow-hidden ${
+          notebookState === "expanded" ? "w-[320px]" : "w-14"
         }`}
       >
         <NotebookPane

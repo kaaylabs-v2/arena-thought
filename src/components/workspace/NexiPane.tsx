@@ -58,7 +58,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
         citations: responseData.citations,
       });
       setIsTyping(false);
-    }, 800 + Math.random() * 600);
+    }, 700 + Math.random() * 500);
   }, [courseId, addMessage]);
 
   const handleSend = () => {
@@ -66,9 +66,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
     if (!text) return;
     addMessage(courseId, { role: "user", content: text });
     setInput("");
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-    }
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
     simulateResponse(text);
   };
 
@@ -106,58 +104,59 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
 
   return (
     <div className="h-full flex flex-col bg-background">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-border">
-        <div>
-          <h2 className="font-serif text-lg text-foreground">{courseTitle}</h2>
-          <p className="text-[11px] font-sans text-muted-foreground">
+      {/* Header — Readwise-inspired clean context bar */}
+      <div className="flex items-center justify-between px-8 py-3.5 border-b border-border">
+        <div className="min-w-0">
+          <h2 className="font-serif text-[1.1rem] text-foreground leading-snug truncate">{courseTitle}</h2>
+          <p className="text-[11px] font-sans text-muted-foreground/80 mt-0.5 tracking-[-0.01em]">
             {activeSource ? `Grounded in: ${activeSource.title}` : currentModule}
           </p>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-sans text-accent bg-accent/10 px-2.5 py-1 rounded-full flex items-center gap-1">
-            <Sparkles className="h-3 w-3" strokeWidth={1.5} />
-            Nexi
-          </span>
-        </div>
+        <span className="text-[10px] font-sans text-accent/80 bg-accent/8 px-2.5 py-1 rounded-full flex items-center gap-1 shrink-0">
+          <Sparkles className="h-3 w-3" strokeWidth={1.5} />
+          Nexi
+        </span>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-6 py-6">
-        <div className="max-w-2xl mx-auto space-y-6">
+      {/* Messages — controlled reading width */}
+      <div className="flex-1 overflow-y-auto px-8 py-8 scrollbar-thin">
+        <div className="max-w-[640px] mx-auto space-y-7">
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`animate-fade-in ${msg.role === "user" ? "flex justify-end" : ""} ${msg.role === "system" ? "flex justify-center" : ""}`}
+              className={`animate-fade-in-fast ${msg.role === "user" ? "flex justify-end" : ""} ${msg.role === "system" ? "flex justify-center" : ""}`}
             >
               {msg.role === "system" ? (
-                <div className="text-[11px] font-sans text-muted-foreground bg-secondary/50 px-3 py-1.5 rounded-full">
+                <div className="text-[11px] font-sans text-muted-foreground/70 bg-muted/40 px-3 py-1.5 rounded-full">
                   {msg.content}
                 </div>
               ) : msg.role === "user" ? (
-                <div className="max-w-lg bg-primary text-primary-foreground rounded-2xl rounded-br-md px-5 py-3.5">
-                  <p className="text-sm font-sans leading-relaxed">{msg.content}</p>
+                <div className="max-w-[480px] bg-primary text-primary-foreground rounded-2xl rounded-br-sm px-5 py-3.5 shadow-soft">
+                  <p className="text-[13.5px] font-sans leading-relaxed">{msg.content}</p>
                 </div>
               ) : (
-                <div className="max-w-2xl">
-                  <div className="bg-card border border-border rounded-2xl rounded-bl-md px-5 py-4">
-                    <div className="text-sm font-sans text-foreground leading-relaxed whitespace-pre-line">
+                <div className="max-w-full">
+                  {/* Nexi response — Granola-inspired calm card */}
+                  <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-5 py-4 shadow-soft">
+                    <div className="text-[13.5px] font-sans text-foreground leading-[1.7] whitespace-pre-line">
                       {msg.content.split(/(\*\*.*?\*\*|\*.*?\*)/g).map((part, i) => {
                         if (part.startsWith("**") && part.endsWith("**")) {
-                          return <strong key={i} className="font-semibold">{part.slice(2, -2)}</strong>;
+                          return <strong key={i} className="font-semibold text-foreground">{part.slice(2, -2)}</strong>;
                         }
                         if (part.startsWith("*") && part.endsWith("*")) {
-                          return <em key={i} className="italic">{part.slice(1, -1)}</em>;
+                          return <em key={i} className="italic text-foreground/85">{part.slice(1, -1)}</em>;
                         }
                         return <span key={i}>{part}</span>;
                       })}
                     </div>
+
+                    {/* Citations — Readwise-inspired source pills */}
                     {msg.citations && msg.citations.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-border">
+                      <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-border/60">
                         {msg.citations.map((cite, i) => (
                           <span
                             key={i}
-                            className="text-[10px] font-sans text-muted-foreground bg-secondary px-2 py-0.5 rounded-full flex items-center gap-1"
+                            className="text-[10px] font-sans text-muted-foreground/70 bg-muted/50 px-2 py-0.5 rounded-full flex items-center gap-1 transition-colors hover:text-muted-foreground hover:bg-muted"
                           >
                             <FileText className="h-2.5 w-2.5" strokeWidth={1.5} />
                             {cite}
@@ -166,17 +165,19 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                       </div>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 mt-2 ml-1">
+
+                  {/* Action row — Granola restraint */}
+                  <div className="flex items-center gap-1 mt-1.5 ml-1">
                     <button
                       onClick={() => handleSave(msg.id, msg.content)}
-                      className={`flex items-center gap-1 text-[11px] font-sans px-2 py-1 rounded-md transition-colors duration-150 ${
+                      className={`flex items-center gap-1 text-[11px] font-sans px-2 py-1 rounded-md transition-all duration-200 ${
                         savedMessages.has(msg.id)
                           ? "text-accent"
-                          : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                          : "text-muted-foreground/60 hover:text-foreground hover:bg-muted/50"
                       }`}
                     >
                       {savedMessages.has(msg.id) ? (
-                        <Check className="h-3 w-3" strokeWidth={1.5} />
+                        <Check className="h-3 w-3" strokeWidth={2} />
                       ) : (
                         <BookmarkPlus className="h-3 w-3" strokeWidth={1.5} />
                       )}
@@ -184,10 +185,10 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                     </button>
                     <button
                       onClick={() => handleCopy(msg.id, msg.content)}
-                      className="flex items-center gap-1 text-[11px] font-sans text-muted-foreground hover:text-foreground hover:bg-secondary px-2 py-1 rounded-md transition-colors duration-150"
+                      className="flex items-center gap-1 text-[11px] font-sans text-muted-foreground/60 hover:text-foreground hover:bg-muted/50 px-2 py-1 rounded-md transition-all duration-200"
                     >
                       {copiedId === msg.id ? (
-                        <Check className="h-3 w-3" strokeWidth={1.5} />
+                        <Check className="h-3 w-3" strokeWidth={2} />
                       ) : (
                         <Copy className="h-3 w-3" strokeWidth={1.5} />
                       )}
@@ -201,12 +202,12 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
 
           {/* Typing indicator */}
           {isTyping && (
-            <div className="animate-fade-in">
-              <div className="bg-card border border-border rounded-2xl rounded-bl-md px-5 py-4 max-w-[120px]">
-                <div className="flex gap-1.5 items-center">
-                  <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full animate-pulse" />
-                  <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full animate-pulse [animation-delay:150ms]" />
-                  <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full animate-pulse [animation-delay:300ms]" />
+            <div className="animate-fade-in-fast">
+              <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-5 py-4 w-fit shadow-soft">
+                <div className="flex gap-1.5 items-center h-4">
+                  <span className="h-1.5 w-1.5 bg-muted-foreground/30 rounded-full animate-pulse" />
+                  <span className="h-1.5 w-1.5 bg-muted-foreground/30 rounded-full animate-pulse [animation-delay:150ms]" />
+                  <span className="h-1.5 w-1.5 bg-muted-foreground/30 rounded-full animate-pulse [animation-delay:300ms]" />
                 </div>
               </div>
             </div>
@@ -214,12 +215,12 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
 
           {/* Follow-up chips */}
           {!isTyping && messages.length > 0 && (
-            <div className="flex flex-wrap gap-2 pt-2">
+            <div className="flex flex-wrap gap-2 pt-1">
               {followUpChips.map((chip) => (
                 <button
                   key={chip.label}
                   onClick={() => handleChip(chip.label)}
-                  className="flex items-center gap-1.5 text-xs font-sans text-muted-foreground border border-border px-3 py-1.5 rounded-full hover:text-foreground hover:border-accent/30 hover:bg-secondary/50 transition-all duration-150 active:scale-[0.97]"
+                  className="flex items-center gap-1.5 text-[12px] font-sans text-muted-foreground/70 border border-border/80 px-3 py-1.5 rounded-full hover:text-foreground hover:border-border hover:bg-muted/40 transition-all duration-200 active:scale-[0.96]"
                 >
                   <chip.icon className="h-3 w-3" strokeWidth={1.5} />
                   {chip.label}
@@ -232,10 +233,10 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
         </div>
       </div>
 
-      {/* Input area */}
-      <div className="px-6 pb-6 pt-2">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-end gap-3 bg-card border border-border rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background transition-shadow">
+      {/* Input — Craft-inspired clean console */}
+      <div className="px-8 pb-6 pt-3">
+        <div className="max-w-[640px] mx-auto">
+          <div className="flex items-end gap-3 bg-card border border-border rounded-xl px-4 py-3 shadow-soft focus-within:shadow-lifted focus-within:border-ring/30 transition-all duration-200">
             <textarea
               ref={textareaRef}
               value={input}
@@ -243,7 +244,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
               onKeyDown={handleKeyDown}
               placeholder="Ask Nexi about your course materials..."
               rows={1}
-              className="flex-1 bg-transparent text-sm font-sans text-foreground placeholder:text-muted-foreground resize-none focus:outline-none leading-relaxed min-h-[24px] max-h-[120px]"
+              className="flex-1 bg-transparent text-[13.5px] font-sans text-foreground placeholder:text-muted-foreground/50 resize-none focus:outline-none leading-relaxed min-h-[24px] max-h-[120px]"
               onInput={(e) => {
                 const target = e.target as HTMLTextAreaElement;
                 target.style.height = "auto";
@@ -252,13 +253,13 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
             />
             <button
               onClick={handleSend}
-              className="h-8 w-8 flex items-center justify-center rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-150 shrink-0 disabled:opacity-40 active:scale-95"
+              className="h-8 w-8 flex items-center justify-center rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 shrink-0 disabled:opacity-30 active:scale-95"
               disabled={!input.trim() || isTyping}
             >
-              <Send className="h-4 w-4" strokeWidth={1.5} />
+              <Send className="h-3.5 w-3.5" strokeWidth={1.5} />
             </button>
           </div>
-          <p className="text-[10px] font-sans text-muted-foreground mt-2 text-center">
+          <p className="text-[10px] font-sans text-muted-foreground/50 mt-2.5 text-center tracking-[-0.01em]">
             Grounded in your course materials · Responses may not always be accurate
           </p>
         </div>
