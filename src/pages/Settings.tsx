@@ -4,24 +4,24 @@ import { useTheme } from "@/components/ThemeProvider";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { NotionLogo, ZoteroLogo, ReadwiseLogo, ObsidianLogo, GoogleDriveLogo, GoogleCalendarLogo } from "@/components/IntegrationLogos";
 import {
-  User, Building2, LogOut, Monitor, Smartphone, MapPin, MoreHorizontal,
-  Moon, Sun, Palette, Eye, Type, Brain, Volume2, BookOpen, Keyboard,
-  Shield, Download, RotateCcw, Plug, Check, Mail, GraduationCap, Target, Pen,
+  Building2, LogOut, Monitor, Smartphone, MoreHorizontal,
+  Moon, Sun, Palette, Eye, Brain, Volume2, BookOpen,
+  Shield, Download, RotateCcw, Plug, Check, Copy,
+  Settings2, Sparkles, Globe, Code2, MessageSquare,
 } from "lucide-react";
 
-type SettingsTab = "profile" | "account" | "connectors" | "privacy" | "appearance" | "ai-learning";
+type SettingsTab = "general" | "nexi" | "account" | "privacy" | "connectors";
 
 const tabConfig: { id: SettingsTab; label: string; icon: React.ElementType }[] = [
-  { id: "profile", label: "Profile", icon: User },
+  { id: "general", label: "General", icon: Settings2 },
+  { id: "nexi", label: "Nexi", icon: Sparkles },
   { id: "account", label: "Account", icon: Building2 },
-  { id: "appearance", label: "Appearance", icon: Palette },
-  { id: "ai-learning", label: "AI & Learning", icon: Brain },
   { id: "privacy", label: "Privacy", icon: Shield },
   { id: "connectors", label: "Connectors", icon: Plug },
 ];
 
 const Settings = () => {
-  const [activeTab, setActiveTab] = useState<SettingsTab>("profile");
+  const [activeTab, setActiveTab] = useState<SettingsTab>("general");
 
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-5xl mx-auto">
@@ -54,12 +54,11 @@ const Settings = () => {
 
         {/* Right content */}
         <div className="flex-1 min-w-0">
-          {activeTab === "profile" && <ProfilePanel />}
+          {activeTab === "general" && <GeneralPanel />}
+          {activeTab === "nexi" && <NexiPanel />}
           {activeTab === "account" && <AccountPanel />}
-          {activeTab === "connectors" && <ConnectorsPanel />}
           {activeTab === "privacy" && <PrivacyPanel />}
-          {activeTab === "appearance" && <AppearancePanel />}
-          {activeTab === "ai-learning" && <AILearningPanel />}
+          {activeTab === "connectors" && <ConnectorsPanel />}
         </div>
       </div>
 
@@ -68,89 +67,147 @@ const Settings = () => {
   );
 };
 
-/* ─── Profile ──────────────────────────────────────────── */
+/* ─── General ──────────────────────────────────────────── */
 
-function ProfilePanel() {
-  const { userProfile, updateUserProfile, notebookEntries, reflections } = useWorkspace();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editForm, setEditForm] = useState(userProfile);
-
-  const handleSave = () => {
-    updateUserProfile(editForm);
-    setIsEditing(false);
-    toast.success("Profile updated");
-  };
-  const handleCancel = () => {
-    setEditForm(userProfile);
-    setIsEditing(false);
-  };
+function GeneralPanel() {
+  const { theme, toggleTheme } = useTheme();
+  const { appSettings, updateAppSettings } = useWorkspace();
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [autoExpandSources, setAutoExpandSources] = useState(true);
+  const [autoSave, setAutoSave] = useState(true);
 
   return (
     <div className="space-y-8">
-      <PanelHeader title="Profile" description="Your learning identity and public information." />
+      <PanelHeader title="General" description="Appearance, input, and workspace preferences." />
 
-      {/* Avatar + name */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-4">
-          <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-            <span className="text-xl font-serif font-medium text-primary/70">
-              {userProfile.name.charAt(0).toUpperCase()}
-            </span>
-          </div>
-          <div>
-            <p className="text-[15px] font-sans font-medium text-foreground">{userProfile.name}</p>
-            <p className="text-[12px] font-sans text-muted-foreground/60">{userProfile.email}</p>
-          </div>
+      {/* Appearance */}
+      <div>
+        <SectionLabel>Appearance</SectionLabel>
+        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+          <SettingRow
+            label="Theme"
+            description="Switch between light and dark mode"
+            action={
+              <button onClick={toggleTheme} className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-foreground hover:bg-muted/50 transition-all duration-200 active:scale-[0.97]">
+                {theme === "light" ? <Moon className="h-3.5 w-3.5" strokeWidth={1.5} /> : <Sun className="h-3.5 w-3.5" strokeWidth={1.5} />}
+                {theme === "light" ? "Dark" : "Light"}
+              </button>
+            }
+          />
+          <SettingRow label="Compact mode" description="Reduce spacing and panel padding" action={<Toggle checked={appSettings.compactMode} onChange={(v) => updateAppSettings({ compactMode: v })} />} />
+          <SettingRow
+            label="Font size"
+            description="Adjust reading text size across the workspace"
+            action={
+              <SegmentedControl
+                value={appSettings.fontSize}
+                options={[{ value: "small", label: "S" }, { value: "medium", label: "M" }, { value: "large", label: "L" }]}
+                onChange={(v) => updateAppSettings({ fontSize: v as "small" | "medium" | "large" })}
+              />
+            }
+          />
         </div>
-        {!isEditing && (
-          <button onClick={() => setIsEditing(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 active:scale-[0.97]">
-            <Pen className="h-3 w-3" strokeWidth={1.5} />
-            Edit
-          </button>
-        )}
       </div>
 
-      {isEditing ? (
-        <div>
-          <div className="rounded-xl border border-border bg-card divide-y divide-border">
-            <ProfileField label="Name" value={editForm.name} onChange={(v) => setEditForm({ ...editForm, name: v })} />
-            <ProfileField label="Email" value={editForm.email} onChange={(v) => setEditForm({ ...editForm, email: v })} />
-            <ProfileField label="Institution" value={editForm.institution} onChange={(v) => setEditForm({ ...editForm, institution: v })} />
-            <ProfileField label="Bio" value={editForm.bio} onChange={(v) => setEditForm({ ...editForm, bio: v })} multiline />
-            <ProfileField label="Learning goal" value={editForm.learningGoal} onChange={(v) => setEditForm({ ...editForm, learningGoal: v })} multiline />
-          </div>
-          <div className="flex items-center gap-2 mt-4">
-            <button onClick={handleSave} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-[12px] font-sans font-medium hover:bg-primary/90 transition-all duration-200 active:scale-[0.97]">Save changes</button>
-            <button onClick={handleCancel} className="px-4 py-2 rounded-lg border border-border text-[12px] font-sans text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200 active:scale-[0.97]">Cancel</button>
-          </div>
-        </div>
-      ) : (
-        <div className="rounded-xl border border-border bg-card divide-y divide-border">
-          <ProfileDetail icon={Mail} label="Email" value={userProfile.email} />
-          <ProfileDetail icon={GraduationCap} label="Institution" value={userProfile.institution} />
-          <ProfileDetail icon={MapPin} label="Timezone" value={userProfile.timezone.replace("_", " ").replace("America/", "")} />
-          <div className="px-5 py-4">
-            <p className="text-[10px] font-sans text-muted-foreground/50 uppercase tracking-widest mb-1.5">Bio</p>
-            <p className="text-[13px] font-sans text-foreground/85 leading-relaxed">{userProfile.bio}</p>
-          </div>
-          <div className="px-5 py-4">
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <Target className="h-3 w-3 text-muted-foreground/50" strokeWidth={1.5} />
-              <p className="text-[10px] font-sans text-muted-foreground/50 uppercase tracking-widest">Learning goal</p>
-            </div>
-            <p className="text-[13px] font-sans text-foreground/85 leading-relaxed">{userProfile.learningGoal}</p>
-          </div>
-        </div>
-      )}
-
-      {/* Learning summary */}
+      {/* Voice & Input */}
       <div>
-        <SectionLabel>Learning summary</SectionLabel>
-        <div className="grid grid-cols-2 gap-3">
-          <StatCard icon={BookOpen} label="Active courses" value="3" />
-          <StatCard icon={Monitor} label="Total study time" value="67h 50m" />
-          <StatCard icon={BookOpen} label="Notes captured" value={String(notebookEntries.length)} />
-          <StatCard icon={Shield} label="Reflections" value={String(reflections.length)} />
+        <SectionLabel>Voice & Input</SectionLabel>
+        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+          <SettingRow label="Voice input" description="Enable microphone for voice-to-text in Nexi" action={<Toggle checked={voiceEnabled} onChange={setVoiceEnabled} />} />
+        </div>
+      </div>
+
+      {/* Reading & Sources */}
+      <div>
+        <SectionLabel>Reading & Sources</SectionLabel>
+        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+          <SettingRow label="Auto-expand sources" description="Automatically open viewer when selecting a source" action={<Toggle checked={autoExpandSources} onChange={setAutoExpandSources} />} />
+          <SettingRow label="Auto-save notes" description="Automatically save Nexi responses when bookmarked" action={<Toggle checked={autoSave} onChange={setAutoSave} />} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Nexi ─────────────────────────────────────────────── */
+
+function NexiPanel() {
+  const [nexiTone, setNexiTone] = useState<"concise" | "detailed" | "socratic">("detailed");
+  const [citationsVisible, setCitationsVisible] = useState(true);
+  const [followUpChips, setFollowUpChips] = useState(true);
+  const [conversationMemory, setConversationMemory] = useState(true);
+  const [codeDepth, setCodeDepth] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
+  const [preferredLanguage, setPreferredLanguage] = useState("English");
+
+  return (
+    <div className="space-y-8">
+      <PanelHeader title="Nexi" description="Configure your AI companion's behavior and communication style." />
+
+      {/* Response behavior */}
+      <div>
+        <SectionLabel>Response behavior</SectionLabel>
+        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+          <SettingRow
+            label="Response style"
+            description="How Nexi communicates explanations"
+            action={
+              <SegmentedControl
+                value={nexiTone}
+                options={[{ value: "concise", label: "Concise" }, { value: "detailed", label: "Detailed" }, { value: "socratic", label: "Socratic" }]}
+                onChange={(v) => setNexiTone(v as "concise" | "detailed" | "socratic")}
+              />
+            }
+          />
+          <SettingRow label="Show citations" description="Display source references in Nexi responses" action={<Toggle checked={citationsVisible} onChange={setCitationsVisible} />} />
+          <SettingRow label="Follow-up suggestions" description="Show suggested actions after each response" action={<Toggle checked={followUpChips} onChange={setFollowUpChips} />} />
+        </div>
+      </div>
+
+      {/* Context & memory */}
+      <div>
+        <SectionLabel>Context & Memory</SectionLabel>
+        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+          <SettingRow label="Conversation memory" description="Remember context from previous sessions within a course" action={<Toggle checked={conversationMemory} onChange={setConversationMemory} />} />
+        </div>
+      </div>
+
+      {/* Explanation preferences */}
+      <div>
+        <SectionLabel>Explanation preferences</SectionLabel>
+        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+          <SettingRow
+            label="Code explanation depth"
+            description="Level of detail for code and math walkthroughs"
+            action={
+              <SegmentedControl
+                value={codeDepth}
+                options={[{ value: "beginner", label: "Beginner" }, { value: "intermediate", label: "Intermediate" }, { value: "advanced", label: "Advanced" }]}
+                onChange={(v) => setCodeDepth(v as "beginner" | "intermediate" | "advanced")}
+              />
+            }
+          />
+          <SettingRow
+            label="Preferred language"
+            description="Language Nexi uses for explanations"
+            action={
+              <select
+                value={preferredLanguage}
+                onChange={(e) => setPreferredLanguage(e.target.value)}
+                className="px-3 py-1.5 rounded-lg border border-border bg-background text-[12px] font-sans text-foreground focus:outline-none focus:ring-1 focus:ring-ring/30 cursor-pointer"
+              >
+                <option value="English">English</option>
+                <option value="Spanish">Español</option>
+                <option value="French">Français</option>
+                <option value="German">Deutsch</option>
+                <option value="Portuguese">Português</option>
+                <option value="Japanese">日本語</option>
+                <option value="Chinese">中文</option>
+                <option value="Korean">한국어</option>
+                <option value="Arabic">العربية</option>
+                <option value="Hindi">हिन्दी</option>
+              </select>
+            }
+          />
         </div>
       </div>
     </div>
@@ -161,6 +218,11 @@ function ProfilePanel() {
 
 function AccountPanel() {
   const handleLogout = () => toast.success("Logged out", { description: "See you next time." });
+
+  const handleCopyOrgId = () => {
+    navigator.clipboard.writeText("org_nxs_8f42b1c3");
+    toast.success("Copied to clipboard");
+  };
 
   const sessions = [
     { device: "Chrome · macOS", location: "San Francisco, US", created: "Mar 18, 2026", updated: "2 min ago" },
@@ -173,7 +235,21 @@ function AccountPanel() {
       <PanelHeader title="Account" description="Organization details and session management." />
 
       <div className="rounded-xl border border-border bg-card divide-y divide-border">
-        <SettingRow label="Organization ID" description="Unique identifier for your workspace" action={<span className="text-[12px] font-mono text-muted-foreground select-all">org_nxs_8f42b1c3</span>} />
+        <SettingRow
+          label="Organization ID"
+          description="Unique identifier for your workspace"
+          action={
+            <div className="flex items-center gap-2">
+              <span className="text-[12px] font-mono text-muted-foreground select-all">org_nxs_8f42b1c3</span>
+              <button
+                onClick={handleCopyOrgId}
+                className="h-7 w-7 rounded-md flex items-center justify-center hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors duration-200 active:scale-[0.95]"
+              >
+                <Copy className="h-3.5 w-3.5" strokeWidth={1.5} />
+              </button>
+            </div>
+          }
+        />
         <SettingRow label="Organization name" description="Managed by your school, company, or institution" action={<span className="text-[13px] font-sans text-foreground">Personal</span>} />
       </div>
 
@@ -306,95 +382,6 @@ function PrivacyPanel() {
   );
 }
 
-/* ─── Appearance ───────────────────────────────────────── */
-
-function AppearancePanel() {
-  const { theme, toggleTheme } = useTheme();
-  const { appSettings, updateAppSettings } = useWorkspace();
-
-  return (
-    <div className="space-y-8">
-      <PanelHeader title="Appearance" description="Customize how Nexus² looks and feels." />
-
-      <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-        <SettingRow
-          label="Theme"
-          description="Switch between light and dark mode"
-          action={
-            <button onClick={toggleTheme} className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-foreground hover:bg-muted/50 transition-all duration-200 active:scale-[0.97]">
-              {theme === "light" ? <Moon className="h-3.5 w-3.5" strokeWidth={1.5} /> : <Sun className="h-3.5 w-3.5" strokeWidth={1.5} />}
-              {theme === "light" ? "Dark" : "Light"}
-            </button>
-          }
-        />
-        <SettingRow label="Compact mode" description="Reduce spacing and panel padding" action={<Toggle checked={appSettings.compactMode} onChange={(v) => updateAppSettings({ compactMode: v })} />} />
-        <SettingRow
-          label="Font size"
-          description="Adjust reading text size across the workspace"
-          action={
-            <SegmentedControl
-              value={appSettings.fontSize}
-              options={[{ value: "small", label: "S" }, { value: "medium", label: "M" }, { value: "large", label: "L" }]}
-              onChange={(v) => updateAppSettings({ fontSize: v as "small" | "medium" | "large" })}
-            />
-          }
-        />
-      </div>
-    </div>
-  );
-}
-
-/* ─── AI & Learning ────────────────────────────────────── */
-
-function AILearningPanel() {
-  const [nexiTone, setNexiTone] = useState<"concise" | "detailed" | "socratic">("detailed");
-  const [citationsVisible, setCitationsVisible] = useState(true);
-  const [followUpChips, setFollowUpChips] = useState(true);
-  const [voiceEnabled, setVoiceEnabled] = useState(true);
-  const [autoExpandSources, setAutoExpandSources] = useState(true);
-  const [autoSave, setAutoSave] = useState(true);
-
-  return (
-    <div className="space-y-8">
-      <PanelHeader title="AI & Learning" description="Configure Nexi behavior, voice input, and reading preferences." />
-
-      <div>
-        <SectionLabel>Nexi — AI Companion</SectionLabel>
-        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow
-            label="Response style"
-            description="How Nexi communicates explanations"
-            action={
-              <SegmentedControl
-                value={nexiTone}
-                options={[{ value: "concise", label: "Concise" }, { value: "detailed", label: "Detailed" }, { value: "socratic", label: "Socratic" }]}
-                onChange={(v) => setNexiTone(v as "concise" | "detailed" | "socratic")}
-              />
-            }
-          />
-          <SettingRow label="Show citations" description="Display source references in Nexi responses" action={<Toggle checked={citationsVisible} onChange={setCitationsVisible} />} />
-          <SettingRow label="Follow-up suggestions" description="Show suggested actions after each Nexi response" action={<Toggle checked={followUpChips} onChange={setFollowUpChips} />} />
-        </div>
-      </div>
-
-      <div>
-        <SectionLabel>Voice & Input</SectionLabel>
-        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow label="Voice input" description="Enable microphone for voice-to-text in Nexi" action={<Toggle checked={voiceEnabled} onChange={setVoiceEnabled} />} />
-        </div>
-      </div>
-
-      <div>
-        <SectionLabel>Reading & Sources</SectionLabel>
-        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow label="Auto-expand sources" description="Automatically open viewer when selecting a source" action={<Toggle checked={autoExpandSources} onChange={setAutoExpandSources} />} />
-          <SettingRow label="Auto-save notes" description="Automatically save Nexi responses when bookmarked" action={<Toggle checked={autoSave} onChange={setAutoSave} />} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ─── Shared UI primitives ─────────────────────────────── */
 
 function PanelHeader({ title, description }: { title: string; description: string }) {
@@ -447,43 +434,6 @@ function SegmentedControl({ value, options, onChange }: { value: string; options
           {opt.label}
         </button>
       ))}
-    </div>
-  );
-}
-
-function ProfileField({ label, value, onChange, multiline }: { label: string; value: string; onChange: (v: string) => void; multiline?: boolean }) {
-  return (
-    <div className="px-5 py-4">
-      <label className="text-[10px] font-sans text-muted-foreground/50 uppercase tracking-widest mb-1.5 block">{label}</label>
-      {multiline ? (
-        <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={3} className="w-full bg-muted/30 rounded-lg px-3 py-2 text-[13px] font-sans text-foreground focus:outline-none focus:ring-1 focus:ring-ring/30 resize-none leading-relaxed" />
-      ) : (
-        <input type="text" value={value} onChange={(e) => onChange(e.target.value)} className="w-full bg-muted/30 rounded-lg px-3 py-2 text-[13px] font-sans text-foreground focus:outline-none focus:ring-1 focus:ring-ring/30" />
-      )}
-    </div>
-  );
-}
-
-function ProfileDetail({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between px-5 py-4">
-      <div className="flex items-center gap-2">
-        <Icon className="h-3.5 w-3.5 text-muted-foreground/50" strokeWidth={1.5} />
-        <span className="text-[12px] font-sans text-muted-foreground">{label}</span>
-      </div>
-      <span className="text-[13px] font-sans text-foreground">{value}</span>
-    </div>
-  );
-}
-
-function StatCard({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-4">
-      <div className="flex items-center gap-2 mb-2">
-        <Icon className="h-3.5 w-3.5 text-muted-foreground/50" strokeWidth={1.5} />
-        <span className="text-[10px] font-sans text-muted-foreground/60 uppercase tracking-widest">{label}</span>
-      </div>
-      <span className="text-xl font-serif text-foreground font-medium tabular-nums">{value}</span>
     </div>
   );
 }
