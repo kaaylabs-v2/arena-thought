@@ -184,8 +184,7 @@ const Settings = () => {
           <IntegrationRow
             name="Notion"
             description="Sync notes and reflections to Notion pages"
-            fallbackLetter="N"
-            fallbackColor="bg-foreground/10 text-foreground"
+            svgLogo={<NotionLogo className="h-5 w-5" />}
           />
           <IntegrationRow
             name="Google Drive"
@@ -200,26 +199,22 @@ const Settings = () => {
           <IntegrationRow
             name="Zotero"
             description="Import academic references and citation data"
-            fallbackLetter="Z"
-            fallbackColor="bg-red-500/15 text-red-500"
+            svgLogo={<ZoteroLogo className="h-5 w-5" />}
           />
           <IntegrationRow
             name="Readwise"
             description="Sync highlights and reading notes"
-            fallbackLetter="R"
-            fallbackColor="bg-yellow-500/15 text-yellow-500"
+            svgLogo={<ReadwiseLogo className="h-5 w-5" />}
           />
           <IntegrationRow
             name="Anki"
             description="Export flashcards from Nexi quiz sessions"
-            fallbackLetter="A"
-            fallbackColor="bg-blue-500/15 text-blue-500"
+            svgLogo={<AnkiLogo className="h-5 w-5" />}
           />
           <IntegrationRow
             name="Obsidian"
             description="Export notebook entries as Markdown vault files"
-            fallbackLetter="O"
-            fallbackColor="bg-purple-500/15 text-purple-500"
+            svgLogo={<ObsidianLogo className="h-5 w-5" />}
           />
         </SettingSection>
 
