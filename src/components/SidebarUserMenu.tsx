@@ -115,13 +115,42 @@ export function SidebarUserMenu() {
         </DropdownMenuItem>
 
         {/* Language */}
-        <DropdownMenuItem
-          className="gap-2.5 px-3 py-2 cursor-pointer"
-          onClick={() => toast.info("Language preferences coming soon")}
-        >
-          <Languages className="h-4 w-4" strokeWidth={1.5} />
-          <span className="text-[13px] font-sans">Language</span>
-        </DropdownMenuItem>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger className="gap-2.5 px-3 py-2 cursor-pointer">
+            <Languages className="h-4 w-4" strokeWidth={1.5} />
+            <span className="text-[13px] font-sans">Language</span>
+          </DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent sideOffset={8} className="w-48 rounded-xl">
+              {[
+                { value: "English", label: "English" },
+                { value: "Spanish", label: "Español" },
+                { value: "French", label: "Français" },
+                { value: "German", label: "Deutsch" },
+                { value: "Portuguese", label: "Português" },
+                { value: "Japanese", label: "日本語" },
+                { value: "Chinese", label: "中文" },
+                { value: "Korean", label: "한국어" },
+                { value: "Arabic", label: "العربية" },
+                { value: "Hindi", label: "हिन्दी" },
+              ].map((lang) => (
+                <DropdownMenuItem
+                  key={lang.value}
+                  className="gap-2.5 px-3 py-2 cursor-pointer justify-between"
+                  onClick={() => {
+                    updateAppSettings({ language: lang.value });
+                    toast.success(`Language set to ${lang.label}`);
+                  }}
+                >
+                  <span className="text-[13px] font-sans">{lang.label}</span>
+                  {appSettings.language === lang.value && (
+                    <Check className="h-3.5 w-3.5 text-accent" strokeWidth={2} />
+                  )}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
 
         <DropdownMenuSeparator />
 

@@ -153,6 +153,17 @@
     font-family: 'Source Serif 4', Georgia, serif;
   }
 
+  /* Font family overrides — applied to root container */
+  .font-family-sans body, .font-family-sans h1, .font-family-sans h2, .font-family-sans .font-serif {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  .font-family-serif body, .font-family-serif {
+    font-family: 'Source Serif 4', Georgia, serif;
+  }
+  .font-family-dyslexic body, .font-family-dyslexic h1, .font-family-dyslexic h2, .font-family-dyslexic .font-serif, .font-family-dyslexic {
+    font-family: 'OpenDyslexic', sans-serif;
+  }
+
   /* Font scaling via CSS zoom */
   .font-scaled {
     zoom: var(--font-scale, 1);

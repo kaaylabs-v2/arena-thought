@@ -10,10 +10,15 @@ function LayoutInner() {
     appSettings.fontSize === "small" ? "0.9" :
     appSettings.fontSize === "large" ? "1.12" : "1";
 
+  const fontFamilyClass =
+    appSettings.fontFamily === "sans" ? "font-family-sans" :
+    appSettings.fontFamily === "serif" ? "font-family-serif" :
+    appSettings.fontFamily === "dyslexic" ? "font-family-dyslexic" : "";
+
   return (
     <SidebarProvider>
       <div
-        className={`min-h-screen flex w-full ${appSettings.compactMode ? "compact-mode" : ""}`}
+        className={`min-h-screen flex w-full ${appSettings.compactMode ? "compact-mode" : ""} ${fontFamilyClass}`}
         style={{ '--font-scale': fontScale } as React.CSSProperties}
       >
         <AppSidebar />

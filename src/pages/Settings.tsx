@@ -2,12 +2,13 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useTheme } from "@/components/ThemeProvider";
 import { useWorkspace } from "@/context/WorkspaceContext";
+import type { FontFamily } from "@/context/WorkspaceContext";
 import { NotionLogo, ZoteroLogo, ReadwiseLogo, ObsidianLogo, GoogleDriveLogo, GoogleCalendarLogo } from "@/components/IntegrationLogos";
 import {
   Building2, LogOut, Monitor, Smartphone, MoreHorizontal,
   Moon, Sun, Palette, Eye, Brain, Volume2, BookOpen,
   Shield, Download, RotateCcw, Plug, Check, Copy,
-  Settings2, Sparkles, Globe, Code2, MessageSquare,
+  Settings2, Sparkles, Globe, Code2, MessageSquare, MonitorSmartphone,
 } from "lucide-react";
 
 type SettingsTab = "general" | "nexi" | "account" | "privacy" | "connectors";
@@ -67,34 +68,148 @@ const Settings = () => {
   );
 };
 
+/* ─── Theme preview mini-illustrations ─────────────────── */
+
+function ThemeMiniPreview({ mode }: { mode: "light" | "auto" | "dark" }) {
+  const lightSide = (
+    <div className="w-full h-full bg-[hsl(42_24%_97%)] rounded-[5px] p-1.5 flex flex-col gap-1">
+      <div className="h-1.5 w-8 rounded-full bg-[hsl(222_28%_14%/0.15)]" />
+      <div className="h-1 w-6 rounded-full bg-[hsl(222_28%_14%/0.08)]" />
+      <div className="flex-1 rounded-[3px] bg-[hsl(40_22%_94%)] mt-0.5" />
+    </div>
+  );
+  const darkSide = (
+    <div className="w-full h-full bg-[hsl(228_18%_9%)] rounded-[5px] p-1.5 flex flex-col gap-1">
+      <div className="h-1.5 w-8 rounded-full bg-[hsl(38_12%_88%/0.2)]" />
+      <div className="h-1 w-6 rounded-full bg-[hsl(38_12%_88%/0.1)]" />
+      <div className="flex-1 rounded-[3px] bg-[hsl(228_16%_13%)] mt-0.5" />
+    </div>
+  );
+
+  if (mode === "light") return <div className="w-full h-full">{lightSide}</div>;
+  if (mode === "dark") return <div className="w-full h-full">{darkSide}</div>;
+
+  // auto — split
+  return (
+    <div className="w-full h-full flex overflow-hidden rounded-[5px]">
+      <div className="w-1/2 bg-[hsl(42_24%_97%)] p-1.5 flex flex-col gap-1">
+        <div className="h-1.5 w-6 rounded-full bg-[hsl(222_28%_14%/0.15)]" />
+        <div className="h-1 w-4 rounded-full bg-[hsl(222_28%_14%/0.08)]" />
+        <div className="flex-1 rounded-l-[3px] bg-[hsl(40_22%_94%)] mt-0.5" />
+      </div>
+      <div className="w-1/2 bg-[hsl(228_18%_9%)] p-1.5 flex flex-col gap-1">
+        <div className="h-1.5 w-6 rounded-full bg-[hsl(38_12%_88%/0.2)]" />
+        <div className="h-1 w-4 rounded-full bg-[hsl(38_12%_88%/0.1)]" />
+        <div className="flex-1 rounded-r-[3px] bg-[hsl(228_16%_13%)] mt-0.5" />
+      </div>
+    </div>
+  );
+}
+
+/* ─── Font preview cards ───────────────────────────────── */
+
+const fontOptions: { value: FontFamily; label: string; family: string }[] = [
+  { value: "default", label: "Default", family: "'Source Serif 4', Georgia, serif" },
+  { value: "sans", label: "Sans", family: "'Inter', system-ui, sans-serif" },
+  { value: "serif", label: "Serif", family: "'Source Serif 4', Georgia, serif" },
+  { value: "dyslexic", label: "Dyslexic", family: "'OpenDyslexic', sans-serif" },
+];
+
 /* ─── General ──────────────────────────────────────────── */
 
 function GeneralPanel() {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const { appSettings, updateAppSettings } = useWorkspace();
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [autoExpandSources, setAutoExpandSources] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
 
+  const themeOptions: { value: "light" | "auto" | "dark"; label: string; icon: React.ElementType }[] = [
+    { value: "light", label: "Light", icon: Sun },
+    { value: "auto", label: "Auto", icon: MonitorSmartphone },
+    { value: "dark", label: "Dark", icon: Moon },
+  ];
+
   return (
     <div className="space-y-8">
       <PanelHeader title="General" description="Appearance, input, and workspace preferences." />
 
-      {/* Appearance */}
+      {/* Color mode */}
       <div>
-        <SectionLabel>Appearance</SectionLabel>
-        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow
-            label="Theme"
-            description="Switch between light and dark mode"
-            action={
-              <button onClick={toggleTheme} className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border text-[12px] font-sans text-foreground hover:bg-muted/50 transition-all duration-200 active:scale-[0.97]">
-                {theme === "light" ? <Moon className="h-3.5 w-3.5" strokeWidth={1.5} /> : <Sun className="h-3.5 w-3.5" strokeWidth={1.5} />}
-                {theme === "light" ? "Dark" : "Light"}
+        <SectionLabel>Color mode</SectionLabel>
+        <div className="flex gap-3">
+          {themeOptions.map((opt) => {
+            const selected = theme === opt.value;
+            return (
+              <button
+                key={opt.value}
+                onClick={() => setTheme(opt.value)}
+                className={`group relative flex flex-col items-center gap-2.5 rounded-xl border-2 p-2.5 pb-3 transition-all duration-300 cursor-pointer active:scale-[0.97] w-[120px] ${
+                  selected
+                    ? "border-accent bg-accent/5 shadow-[0_0_0_1px_hsl(var(--accent)/0.15)]"
+                    : "border-border hover:border-muted-foreground/25 hover:bg-muted/30"
+                }`}
+              >
+                <div className={`w-full aspect-[4/3] rounded-lg overflow-hidden transition-transform duration-300 ${!selected ? "group-hover:scale-[1.02]" : ""}`}>
+                  <ThemeMiniPreview mode={opt.value} />
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <opt.icon className="h-3 w-3 text-muted-foreground" strokeWidth={1.5} />
+                  <span className={`text-[12px] font-sans ${selected ? "font-medium text-foreground" : "text-muted-foreground"}`}>
+                    {opt.label}
+                  </span>
+                </div>
+                {selected && (
+                  <div className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent flex items-center justify-center">
+                    <Check className="h-2.5 w-2.5 text-accent-foreground" strokeWidth={3} />
+                  </div>
+                )}
               </button>
-            }
-          />
-          <SettingRow label="Compact mode" description="Reduce spacing and panel padding" action={<Toggle checked={appSettings.compactMode} onChange={(v) => updateAppSettings({ compactMode: v })} />} />
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Font style */}
+      <div>
+        <SectionLabel>Font style</SectionLabel>
+        <div className="flex gap-3">
+          {fontOptions.map((opt) => {
+            const selected = appSettings.fontFamily === opt.value;
+            return (
+              <button
+                key={opt.value}
+                onClick={() => updateAppSettings({ fontFamily: opt.value })}
+                className={`group relative flex flex-col items-center gap-2 rounded-xl border-2 p-3 pb-2.5 transition-all duration-300 cursor-pointer active:scale-[0.97] w-[100px] ${
+                  selected
+                    ? "border-accent bg-accent/5 shadow-[0_0_0_1px_hsl(var(--accent)/0.15)]"
+                    : "border-border hover:border-muted-foreground/25 hover:bg-muted/30"
+                }`}
+              >
+                <span
+                  className={`text-[28px] leading-none transition-transform duration-300 ${!selected ? "group-hover:scale-105" : ""}`}
+                  style={{ fontFamily: opt.family }}
+                >
+                  Aa
+                </span>
+                <span className={`text-[11px] font-sans ${selected ? "font-medium text-foreground" : "text-muted-foreground"}`}>
+                  {opt.label}
+                </span>
+                {selected && (
+                  <div className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-accent flex items-center justify-center">
+                    <Check className="h-2.5 w-2.5 text-accent-foreground" strokeWidth={3} />
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Font size + compact */}
+      <div>
+        <SectionLabel>Display</SectionLabel>
+        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
           <SettingRow
             label="Font size"
             description="Adjust reading text size across the workspace"
@@ -106,6 +221,7 @@ function GeneralPanel() {
               />
             }
           />
+          <SettingRow label="Compact mode" description="Reduce spacing and panel padding" action={<Toggle checked={appSettings.compactMode} onChange={(v) => updateAppSettings({ compactMode: v })} />} />
         </div>
       </div>
 
