@@ -335,6 +335,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         setActiveSource,
         reflections,
         addReflection,
+        deleteReflection,
         userProfile,
         updateUserProfile,
         appSettings,
