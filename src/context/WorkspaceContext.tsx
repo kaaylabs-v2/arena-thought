@@ -200,18 +200,21 @@ const seedReflections: Reflection[] = [
     date: "Today",
     content: "I'm starting to see how gradient descent connects to the broader optimization landscape. The intuition about loss surfaces being high-dimensional is finally clicking — it's not about finding the single lowest point, but navigating valleys that generalize well.",
     linkedCourse: "Foundations of Machine Learning",
+    mood: "focused",
   },
   {
     id: "r2",
     date: "Yesterday",
     content: "Bayesian inference feels less like a formula and more like a philosophy of knowledge. You start with what you believe, encounter evidence, and update. It mirrors how actual learning works — which is strangely recursive given what I'm studying.",
     linkedCourse: "Advanced Statistical Methods",
+    mood: "curious",
   },
   {
     id: "r3",
     date: "March 15",
     content: "Chalmers' hard problem keeps returning to mind. If we can't explain why subjective experience exists, maybe the question itself reveals something about the limits of reductive explanation. There's something humbling about studying a problem that resists the tools you're using to study it.",
     linkedCourse: "Philosophy of Mind",
+    mood: "calm",
   },
 ];
 
