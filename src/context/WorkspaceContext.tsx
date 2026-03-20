@@ -44,6 +44,11 @@ export interface UserProfile {
   timezone: string;
 }
 
+export interface AppSettings {
+  compactMode: boolean;
+  fontSize: "small" | "medium" | "large";
+}
+
 interface WorkspaceState {
   notebookEntries: NotebookEntry[];
   addNotebookEntry: (entry: Omit<NotebookEntry, "id" | "date">) => void;
@@ -57,6 +62,8 @@ interface WorkspaceState {
   addReflection: (content: string, linkedCourse?: string) => void;
   userProfile: UserProfile;
   updateUserProfile: (updates: Partial<UserProfile>) => void;
+  appSettings: AppSettings;
+  updateAppSettings: (updates: Partial<AppSettings>) => void;
 }
 
 const WorkspaceContext = createContext<WorkspaceState | null>(null);
@@ -256,6 +263,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setUserProfile((prev) => ({ ...prev, ...updates }));
   }, []);
 
+  const [appSettings, setAppSettings] = useState<AppSettings>({ compactMode: false, fontSize: "medium" });
+  const updateAppSettings = useCallback((updates: Partial<AppSettings>) => {
+    setAppSettings((prev) => ({ ...prev, ...updates }));
+  }, []);
+
   return (
     <WorkspaceContext.Provider
       value={{
@@ -271,6 +283,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         addReflection,
         userProfile,
         updateUserProfile,
+        appSettings,
+        updateAppSettings,
       }}
     >
       {children}

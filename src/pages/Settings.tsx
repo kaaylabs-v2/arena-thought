@@ -2,17 +2,17 @@ import { Moon, Sun, Shield, Volume2, Palette, RotateCcw, Eye, Bell, Keyboard, Bo
 import { useTheme } from "@/components/ThemeProvider";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useWorkspace } from "@/context/WorkspaceContext";
 
 const Settings = () => {
   const { theme, toggleTheme } = useTheme();
+  const { appSettings, updateAppSettings } = useWorkspace();
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [autoSave, setAutoSave] = useState(true);
-  const [compactMode, setCompactMode] = useState(false);
   const [notifications, setNotifications] = useState(false);
   const [analyticsOptOut, setAnalyticsOptOut] = useState(true);
   const [localOnly, setLocalOnly] = useState(true);
   const [nexiTone, setNexiTone] = useState<"concise" | "detailed" | "socratic">("detailed");
-  const [fontSize, setFontSize] = useState<"small" | "medium" | "large">("medium");
   const [citationsVisible, setCitationsVisible] = useState(true);
   const [followUpChips, setFollowUpChips] = useState(true);
   const [autoExpandSources, setAutoExpandSources] = useState(true);
@@ -53,20 +53,20 @@ const Settings = () => {
           <SettingRow
             label="Compact mode"
             description="Reduce spacing and panel padding"
-            action={<Toggle checked={compactMode} onChange={setCompactMode} />}
+            action={<Toggle checked={appSettings.compactMode} onChange={(v) => updateAppSettings({ compactMode: v })} />}
           />
           <SettingRow
             label="Font size"
             description="Adjust reading text size across the workspace"
             action={
               <SegmentedControl
-                value={fontSize}
+                value={appSettings.fontSize}
                 options={[
                   { value: "small", label: "S" },
                   { value: "medium", label: "M" },
                   { value: "large", label: "L" },
                 ]}
-                onChange={(v) => setFontSize(v as "small" | "medium" | "large")}
+                onChange={(v) => updateAppSettings({ fontSize: v as "small" | "medium" | "large" })}
               />
             }
           />
