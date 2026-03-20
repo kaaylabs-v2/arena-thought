@@ -1,9 +1,12 @@
-import { Shield, Plus, Calendar, Lock, Trash2, Sparkles } from "lucide-react";
-import { useState, useRef } from "react";
+import { Shield, Plus, Calendar, Lock, Trash2, Sparkles, Mic, MicOff } from "lucide-react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import type { ReflectionMood } from "@/context/WorkspaceContext";
 import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
 import { toast } from "sonner";
+
+// Extend Window for speech recognition support
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 const promptChips = [
   "What challenged me today",
@@ -53,7 +56,75 @@ const Reflections = () => {
   const { reflections, addReflection, deleteReflection } = useWorkspace();
   const [newReflection, setNewReflection] = useState("");
   const [selectedMood, setSelectedMood] = useState<ReflectionMood | null>(null);
+  const [isListening, setIsListening] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const recognitionRef = useRef<any>(null);
+
+  // Speech recognition setup
+  const toggleVoice = useCallback(() => {
+    const SpeechRecognitionCtor = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognitionCtor) {
+      toast.error("Speech recognition not supported in this browser");
+      return;
+    }
+
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognitionCtor();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+    recognitionRef.current = recognition;
+
+    let finalTranscript = "";
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + " ";
+        } else {
+          interim = transcript;
+        }
+      }
+      setNewReflection((prev) => {
+        const base = prev.replace(/\u200B.*$/, "").trimEnd();
+        const combined = base + (base ? " " : "") + finalTranscript + (interim ? "\u200B" + interim : "");
+        return combined;
+      });
+    };
+
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+      if (event.error !== "aborted") {
+        toast.error("Voice input error: " + event.error);
+      }
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+      // Clean up zero-width space markers from interim results
+      setNewReflection((prev) => prev.replace(/\u200B/g, ""));
+    };
+
+    recognition.start();
+    setIsListening(true);
+    toast.success("Listening... speak your reflection");
+  }, [isListening]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
 
   const headerReveal = useScrollReveal();
   const composerReveal = useScrollReveal();
@@ -145,16 +216,34 @@ const Reflections = () => {
 
           <div className="flex items-center justify-between pt-3 border-t border-border/60">
             <span className="text-[10px] font-sans text-muted-foreground/40">
-              {newReflection.length > 0 ? `${newReflection.length} chars` : "Enter to save · Shift+Enter for newline"}
+              {isListening ? (
+                <span className="text-accent flex items-center gap-1">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                  Listening...
+                </span>
+              ) : newReflection.length > 0 ? `${newReflection.length} chars` : "Enter to save · Shift+Enter for newline"}
             </span>
-            <button
-              onClick={handleSave}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-[12px] font-sans font-medium hover:bg-primary/90 transition-all duration-200 disabled:opacity-30 active:scale-[0.97]"
-              disabled={!newReflection.trim()}
-            >
-              <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
-              Save reflection
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleVoice}
+                className={`flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200 active:scale-[0.95] ${
+                  isListening
+                    ? "bg-accent/15 text-accent border border-accent/30 shadow-[0_0_12px_hsl(var(--accent)/0.15)]"
+                    : "border border-border text-muted-foreground/50 hover:border-accent/20 hover:text-foreground"
+                }`}
+                title={isListening ? "Stop listening" : "Voice input"}
+              >
+                {isListening ? <MicOff className="h-3.5 w-3.5" strokeWidth={1.5} /> : <Mic className="h-3.5 w-3.5" strokeWidth={1.5} />}
+              </button>
+              <button
+                onClick={handleSave}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-[12px] font-sans font-medium hover:bg-primary/90 transition-all duration-200 disabled:opacity-30 active:scale-[0.97]"
+                disabled={!newReflection.trim()}
+              >
+                <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
+                Save reflection
+              </button>
+            </div>
           </div>
         </div>
       </div>
