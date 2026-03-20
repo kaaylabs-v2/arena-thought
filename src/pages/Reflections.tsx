@@ -53,7 +53,75 @@ const Reflections = () => {
   const { reflections, addReflection, deleteReflection } = useWorkspace();
   const [newReflection, setNewReflection] = useState("");
   const [selectedMood, setSelectedMood] = useState<ReflectionMood | null>(null);
+  const [isListening, setIsListening] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+
+  // Speech recognition setup
+  const toggleVoice = useCallback(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error("Speech recognition not supported in this browser");
+      return;
+    }
+
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+    recognitionRef.current = recognition;
+
+    let finalTranscript = "";
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + " ";
+        } else {
+          interim = transcript;
+        }
+      }
+      setNewReflection((prev) => {
+        const base = prev.replace(/\u200B.*$/, "").trimEnd();
+        const combined = base + (base ? " " : "") + finalTranscript + (interim ? "\u200B" + interim : "");
+        return combined;
+      });
+    };
+
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+      if (event.error !== "aborted") {
+        toast.error("Voice input error: " + event.error);
+      }
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+      // Clean up zero-width space markers from interim results
+      setNewReflection((prev) => prev.replace(/\u200B/g, ""));
+    };
+
+    recognition.start();
+    setIsListening(true);
+    toast.success("Listening... speak your reflection");
+  }, [isListening]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
 
   const headerReveal = useScrollReveal();
   const composerReveal = useScrollReveal();
