@@ -47,9 +47,13 @@ export interface UserProfile {
   timezone: string;
 }
 
+export type FontFamily = "default" | "sans" | "serif" | "dyslexic";
+
 export interface AppSettings {
   compactMode: boolean;
   fontSize: "small" | "medium" | "large";
+  fontFamily: FontFamily;
+  language: string;
 }
 
 export type TaskPriority = "high" | "medium" | "low";
@@ -291,7 +295,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setUserProfile((prev) => ({ ...prev, ...updates }));
   }, []);
 
-  const [appSettings, setAppSettings] = useState<AppSettings>({ compactMode: false, fontSize: "medium" });
+  const [appSettings, setAppSettings] = useState<AppSettings>({ compactMode: false, fontSize: "medium", fontFamily: "default", language: "English" });
   const updateAppSettings = useCallback((updates: Partial<AppSettings>) => {
     setAppSettings((prev) => ({ ...prev, ...updates }));
   }, []);
