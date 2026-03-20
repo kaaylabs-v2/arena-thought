@@ -314,7 +314,7 @@ function ShortcutRow({ label, keys }: { label: string; keys: string[] }) {
   );
 }
 
-function IntegrationRow({ name, description, icon }: { name: string; description: string; icon?: string }) {
+function IntegrationRow({ name, description, icon, fallbackLetter, fallbackColor }: { name: string; description: string; icon?: string; fallbackLetter?: string; fallbackColor?: string }) {
   const [connected, setConnected] = useState(false);
 
   const handleToggle = () => {
