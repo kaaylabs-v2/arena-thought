@@ -114,6 +114,7 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
     const allItems: { id: string; title: string; type: "video" | "lecture" | "reading" | "pdf" }[] = modules.flatMap((m) =>
       m.items.map((item) => ({ id: item.id, title: item.title, type: item.type }))
     );
+    return (
       <div className="h-full flex flex-col items-center py-4 gap-1.5">
         <Tooltip>
           <TooltipTrigger asChild>
