@@ -4,12 +4,10 @@ import {
   BookOpen,
   Sparkles,
   BarChart3,
-  Settings,
   Moon,
   Sun,
   ChevronsLeft,
   ChevronsRight,
-  User,
   ListChecks,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
@@ -28,6 +26,7 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { SidebarUserMenu } from "@/components/SidebarUserMenu";
 
 const mainNav = [
   { title: "Home", url: "/", icon: Home },
@@ -36,11 +35,6 @@ const mainNav = [
   { title: "Notebook", url: "/notebook", icon: BookOpen },
   { title: "Reflections", url: "/reflections", icon: Sparkles },
   { title: "Progress", url: "/progress", icon: BarChart3 },
-];
-
-const bottomNav = [
-  { title: "Profile", url: "/profile", icon: User },
-  { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
@@ -56,7 +50,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
-      {/* Header — logo + collapse toggle, same px as menu items */}
+      {/* Header — logo + collapse toggle */}
       <SidebarHeader className="px-2 py-3">
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
@@ -111,7 +105,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer */}
+      {/* Footer — theme toggle + user menu */}
       <SidebarFooter className="px-2 pb-3">
         <SidebarSeparator className="mx-0" />
         <SidebarMenu>
@@ -129,27 +123,8 @@ export function AppSidebar() {
               <span className="text-[13px] font-sans">{theme === "light" ? "Dark mode" : "Light mode"}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
-
-          {bottomNav.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
-                asChild
-                isActive={isActive(item.url)}
-                tooltip={item.title}
-                className="rounded-lg"
-              >
-                <NavLink
-                  to={item.url}
-                  className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-                  activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                >
-                  <item.icon strokeWidth={1.5} />
-                  <span className="text-[13px] font-sans">{item.title}</span>
-                </NavLink>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
         </SidebarMenu>
+        <SidebarUserMenu />
       </SidebarFooter>
     </Sidebar>
   );
