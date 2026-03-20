@@ -10,16 +10,19 @@ import {
   Presentation,
   Link as LinkIcon,
   StickyNote,
+  Clock,
+  Layers,
 } from "lucide-react";
-import type { PaneState } from "@/pages/Workspace";
+import type { SourcesMode } from "@/pages/Workspace";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useWorkspace, type SourceItem } from "@/context/WorkspaceContext";
 
 interface SourcesPaneProps {
-  state: PaneState;
+  mode: SourcesMode;
   onToggle: () => void;
   selectedSource: string | null;
   onSelectSource: (id: string | null) => void;
+  onDeselectSource: () => void;
   courseTitle: string;
 }
 
@@ -61,7 +64,6 @@ const modules = [
   },
 ];
 
-// Accurate icons per document type
 const typeIcon = {
   video: Video,
   lecture: BookOpen,
@@ -72,18 +74,43 @@ const typeIcon = {
   note: StickyNote,
 };
 
-const typeLabel = {
+const typeLabel: Record<string, string> = {
   video: "Video",
   lecture: "Lecture",
   reading: "Reading",
   pdf: "PDF",
+  slides: "Slides",
+  link: "Link",
+  note: "Note",
 };
 
-const focusedSourceContent: Record<string, { title: string; type: string; preview: string }> = {
+// Richer simulated document content for viewer mode
+const sourceDocuments: Record<string, { sections: { heading: string; body: string }[] }> = {
+  s1: {
+    sections: [
+      { heading: "Welcome", body: "This course provides a comprehensive introduction to machine learning, covering both theoretical foundations and practical applications. By the end of this course, you will understand the major paradigms of machine learning and be able to apply them to real-world problems." },
+      { heading: "Course Objectives", body: "• Understand supervised, unsupervised, and reinforcement learning\n• Implement fundamental ML algorithms from scratch\n• Evaluate model performance using appropriate metrics\n• Apply ML techniques to structured and unstructured data" },
+      { heading: "Prerequisites", body: "Linear algebra (matrices, vectors, eigendecomposition), probability and statistics, basic calculus, and programming experience in Python." },
+    ],
+  },
   s7: {
-    title: "Backpropagation",
-    type: "Lecture",
-    preview: "Backpropagation is the core algorithm for training neural networks. It computes the gradient of the loss function with respect to each weight by applying the chain rule, propagating errors backward through the network layers.\n\nKey concepts covered:\n• Chain rule of calculus\n• Computational graphs\n• Forward and backward passes\n• Gradient flow and vanishing gradients\n• Practical implementation considerations",
+    sections: [
+      { heading: "Introduction to Backpropagation", body: "Backpropagation is the core algorithm for training neural networks. It computes the gradient of the loss function with respect to each weight by applying the chain rule, propagating errors backward through the network layers." },
+      { heading: "The Chain Rule", body: "The chain rule of calculus is the mathematical foundation of backpropagation. For a composite function f(g(x)), the derivative is f'(g(x)) · g'(x). In neural networks, this allows us to compute how each weight contributes to the final error by decomposing the computation into a series of local derivatives." },
+      { heading: "Computational Graphs", body: "A computational graph represents the sequence of operations in a neural network as a directed acyclic graph. Each node represents an operation (addition, multiplication, activation function), and edges represent the flow of data. This abstraction makes it straightforward to apply the chain rule systematically." },
+      { heading: "Forward Pass", body: "During the forward pass, input data flows through the network layer by layer. At each node, the incoming values are combined using the node's operation, and the result is passed to the next layer. The final output is compared to the target to compute the loss." },
+      { heading: "Backward Pass", body: "The backward pass starts from the loss and propagates gradients back through the network. At each node, the incoming gradient (from the layer above) is multiplied by the local gradient of the node's operation. These gradients accumulate to give the total gradient for each weight." },
+      { heading: "Vanishing & Exploding Gradients", body: "In deep networks, gradients can become extremely small (vanishing) or extremely large (exploding) as they propagate through many layers. This is because the gradient at each layer is the product of all the local gradients along the path. Solutions include careful initialization (Xavier, He), batch normalization, residual connections, and gradient clipping." },
+      { heading: "Practical Considerations", body: "• Mini-batch gradient descent for computational efficiency\n• Learning rate selection and scheduling\n• Momentum and adaptive learning rate methods (Adam, RMSprop)\n• Regularization to prevent overfitting (L2, dropout)\n• Early stopping based on validation performance" },
+    ],
+  },
+  s9: {
+    sections: [
+      { heading: "Abstract", body: "Training deep neural networks presents unique challenges that arise from the depth and complexity of modern architectures. This document surveys practical techniques for training deep networks reliably and efficiently." },
+      { heading: "Weight Initialization", body: "Proper weight initialization is critical for training deep networks. Random initialization with the wrong scale can cause activations to vanish or explode through the layers. Xavier initialization sets weights to have variance 2/(n_in + n_out), while He initialization uses variance 2/n_in, which is better suited for ReLU networks." },
+      { heading: "Batch Normalization", body: "Batch normalization normalizes the inputs to each layer to have zero mean and unit variance within each mini-batch. This reduces internal covariate shift, allows higher learning rates, and acts as a form of regularization. It is applied before or after the activation function." },
+      { heading: "Residual Connections", body: "Skip connections, or residual connections, allow gradients to flow directly through the network by adding the input of a block to its output: y = F(x) + x. This architecture, introduced in ResNet, enables training of very deep networks (100+ layers) by mitigating the vanishing gradient problem." },
+    ],
   },
 };
 
@@ -95,8 +122,7 @@ function findSourceItem(sourceId: string): SourceItem | null {
   return null;
 }
 
-export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, courseTitle }: SourcesPaneProps) {
-  const isMini = state === "mini";
+export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, onDeselectSource, courseTitle }: SourcesPaneProps) {
   const { setActiveSource } = useWorkspace();
 
   const handleSelectSource = (id: string) => {
@@ -106,12 +132,13 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
   };
 
   const handleDeselectSource = () => {
-    onSelectSource(null);
+    onDeselectSource();
     setActiveSource(null);
   };
 
-  if (isMini) {
-    const allItems: { id: string; title: string; type: "video" | "lecture" | "reading" | "pdf" }[] = modules.flatMap((m) =>
+  // ─── Mini Rail ───
+  if (mode === "mini") {
+    const allItems = modules.flatMap((m) =>
       m.items.map((item) => ({ id: item.id, title: item.title, type: item.type }))
     );
     return (
@@ -134,10 +161,7 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
               <Tooltip key={item.id}>
                 <TooltipTrigger asChild>
                   <button
-                    onClick={() => {
-                      handleSelectSource(item.id);
-                      onToggle();
-                    }}
+                    onClick={() => handleSelectSource(item.id)}
                     className={`h-8 w-8 flex items-center justify-center rounded-lg transition-colors duration-200 ${
                       selectedSource === item.id
                         ? "bg-secondary text-foreground"
@@ -156,55 +180,95 @@ export function SourcesPane({ state, onToggle, selectedSource, onSelectSource, c
     );
   }
 
-  // Focused source — Readwise Reader-inspired reading surface
-  if (selectedSource) {
+  // ─── Viewer Mode ───
+  if (mode === "viewer" && selectedSource) {
     const sourceItem = findSourceItem(selectedSource);
-    const focused = focusedSourceContent[selectedSource] || {
-      title: sourceItem?.title || "Source Material",
-      type: sourceItem ? typeLabel[sourceItem.type] : "Document",
-      preview: "Select a source to view its content and context. This material serves as grounding for your learning conversations with Nexi.",
-    };
+    const Icon = sourceItem ? typeIcon[sourceItem.type] : FileText;
+    const doc = sourceDocuments[selectedSource];
+
+    // Generic fallback content
+    const fallbackContent = sourceItem
+      ? `This ${typeLabel[sourceItem.type]?.toLowerCase() || "document"} is part of the ${sourceItem.moduleName} module. Open it in your preferred reader for the full experience, or use Nexi to ask questions about its content.`
+      : "Select a source to view its content.";
 
     return (
       <div className="h-full flex flex-col animate-fade-in-gentle">
-        <div className="flex items-center gap-2 px-4 py-3.5 border-b border-border">
+        {/* Viewer header */}
+        <div className="flex items-center gap-3 px-5 py-3 border-b border-border">
           <button
             onClick={handleDeselectSource}
-            className="h-7 w-7 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200"
+            className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200 shrink-0"
           >
-            <ArrowLeft className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
+            <ArrowLeft className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
           </button>
           <div className="flex-1 min-w-0">
-            <h3 className="text-[13px] font-sans font-medium text-foreground truncate">{focused.title}</h3>
-            <span className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-wider">{focused.type}</span>
+            <h3 className="text-[14px] font-serif font-medium text-foreground truncate">
+              {sourceItem?.title || "Source Material"}
+            </h3>
           </div>
           <button
             onClick={onToggle}
-            className="h-7 w-7 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200"
+            className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200 shrink-0"
           >
-            <ChevronLeft className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
+            <ChevronLeft className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
           </button>
         </div>
 
-        {/* Source metadata bar */}
+        {/* Source metadata strip */}
         {sourceItem && (
-          <div className="px-4 py-2.5 border-b border-border/60 bg-muted/30">
-            <div className="flex items-center gap-2 text-[10px] font-sans text-muted-foreground/60">
-              <span className="uppercase tracking-wider">{sourceItem.moduleName}</span>
-              <span>·</span>
-              <span>{typeLabel[sourceItem.type]}</span>
+          <div className="px-5 py-2.5 border-b border-border/50 bg-muted/20">
+            <div className="flex items-center gap-3 text-[11px] font-sans text-muted-foreground/70">
+              <span className="flex items-center gap-1.5">
+                <Icon className="h-3 w-3" strokeWidth={1.5} />
+                {typeLabel[sourceItem.type]}
+              </span>
+              <span className="text-border">·</span>
+              <span className="flex items-center gap-1.5">
+                <Layers className="h-3 w-3" strokeWidth={1.5} />
+                {sourceItem.moduleName}
+              </span>
+              <span className="text-border">·</span>
+              <span className="flex items-center gap-1.5">
+                <Clock className="h-3 w-3" strokeWidth={1.5} />
+                12 min read
+              </span>
             </div>
           </div>
         )}
 
-        <div className="flex-1 overflow-y-auto p-5 scrollbar-thin">
-          <p className="text-[13px] font-sans text-foreground/90 leading-[1.75] whitespace-pre-line">{focused.preview}</p>
+        {/* Document reading surface */}
+        <div className="flex-1 overflow-y-auto scrollbar-thin">
+          <div className="px-6 py-6">
+            {doc ? (
+              <div className="space-y-6">
+                {doc.sections.map((section, i) => (
+                  <div key={i} className="animate-fade-in-fast" style={{ animationDelay: `${i * 40}ms` }}>
+                    <h4 className="text-[13px] font-sans font-semibold text-foreground mb-2 tracking-[-0.01em]">
+                      {section.heading}
+                    </h4>
+                    <p className="text-[13px] font-sans text-foreground/85 leading-[1.8] whitespace-pre-line">
+                      {section.body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="rounded-xl border border-border/60 bg-muted/20 p-6 text-center">
+                  <Icon className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" strokeWidth={1} />
+                  <p className="text-[13px] font-sans text-foreground/70 leading-relaxed max-w-[320px] mx-auto">
+                    {fallbackContent}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
   }
 
-  // Expanded module tree
+  // ─── List Mode ───
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center justify-between px-4 py-3.5 border-b border-border">
