@@ -127,12 +127,8 @@ const StudyPlan = () => {
               return (
                 <div key={p.id} className="flex items-center justify-between py-2.5 px-3 rounded-lg setting-row">
                   <div className="flex items-center gap-2.5">
-                    <div className={cn("h-7 w-7 rounded-md border border-border/60 flex items-center justify-center shrink-0 overflow-hidden", p.color || "bg-muted/50")}>
-                      {p.icon ? (
-                        <img src={p.icon} alt={p.name} className="h-4 w-4 object-contain" />
-                      ) : (
-                        <span className="text-[10px] font-sans font-bold">{p.letter}</span>
-                      )}
+                    <div className="h-7 w-7 rounded-md border border-border/60 flex items-center justify-center shrink-0 overflow-hidden bg-muted/50">
+                      {p.logo}
                     </div>
                     <span className="text-[12px] font-sans text-foreground">{p.name}</span>
                   </div>
