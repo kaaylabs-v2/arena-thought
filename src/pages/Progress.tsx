@@ -168,7 +168,7 @@ function CourseCard({ course, index }: { course: typeof courseProgress[number]; 
 
   return (
     <Link
-      ref={reveal.ref as React.Ref<HTMLAnchorElement>}
+      ref={reveal.ref}
       to={`/workspace/${course.id}`}
       className={`group flex items-center gap-5 rounded-xl border border-border bg-card p-5 hover:border-accent/20 hover:shadow-lifted transition-all duration-250 ease-out active:scale-[0.998] ${props.className}`}
       style={props.style}
