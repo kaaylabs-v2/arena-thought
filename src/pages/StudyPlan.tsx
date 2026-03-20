@@ -23,7 +23,6 @@ const courseOptions = [
 
 const syncPlatforms = [
   { id: "google-cal", name: "Google Calendar", logo: <GoogleCalendarLogo className="h-4 w-4" />, connected: false },
-  { id: "apple-cal", name: "Apple Calendar", logo: <AppleCalendarLogo className="h-4 w-4" />, connected: false },
   { id: "notion", name: "Notion", logo: <NotionLogo className="h-4 w-4" />, connected: false },
 ];
 

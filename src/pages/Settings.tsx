@@ -207,11 +207,6 @@ const Settings = () => {
             svgLogo={<ReadwiseLogo className="h-5 w-5" />}
           />
           <IntegrationRow
-            name="Anki"
-            description="Export flashcards from Nexi quiz sessions"
-            svgLogo={<AnkiLogo className="h-5 w-5" />}
-          />
-          <IntegrationRow
             name="Obsidian"
             description="Export notebook entries as Markdown vault files"
             svgLogo={<ObsidianLogo className="h-5 w-5" />}
