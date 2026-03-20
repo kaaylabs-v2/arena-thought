@@ -163,7 +163,7 @@ function EmptyState() {
 }
 
 function CourseCard({ course, index }: { course: typeof courseProgress[number]; index: number }) {
-  const reveal = useScrollReveal();
+  const reveal = useScrollReveal<HTMLAnchorElement>();
   const props = revealProps(reveal.isVisible, 60 + index * 70);
 
   return (
