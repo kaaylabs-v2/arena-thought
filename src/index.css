@@ -141,6 +141,19 @@
 }
 
 @layer components {
+  /* Compact mode — reduces spacing globally */
+  .compact-mode h1 { @apply text-3xl; }
+  .compact-mode section { @apply mb-6; }
+  .compact-mode .p-8 { padding: 1.25rem; }
+  .compact-mode .lg\:p-12 { padding: 1.5rem; }
+  .compact-mode .xl\:p-16 { padding: 1.5rem; }
+  .compact-mode .mb-10 { margin-bottom: 1.5rem; }
+  .compact-mode .mb-14 { margin-bottom: 2rem; }
+  .compact-mode .p-5 { padding: 0.875rem; }
+  .compact-mode .p-6 { padding: 1rem; }
+  .compact-mode .py-4 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+  .compact-mode .gap-3 { gap: 0.5rem; }
+
   /* Pane transition class for workspace */
   .pane-transition {
     transition: width 280ms cubic-bezier(0.16, 1, 0.3, 1),
