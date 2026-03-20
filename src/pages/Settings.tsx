@@ -330,9 +330,9 @@ function IntegrationRow({ name, description, icon, fallbackLetter, fallbackColor
   };
 
   return (
-    <div className="flex items-center justify-between px-5 py-4">
+    <div className="flex items-center justify-between px-5 py-4 setting-row">
       <div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
-        <div className={`h-8 w-8 rounded-lg border border-border/60 flex items-center justify-center shrink-0 overflow-hidden ${fallbackColor ? fallbackColor : 'bg-muted/50'}`}>
+        <div className={`h-8 w-8 rounded-lg border border-border/60 flex items-center justify-center shrink-0 overflow-hidden transition-transform duration-300 ease-spring group-hover:scale-105 ${fallbackColor ? fallbackColor : 'bg-muted/50'}`}>
           {icon ? (
             <img src={icon} alt={name} className="h-5 w-5 object-contain" />
           ) : (
@@ -346,15 +346,15 @@ function IntegrationRow({ name, description, icon, fallbackLetter, fallbackColor
       </div>
       <button
         onClick={handleToggle}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-sans transition-all duration-200 active:scale-[0.97] shrink-0 ${
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-sans shrink-0 btn-ghost ${
           connected
-            ? "border border-accent/30 text-accent bg-accent/5 hover:bg-accent/10"
-            : "border border-border text-muted-foreground hover:text-foreground hover:bg-muted/50"
+            ? "border border-accent/30 text-accent bg-accent/5 hover:!bg-accent/10"
+            : "border border-border text-muted-foreground hover:text-foreground"
         }`}
       >
         {connected ? (
           <>
-            <Check className="h-3 w-3" strokeWidth={2} />
+            <Check className="h-3 w-3 animate-check-pop" strokeWidth={2} />
             Connected
           </>
         ) : (
