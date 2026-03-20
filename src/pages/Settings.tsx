@@ -329,7 +329,9 @@ function IntegrationRow({ name, description, icon, svgLogo, fallbackLetter, fall
     <div className="flex items-center justify-between px-5 py-4 setting-row">
       <div className="flex items-center gap-3 min-w-0 flex-1 mr-4">
         <div className={`h-8 w-8 rounded-lg border border-border/60 flex items-center justify-center shrink-0 overflow-hidden transition-transform duration-300 ease-spring group-hover:scale-105 ${fallbackColor ? fallbackColor : 'bg-muted/50'}`}>
-          {icon ? (
+          {svgLogo ? (
+            svgLogo
+          ) : icon ? (
             <img src={icon} alt={name} className="h-5 w-5 object-contain" />
           ) : (
             <span className="text-[12px] font-sans font-bold">{fallbackLetter || name.charAt(0)}</span>
