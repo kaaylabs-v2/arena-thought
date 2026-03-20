@@ -28,11 +28,14 @@ export interface SourceItem {
   moduleName: string;
 }
 
+export type ReflectionMood = "focused" | "confused" | "energized" | "drained" | "curious" | "calm";
+
 export interface Reflection {
   id: string;
   date: string;
   content: string;
   linkedCourse?: string;
+  mood?: ReflectionMood;
 }
 
 export interface UserProfile {
