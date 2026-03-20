@@ -6,10 +6,15 @@ import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
 import { toast } from "sonner";
 
 // Extend Window for speech recognition support
+interface SpeechRecognitionAPI {
+  new (): SpeechRecognition;
+  prototype: SpeechRecognition;
+}
+
 declare global {
   interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
+    SpeechRecognition: SpeechRecognitionAPI;
+    webkitSpeechRecognition: SpeechRecognitionAPI;
   }
 }
 
