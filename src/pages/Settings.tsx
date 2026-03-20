@@ -14,10 +14,10 @@ type SettingsTab = "profile" | "account" | "connectors" | "privacy" | "appearanc
 const tabConfig: { id: SettingsTab; label: string; icon: React.ElementType }[] = [
   { id: "profile", label: "Profile", icon: User },
   { id: "account", label: "Account", icon: Building2 },
-  { id: "connectors", label: "Connectors", icon: Plug },
-  { id: "privacy", label: "Privacy", icon: Shield },
   { id: "appearance", label: "Appearance", icon: Palette },
   { id: "ai-learning", label: "AI & Learning", icon: Brain },
+  { id: "privacy", label: "Privacy", icon: Shield },
+  { id: "connectors", label: "Connectors", icon: Plug },
 ];
 
 const Settings = () => {
