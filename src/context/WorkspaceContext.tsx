@@ -47,6 +47,8 @@ export interface UserProfile {
 interface WorkspaceState {
   notebookEntries: NotebookEntry[];
   addNotebookEntry: (entry: Omit<NotebookEntry, "id" | "date">) => void;
+  updateNotebookEntry: (id: string, updates: Partial<NotebookEntry>) => void;
+  deleteNotebookEntry: (id: string) => void;
   chatMessages: Record<string, ChatMessage[]>;
   addMessage: (courseId: string, message: Omit<ChatMessage, "id">) => void;
   activeSource: SourceItem | null;
@@ -226,6 +228,16 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     ]);
   }, []);
 
+  const updateNotebookEntry = useCallback((id: string, updates: Partial<NotebookEntry>) => {
+    setNotebookEntries((prev) =>
+      prev.map((e) => (e.id === id ? { ...e, ...updates } : e))
+    );
+  }, []);
+
+  const deleteNotebookEntry = useCallback((id: string) => {
+    setNotebookEntries((prev) => prev.filter((e) => e.id !== id));
+  }, []);
+
   const addMessage = useCallback((courseId: string, message: Omit<ChatMessage, "id">) => {
     setChatMessages((prev) => ({
       ...prev,
@@ -249,6 +261,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       value={{
         notebookEntries,
         addNotebookEntry,
+        updateNotebookEntry,
+        deleteNotebookEntry,
         chatMessages,
         addMessage,
         activeSource,
