@@ -183,37 +183,39 @@ const Settings = () => {
           <IntegrationRow
             name="Notion"
             description="Sync notes and reflections to Notion pages"
-            icon="https://cdn.simpleicons.org/notion/000000"
+            icon="https://www.notion.so/images/favicon.ico"
           />
           <IntegrationRow
             name="Google Drive"
             description="Import sources and export notes to Drive"
-            icon="https://cdn.simpleicons.org/googledrive"
+            icon="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png"
           />
           <IntegrationRow
             name="Google Calendar"
             description="Connect Google Calendar for study scheduling"
-            icon="https://cdn.simpleicons.org/googlecalendar"
+            icon="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_31_2x.png"
           />
           <IntegrationRow
             name="Zotero"
             description="Import academic references and citation data"
-            icon="https://cdn.simpleicons.org/zotero"
+            icon="https://www.zotero.org/support/lib/exe/fetch.php?tok=b55a97&media=logo.png"
           />
           <IntegrationRow
             name="Readwise"
             description="Sync highlights and reading notes"
-            icon="https://cdn.simpleicons.org/readwise"
+            fallbackLetter="R"
+            fallbackColor="bg-yellow-500/15 text-yellow-500"
           />
           <IntegrationRow
             name="Anki"
             description="Export flashcards from Nexi quiz sessions"
-            icon="https://upload.wikimedia.org/wikipedia/commons/3/3d/Anki-icon.svg"
+            fallbackLetter="A"
+            fallbackColor="bg-blue-500/15 text-blue-500"
           />
           <IntegrationRow
             name="Obsidian"
             description="Export notebook entries as Markdown vault files"
-            icon="https://cdn.simpleicons.org/obsidian"
+            icon="https://obsidian.md/favicon.ico"
           />
         </SettingSection>
 
