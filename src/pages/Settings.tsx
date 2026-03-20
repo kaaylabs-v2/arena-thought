@@ -53,7 +53,7 @@ const Settings = () => {
           <SettingRow
             label="Compact mode"
             description="Reduce spacing and panel padding"
-            action={<Toggle checked={compactMode} onChange={setCompactMode} />}
+            action={<Toggle checked={appSettings.compactMode} onChange={(v) => updateAppSettings({ compactMode: v })} />}
           />
           <SettingRow
             label="Font size"
