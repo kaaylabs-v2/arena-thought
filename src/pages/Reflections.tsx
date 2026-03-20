@@ -63,7 +63,7 @@ const Reflections = () => {
   // Speech recognition setup
   const toggleVoice = useCallback(() => {
     const SpeechRecognitionCtor = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) {
+    if (!SpeechRecognitionCtor) {
       toast.error("Speech recognition not supported in this browser");
       return;
     }
