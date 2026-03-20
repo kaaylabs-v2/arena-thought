@@ -295,7 +295,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setUserProfile((prev) => ({ ...prev, ...updates }));
   }, []);
 
-  const [appSettings, setAppSettings] = useState<AppSettings>({ compactMode: false, fontSize: "medium" });
+  const [appSettings, setAppSettings] = useState<AppSettings>({ compactMode: false, fontSize: "medium", fontFamily: "default", language: "English" });
   const updateAppSettings = useCallback((updates: Partial<AppSettings>) => {
     setAppSettings((prev) => ({ ...prev, ...updates }));
   }, []);
