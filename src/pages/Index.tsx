@@ -27,7 +27,7 @@ const Index = () => {
   const upcomingTasks = tasks.filter((t) => !t.completed).slice(0, 4);
 
   return (
-    <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl">
+    <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl mx-auto">
       {/* Greeting */}
       <div className="mb-14 animate-fade-in">
         <h1 className="font-serif text-4xl lg:text-[2.75rem] text-foreground mb-2 leading-[1.1] font-medium">
