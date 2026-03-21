@@ -57,6 +57,51 @@ const Notebook = () => {
     return result;
   }, [notebookEntries, search, sort]);
 
+  // Vocabulary filtering
+  const filteredVocab = useMemo(() => {
+    return vocabulary.filter((v) =>
+      !search || v.term.toLowerCase().includes(search.toLowerCase()) || v.definition.toLowerCase().includes(search.toLowerCase()) || v.course.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [vocabulary, search]);
+
+  // Vocab editor state
+  const [editingVocab, setEditingVocab] = useState<VocabularyEntry | null>(null);
+  const [newVocab, setNewVocab] = useState(false);
+  const [vTerm, setVTerm] = useState("");
+  const [vDef, setVDef] = useState("");
+  const [vExample, setVExample] = useState("");
+  const [vCourse, setVCourse] = useState("General");
+
+  const openNewVocab = useCallback(() => {
+    setEditingVocab(null);
+    setNewVocab(true);
+    setVTerm(""); setVDef(""); setVExample(""); setVCourse("General");
+  }, []);
+
+  const openEditVocab = useCallback((v: VocabularyEntry) => {
+    setEditingVocab(v);
+    setNewVocab(false);
+    setVTerm(v.term); setVDef(v.definition); setVExample(v.example || ""); setVCourse(v.course);
+  }, []);
+
+  const handleSaveVocab = useCallback(() => {
+    if (!vTerm.trim() || !vDef.trim()) { toast.error("Term and definition required"); return; }
+    if (newVocab) {
+      addVocabulary({ term: vTerm.trim(), definition: vDef.trim(), example: vExample.trim() || undefined, course: vCourse, tags: [], savedFrom: "personal" });
+      toast.success("Term added");
+    } else if (editingVocab) {
+      updateVocabulary(editingVocab.id, { term: vTerm.trim(), definition: vDef.trim(), example: vExample.trim() || undefined, course: vCourse });
+      toast.success("Term updated");
+    }
+    setEditingVocab(null); setNewVocab(false);
+  }, [vTerm, vDef, vExample, vCourse, newVocab, editingVocab, addVocabulary, updateVocabulary]);
+
+  const handleDeleteVocab = useCallback((id: string) => {
+    deleteVocabulary(id);
+    toast.success("Term deleted");
+    setEditingVocab(null); setNewVocab(false);
+  }, [deleteVocabulary]);
+
   const openNoteEditor = useCallback((note: NotebookEntry) => {
     setOpenNote(note);
     setEditTitle(note.title);
