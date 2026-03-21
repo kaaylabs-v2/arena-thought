@@ -243,7 +243,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
                     className={`h-8 w-8 flex items-center justify-center rounded-lg transition-colors duration-200 ${
                       selectedSource === item.id
                         ? "bg-secondary text-foreground"
-                        : "hover:bg-secondary/70 text-muted-foreground/60"
+                        : "hover:bg-secondary/80 text-muted-foreground/60"
                     }`}
                   >
                     <Icon className="h-3.5 w-3.5" strokeWidth={1.5} />
