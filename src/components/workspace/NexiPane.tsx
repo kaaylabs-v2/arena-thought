@@ -178,7 +178,8 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-8 py-8 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto px-8 py-8 scrollbar-thin relative" ref={messagesContainerRef}>
+        <VocabSelectionPopover containerRef={messagesContainerRef} courseTitle={courseTitle} />
         <div className="max-w-[640px] mx-auto space-y-7">
           {messages.map((msg) => (
             <div
