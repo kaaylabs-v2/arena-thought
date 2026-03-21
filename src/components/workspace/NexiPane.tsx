@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import {
   Send,
   BookmarkPlus,
+  BookA,
   Copy,
   Check,
   Sparkles,
@@ -31,10 +32,11 @@ const followUpChips = [
 ];
 
 export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps) {
-  const { chatMessages, addMessage, addNotebookEntry, activeSource } = useWorkspace();
+  const { chatMessages, addMessage, addNotebookEntry, addVocabulary, activeSource } = useWorkspace();
   const messages = chatMessages[courseId] || [];
   const [input, setInput] = useState("");
   const [savedMessages, setSavedMessages] = useState<Set<string>>(new Set());
+  const [vocabSaved, setVocabSaved] = useState<Set<string>>(new Set());
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -96,6 +98,23 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
       savedFrom: "nexi",
     });
     toast.success("Saved to Notebook", { description: title.slice(0, 40) + "…" });
+  };
+
+  const handleSaveVocab = (msgId: string, content: string) => {
+    if (vocabSaved.has(msgId)) return;
+    setVocabSaved((prev) => new Set(prev).add(msgId));
+    // Extract first bold term as the vocab term, rest as definition
+    const boldMatch = content.match(/\*\*(.*?)\*\*/);
+    const term = boldMatch ? boldMatch[1] : content.slice(0, 40).replace(/\n/g, " ").trim();
+    const definition = content.slice(0, 200).replace(/\*\*/g, "").replace(/\n/g, " ").trim();
+    addVocabulary({
+      term,
+      definition,
+      course: courseTitle,
+      tags: [],
+      savedFrom: "nexi",
+    });
+    toast.success("Saved to Vocabulary", { description: term });
   };
 
   const handleCopy = (msgId: string, content: string) => {
@@ -230,6 +249,21 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                         <Copy className="h-3 w-3" strokeWidth={1.5} />
                       )}
                       {copiedId === msg.id ? "Copied" : "Copy"}
+                    </button>
+                    <button
+                      onClick={() => handleSaveVocab(msg.id, msg.content)}
+                      className={`flex items-center gap-1 text-[11px] font-sans px-2 py-1 rounded-md transition-all duration-200 ${
+                        vocabSaved.has(msg.id)
+                          ? "text-accent"
+                          : "text-muted-foreground/60 hover:text-foreground hover:bg-muted/50"
+                      }`}
+                    >
+                      {vocabSaved.has(msg.id) ? (
+                        <Check className="h-3 w-3" strokeWidth={2} />
+                      ) : (
+                        <BookA className="h-3 w-3" strokeWidth={1.5} />
+                      )}
+                      {vocabSaved.has(msg.id) ? "Saved" : "Save as Vocab"}
                     </button>
                   </div>
                 </div>

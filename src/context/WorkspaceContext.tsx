@@ -12,6 +12,17 @@ export interface NotebookEntry {
   savedFrom: "nexi" | "personal" | "source";
 }
 
+export interface VocabularyEntry {
+  id: string;
+  term: string;
+  definition: string;
+  example?: string;
+  course: string;
+  tags: string[];
+  date: string;
+  savedFrom: "nexi" | "personal" | "source";
+}
+
 export interface ChatMessage {
   id: string;
   role: "user" | "nexi" | "system";
@@ -73,6 +84,10 @@ interface WorkspaceState {
   addNotebookEntry: (entry: Omit<NotebookEntry, "id" | "date">) => void;
   updateNotebookEntry: (id: string, updates: Partial<NotebookEntry>) => void;
   deleteNotebookEntry: (id: string) => void;
+  vocabulary: VocabularyEntry[];
+  addVocabulary: (entry: Omit<VocabularyEntry, "id" | "date">) => void;
+  updateVocabulary: (id: string, updates: Partial<VocabularyEntry>) => void;
+  deleteVocabulary: (id: string) => void;
   chatMessages: Record<string, ChatMessage[]>;
   addMessage: (courseId: string, message: Omit<ChatMessage, "id">) => void;
   activeSource: SourceItem | null;
@@ -152,6 +167,38 @@ const seedNotebookEntries: NotebookEntry[] = [
     tags: ["bayesian", "fundamentals"],
     source: "Personal note",
     date: "4 days ago",
+    savedFrom: "personal",
+  },
+];
+
+const seedVocabulary: VocabularyEntry[] = [
+  {
+    id: "v1",
+    term: "Backpropagation",
+    definition: "An algorithm for training neural networks by computing gradients of the loss function with respect to each weight using the chain rule, propagating errors backward through the network.",
+    example: "During backpropagation, the gradient ∂L/∂w tells us how to adjust weight w to reduce the loss.",
+    course: "Foundations of Machine Learning",
+    tags: ["neural-networks"],
+    date: "Just now",
+    savedFrom: "nexi",
+  },
+  {
+    id: "v2",
+    term: "Gradient Descent",
+    definition: "An optimization algorithm that iteratively adjusts parameters in the direction that reduces the loss function, using the negative gradient as the update direction.",
+    example: "w_new = w_old - learning_rate × ∂L/∂w",
+    course: "Foundations of Machine Learning",
+    tags: ["optimization"],
+    date: "2 hours ago",
+    savedFrom: "nexi",
+  },
+  {
+    id: "v3",
+    term: "Posterior Probability",
+    definition: "The probability of a hypothesis after observing evidence, calculated using Bayes' theorem as proportional to the likelihood times the prior.",
+    course: "Advanced Statistical Methods",
+    tags: ["bayesian"],
+    date: "Yesterday",
     savedFrom: "personal",
   },
 ];
@@ -254,6 +301,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [chatMessages, setChatMessages] = useState<Record<string, ChatMessage[]>>(seedChatMessages);
   const [activeSource, setActiveSource] = useState<SourceItem | null>(null);
   const [reflections, setReflections] = useState<Reflection[]>(seedReflections);
+  const [vocabulary, setVocabulary] = useState<VocabularyEntry[]>(seedVocabulary);
   const [userProfile, setUserProfile] = useState<UserProfile>(defaultProfile);
 
   const addNotebookEntry = useCallback((entry: Omit<NotebookEntry, "id" | "date">) => {
@@ -271,6 +319,18 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   const deleteNotebookEntry = useCallback((id: string) => {
     setNotebookEntries((prev) => prev.filter((e) => e.id !== id));
+  }, []);
+
+  const addVocabulary = useCallback((entry: Omit<VocabularyEntry, "id" | "date">) => {
+    setVocabulary((prev) => [{ ...entry, id: genId(), date: "Just now" }, ...prev]);
+  }, []);
+
+  const updateVocabulary = useCallback((id: string, updates: Partial<VocabularyEntry>) => {
+    setVocabulary((prev) => prev.map((v) => (v.id === id ? { ...v, ...updates } : v)));
+  }, []);
+
+  const deleteVocabulary = useCallback((id: string) => {
+    setVocabulary((prev) => prev.filter((v) => v.id !== id));
   }, []);
 
   const addMessage = useCallback((courseId: string, message: Omit<ChatMessage, "id">) => {
@@ -333,6 +393,10 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         addNotebookEntry,
         updateNotebookEntry,
         deleteNotebookEntry,
+        vocabulary,
+        addVocabulary,
+        updateVocabulary,
+        deleteVocabulary,
         chatMessages,
         addMessage,
         activeSource,

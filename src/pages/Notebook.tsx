@@ -1,13 +1,15 @@
 import {
   Search, BookOpen, Tag, Calendar, StickyNote, LayoutGrid, List,
   Plus, ArrowLeft, Trash2, Bold, Italic, Underline, ListOrdered, ListChecks, X, MoreHorizontal,
+  BookA,
 } from "lucide-react";
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
-import { useWorkspace, type NotebookEntry } from "@/context/WorkspaceContext";
+import { useWorkspace, type NotebookEntry, type VocabularyEntry } from "@/context/WorkspaceContext";
 import { toast } from "sonner";
 
 type SortKey = "recent" | "course" | "tag";
 type ViewMode = "list" | "cards";
+type PageTab = "notes" | "vocab";
 
 const courseColors: Record<string, string> = {
   "Foundations of Machine Learning": "bg-accent/[0.06] border-accent/15",
@@ -23,7 +25,8 @@ const courseOptions = [
 ];
 
 const Notebook = () => {
-  const { notebookEntries, addNotebookEntry, updateNotebookEntry, deleteNotebookEntry } = useWorkspace();
+  const { notebookEntries, addNotebookEntry, updateNotebookEntry, deleteNotebookEntry, vocabulary, addVocabulary, updateVocabulary, deleteVocabulary } = useWorkspace();
+  const [pageTab, setPageTab] = useState<PageTab>("notes");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortKey>("recent");
   const [view, setView] = useState<ViewMode>("cards");
@@ -53,6 +56,51 @@ const Notebook = () => {
     }
     return result;
   }, [notebookEntries, search, sort]);
+
+  // Vocabulary filtering
+  const filteredVocab = useMemo(() => {
+    return vocabulary.filter((v) =>
+      !search || v.term.toLowerCase().includes(search.toLowerCase()) || v.definition.toLowerCase().includes(search.toLowerCase()) || v.course.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [vocabulary, search]);
+
+  // Vocab editor state
+  const [editingVocab, setEditingVocab] = useState<VocabularyEntry | null>(null);
+  const [newVocab, setNewVocab] = useState(false);
+  const [vTerm, setVTerm] = useState("");
+  const [vDef, setVDef] = useState("");
+  const [vExample, setVExample] = useState("");
+  const [vCourse, setVCourse] = useState("General");
+
+  const openNewVocab = useCallback(() => {
+    setEditingVocab(null);
+    setNewVocab(true);
+    setVTerm(""); setVDef(""); setVExample(""); setVCourse("General");
+  }, []);
+
+  const openEditVocab = useCallback((v: VocabularyEntry) => {
+    setEditingVocab(v);
+    setNewVocab(false);
+    setVTerm(v.term); setVDef(v.definition); setVExample(v.example || ""); setVCourse(v.course);
+  }, []);
+
+  const handleSaveVocab = useCallback(() => {
+    if (!vTerm.trim() || !vDef.trim()) { toast.error("Term and definition required"); return; }
+    if (newVocab) {
+      addVocabulary({ term: vTerm.trim(), definition: vDef.trim(), example: vExample.trim() || undefined, course: vCourse, tags: [], savedFrom: "personal" });
+      toast.success("Term added");
+    } else if (editingVocab) {
+      updateVocabulary(editingVocab.id, { term: vTerm.trim(), definition: vDef.trim(), example: vExample.trim() || undefined, course: vCourse });
+      toast.success("Term updated");
+    }
+    setEditingVocab(null); setNewVocab(false);
+  }, [vTerm, vDef, vExample, vCourse, newVocab, editingVocab, addVocabulary, updateVocabulary]);
+
+  const handleDeleteVocab = useCallback((id: string) => {
+    deleteVocabulary(id);
+    toast.success("Term deleted");
+    setEditingVocab(null); setNewVocab(false);
+  }, [deleteVocabulary]);
 
   const openNoteEditor = useCallback((note: NotebookEntry) => {
     setOpenNote(note);
@@ -279,170 +327,312 @@ const Notebook = () => {
   // ─── Notes listing view ───
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-5xl mx-auto">
-      <div className="flex items-start justify-between mb-10 animate-fade-in">
+      <div className="flex items-start justify-between mb-6 animate-fade-in">
         <div>
           <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1]">Notebook</h1>
           <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Your collected insights and knowledge.</p>
         </div>
         <button
-          onClick={openNewNote}
+          onClick={pageTab === "notes" ? openNewNote : openNewVocab}
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-[13px] font-sans font-medium btn-apple shrink-0"
         >
           <Plus className="h-4 w-4" strokeWidth={1.5} />
-          New note
+          {pageTab === "notes" ? "New note" : "New term"}
         </button>
       </div>
 
-      {/* Search + Sort + View toggle */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-8 animate-fade-in [animation-delay:80ms] [animation-fill-mode:backwards]">
-        <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" strokeWidth={1.5} />
-          <input
-            type="text"
-            placeholder="Search notes..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-[13px] font-sans placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring/40 transition-all duration-200"
-          />
-        </div>
-        <div className="flex gap-2">
-          <div className="flex gap-0.5 bg-muted/60 p-1 rounded-lg">
-            {(["recent", "course", "tag"] as SortKey[]).map((key) => (
-              <button
-                key={key}
-                onClick={() => setSort(key)}
-                className={`px-3.5 py-1.5 text-[12px] font-sans font-medium rounded-md capitalize transition-all duration-200 ${
-                  sort === key ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {key}
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-0.5 bg-muted/60 p-1 rounded-lg">
-            <button
-              onClick={() => setView("cards")}
-              className={`h-8 w-8 flex items-center justify-center rounded-md transition-all duration-200 ${
-                view === "cards" ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <LayoutGrid className="h-3.5 w-3.5" strokeWidth={1.5} />
-            </button>
-            <button
-              onClick={() => setView("list")}
-              className={`h-8 w-8 flex items-center justify-center rounded-md transition-all duration-200 ${
-                view === "list" ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <List className="h-3.5 w-3.5" strokeWidth={1.5} />
-            </button>
-          </div>
-        </div>
+      {/* Page tabs */}
+      <div className="flex gap-1 mb-6 animate-fade-in [animation-delay:40ms] [animation-fill-mode:backwards]">
+        <button
+          onClick={() => setPageTab("notes")}
+          className={`px-4 py-2 text-[13px] font-sans font-medium rounded-lg transition-all duration-200 ${
+            pageTab === "notes"
+              ? "bg-primary text-primary-foreground shadow-soft"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+          }`}
+        >
+          Notes
+          <span className="ml-1.5 text-[11px] opacity-70">{notebookEntries.length}</span>
+        </button>
+        <button
+          onClick={() => setPageTab("vocab")}
+          className={`px-4 py-2 text-[13px] font-sans font-medium rounded-lg transition-all duration-200 flex items-center gap-1.5 ${
+            pageTab === "vocab"
+              ? "bg-primary text-primary-foreground shadow-soft"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+          }`}
+        >
+          <BookA className="h-3.5 w-3.5" strokeWidth={1.5} />
+          Vocabulary
+          <span className="text-[11px] opacity-70">{vocabulary.length}</span>
+        </button>
       </div>
 
-      {/* Notes */}
-      {filteredNotes.length === 0 ? (
-        <div className="text-center py-24 animate-fade-in">
-          <StickyNote className="h-10 w-10 text-muted-foreground/25 mx-auto mb-3" strokeWidth={1} />
-          <p className="text-muted-foreground/70 font-sans text-sm mb-4">Your insights will appear here as you learn.</p>
-          <button
-            onClick={openNewNote}
-            className="text-[13px] font-sans text-accent hover:text-accent/80 transition-colors duration-200"
-          >
-            Create your first note →
-          </button>
-        </div>
-      ) : view === "list" ? (
-        <div className="space-y-2.5">
-          {filteredNotes.map((note, i) => (
-            <div
-              key={note.id}
-              onClick={() => openNoteEditor(note)}
-              className="group card-interactive p-5 cursor-pointer animate-fade-in [animation-fill-mode:backwards]"
-              style={{ animationDelay: `${100 + i * 60}ms` }}
-            >
-              <div className="flex items-start justify-between mb-2">
-                <h3 className="font-serif text-base text-foreground flex-1 leading-snug">{note.title}</h3>
-                <span className="text-[10px] font-sans text-muted-foreground/60 ml-3 shrink-0 flex items-center gap-1">
-                  <Calendar className="h-3 w-3" strokeWidth={1.5} />
-                  {note.date}
-                </span>
+      {pageTab === "notes" ? (
+        <>
+          {/* Search + Sort + View toggle */}
+          <div className="flex flex-col sm:flex-row gap-3 mb-8 animate-fade-in [animation-delay:80ms] [animation-fill-mode:backwards]">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" strokeWidth={1.5} />
+              <input
+                type="text"
+                placeholder="Search notes..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-[13px] font-sans placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring/40 transition-all duration-200"
+              />
+            </div>
+            <div className="flex gap-2">
+              <div className="flex gap-0.5 bg-muted/60 p-1 rounded-lg">
+                {(["recent", "course", "tag"] as SortKey[]).map((key) => (
+                  <button
+                    key={key}
+                    onClick={() => setSort(key)}
+                    className={`px-3.5 py-1.5 text-[12px] font-sans font-medium rounded-md capitalize transition-all duration-200 ${
+                      sort === key ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {key}
+                  </button>
+                ))}
               </div>
-              <p className="text-[12px] text-muted-foreground/70 font-sans leading-relaxed mb-3 line-clamp-2 tracking-[-0.01em]">{note.snippet}</p>
-              <div className="flex items-center gap-3 flex-wrap">
-                <span className="text-[10px] font-sans text-muted-foreground/60 flex items-center gap-1">
-                  <BookOpen className="h-3 w-3" strokeWidth={1.5} />
-                  {note.course}
-                </span>
-                <span className="text-border">·</span>
-                <span className="text-[10px] font-sans text-muted-foreground/50">{note.source}</span>
-                {note.tags.length > 0 && (
-                  <div className="flex gap-1.5 ml-auto">
-                    {note.tags.map((tag) => (
-                      <span key={tag} className="text-[10px] font-sans text-accent/70 bg-accent/8 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                        <Tag className="h-2.5 w-2.5" strokeWidth={1.5} />
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+              <div className="flex gap-0.5 bg-muted/60 p-1 rounded-lg">
+                <button
+                  onClick={() => setView("cards")}
+                  className={`h-8 w-8 flex items-center justify-center rounded-md transition-all duration-200 ${
+                    view === "cards" ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <LayoutGrid className="h-3.5 w-3.5" strokeWidth={1.5} />
+                </button>
+                <button
+                  onClick={() => setView("list")}
+                  className={`h-8 w-8 flex items-center justify-center rounded-md transition-all duration-200 ${
+                    view === "list" ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <List className="h-3.5 w-3.5" strokeWidth={1.5} />
+                </button>
               </div>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="columns-2 lg:columns-3 gap-3 [column-fill:_balance]">
-          {filteredNotes.map((note, i) => {
-            const colorClass = courseColors[note.course] || "bg-card border-border";
-            return (
-              <div
-                key={note.id}
-                onClick={() => openNoteEditor(note)}
-                className={`break-inside-avoid mb-3 group rounded-xl border p-4 cursor-pointer animate-fade-in [animation-fill-mode:backwards] ${colorClass}`}
-                style={{
-                  animationDelay: `${80 + i * 50}ms`,
-                  transition: "transform 350ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 350ms cubic-bezier(0.22, 1, 0.36, 1), border-color 250ms ease",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px) scale(1.01)";
-                  e.currentTarget.style.boxShadow = "0 6px 20px -6px hsl(222 28% 14% / 0.1), 0 2px 6px -2px hsl(222 28% 14% / 0.05)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "";
-                  e.currentTarget.style.boxShadow = "";
-                }}
-                onMouseDown={(e) => {
-                  e.currentTarget.style.transform = "translateY(0) scale(0.98)";
-                  e.currentTarget.style.transition = "transform 100ms cubic-bezier(0.22, 1, 0.36, 1)";
-                }}
-                onMouseUp={(e) => {
-                  e.currentTarget.style.transform = "translateY(-2px) scale(1.01)";
-                  e.currentTarget.style.transition = "transform 350ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 350ms cubic-bezier(0.22, 1, 0.36, 1), border-color 250ms ease";
-                }}
-              >
-                <h3 className="font-serif text-[15px] text-foreground leading-snug mb-2">{note.title}</h3>
-                <p className="text-[12px] text-muted-foreground/75 font-sans leading-[1.7] mb-3 tracking-[-0.01em]">
-                  {note.snippet}
-                </p>
-                <div className="flex items-center gap-2 flex-wrap">
-                  {note.tags.map((tag) => (
-                    <span key={tag} className="text-[10px] font-sans text-accent/70 bg-accent/8 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                      <Tag className="h-2.5 w-2.5" strokeWidth={1.5} />
-                      {tag}
+          </div>
+
+          {/* Notes */}
+          {filteredNotes.length === 0 ? (
+            <div className="text-center py-24 animate-fade-in">
+              <StickyNote className="h-10 w-10 text-muted-foreground/25 mx-auto mb-3" strokeWidth={1} />
+              <p className="text-muted-foreground/70 font-sans text-sm mb-4">Your insights will appear here as you learn.</p>
+              <button onClick={openNewNote} className="text-[13px] font-sans text-accent hover:text-accent/80 transition-colors duration-200">
+                Create your first note →
+              </button>
+            </div>
+          ) : view === "list" ? (
+            <div className="space-y-2.5">
+              {filteredNotes.map((note, i) => (
+                <div
+                  key={note.id}
+                  onClick={() => openNoteEditor(note)}
+                  className="group card-interactive p-5 cursor-pointer animate-fade-in [animation-fill-mode:backwards]"
+                  style={{ animationDelay: `${100 + i * 60}ms` }}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-serif text-base text-foreground flex-1 leading-snug">{note.title}</h3>
+                    <span className="text-[10px] font-sans text-muted-foreground/60 ml-3 shrink-0 flex items-center gap-1">
+                      <Calendar className="h-3 w-3" strokeWidth={1.5} />
+                      {note.date}
                     </span>
-                  ))}
+                  </div>
+                  <p className="text-[12px] text-muted-foreground/70 font-sans leading-relaxed mb-3 line-clamp-2 tracking-[-0.01em]">{note.snippet}</p>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="text-[10px] font-sans text-muted-foreground/60 flex items-center gap-1">
+                      <BookOpen className="h-3 w-3" strokeWidth={1.5} />
+                      {note.course}
+                    </span>
+                    <span className="text-border">·</span>
+                    <span className="text-[10px] font-sans text-muted-foreground/50">{note.source}</span>
+                    {note.tags.length > 0 && (
+                      <div className="flex gap-1.5 ml-auto">
+                        {note.tags.map((tag) => (
+                          <span key={tag} className="text-[10px] font-sans text-accent/70 bg-accent/8 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                            <Tag className="h-2.5 w-2.5" strokeWidth={1.5} />
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-border/40">
-                  <span className="text-[10px] font-sans text-muted-foreground/50 flex items-center gap-1 truncate">
-                    <BookOpen className="h-3 w-3 shrink-0" strokeWidth={1.5} />
-                    <span className="truncate">{note.course}</span>
-                  </span>
-                  <span className="text-[10px] font-sans text-muted-foreground/40 ml-auto shrink-0">{note.date}</span>
+              ))}
+            </div>
+          ) : (
+            <div className="columns-2 lg:columns-3 gap-3 [column-fill:_balance]">
+              {filteredNotes.map((note, i) => {
+                const colorClass = courseColors[note.course] || "bg-card border-border";
+                return (
+                  <div
+                    key={note.id}
+                    onClick={() => openNoteEditor(note)}
+                    className={`break-inside-avoid mb-3 group rounded-xl border p-4 cursor-pointer animate-fade-in [animation-fill-mode:backwards] ${colorClass}`}
+                    style={{
+                      animationDelay: `${80 + i * 50}ms`,
+                      transition: "transform 350ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 350ms cubic-bezier(0.22, 1, 0.36, 1), border-color 250ms ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px) scale(1.01)";
+                      e.currentTarget.style.boxShadow = "0 6px 20px -6px hsl(222 28% 14% / 0.1), 0 2px 6px -2px hsl(222 28% 14% / 0.05)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "";
+                      e.currentTarget.style.boxShadow = "";
+                    }}
+                    onMouseDown={(e) => {
+                      e.currentTarget.style.transform = "translateY(0) scale(0.98)";
+                      e.currentTarget.style.transition = "transform 100ms cubic-bezier(0.22, 1, 0.36, 1)";
+                    }}
+                    onMouseUp={(e) => {
+                      e.currentTarget.style.transform = "translateY(-2px) scale(1.01)";
+                      e.currentTarget.style.transition = "transform 350ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 350ms cubic-bezier(0.22, 1, 0.36, 1), border-color 250ms ease";
+                    }}
+                  >
+                    <h3 className="font-serif text-[15px] text-foreground leading-snug mb-2">{note.title}</h3>
+                    <p className="text-[12px] text-muted-foreground/75 font-sans leading-[1.7] mb-3 tracking-[-0.01em]">{note.snippet}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {note.tags.map((tag) => (
+                        <span key={tag} className="text-[10px] font-sans text-accent/70 bg-accent/8 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                          <Tag className="h-2.5 w-2.5" strokeWidth={1.5} />
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-border/40">
+                      <span className="text-[10px] font-sans text-muted-foreground/50 flex items-center gap-1 truncate">
+                        <BookOpen className="h-3 w-3 shrink-0" strokeWidth={1.5} />
+                        <span className="truncate">{note.course}</span>
+                      </span>
+                      <span className="text-[10px] font-sans text-muted-foreground/40 ml-auto shrink-0">{note.date}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {/* Vocab search */}
+          <div className="flex flex-col sm:flex-row gap-3 mb-8 animate-fade-in [animation-delay:80ms] [animation-fill-mode:backwards]">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" strokeWidth={1.5} />
+              <input
+                type="text"
+                placeholder="Search vocabulary..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-[13px] font-sans placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring/40 transition-all duration-200"
+              />
+            </div>
+          </div>
+
+          {/* Vocab inline editor */}
+          {(newVocab || editingVocab) && (
+            <div className="mb-6 rounded-xl border border-accent/20 bg-accent/5 p-5 animate-fade-in">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-[13px] font-sans font-medium text-foreground">{newVocab ? "New Term" : "Edit Term"}</h3>
+                <div className="flex items-center gap-2">
+                  {editingVocab && (
+                    <button onClick={() => handleDeleteVocab(editingVocab.id)} className="h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/50 hover:text-destructive hover:bg-destructive/5 transition-all duration-200">
+                      <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+                    </button>
+                  )}
+                  <button onClick={() => { setNewVocab(false); setEditingVocab(null); }} className="text-[11px] font-sans text-muted-foreground hover:text-foreground transition-colors">Cancel</button>
+                  <button onClick={handleSaveVocab} className="px-3 py-1 rounded-md bg-primary text-primary-foreground text-[11px] font-sans font-medium hover:bg-primary/90 transition-colors active:scale-[0.97]">Save</button>
                 </div>
               </div>
-            );
-          })}
-        </div>
+              <div className="space-y-3">
+                <input
+                  type="text"
+                  value={vTerm}
+                  onChange={(e) => setVTerm(e.target.value)}
+                  placeholder="Term"
+                  autoFocus
+                  className="w-full bg-background rounded-lg border border-input px-3 py-2 text-[14px] font-serif font-medium text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring/20"
+                />
+                <textarea
+                  value={vDef}
+                  onChange={(e) => setVDef(e.target.value)}
+                  placeholder="Definition"
+                  rows={2}
+                  className="w-full bg-background rounded-lg border border-input px-3 py-2 text-[13px] font-sans text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring/20 resize-none"
+                />
+                <input
+                  type="text"
+                  value={vExample}
+                  onChange={(e) => setVExample(e.target.value)}
+                  placeholder="Example usage (optional)"
+                  className="w-full bg-background rounded-lg border border-input px-3 py-2 text-[13px] font-sans text-foreground/80 italic placeholder:text-muted-foreground/40 placeholder:not-italic focus:outline-none focus:ring-2 focus:ring-ring/20"
+                />
+                <select
+                  value={vCourse}
+                  onChange={(e) => setVCourse(e.target.value)}
+                  className="h-9 px-3 rounded-lg border border-input bg-background text-[12px] font-sans text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring/20"
+                >
+                  {courseOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            </div>
+          )}
+
+          {/* Vocab list */}
+          {filteredVocab.length === 0 ? (
+            <div className="text-center py-24 animate-fade-in">
+              <BookA className="h-10 w-10 text-muted-foreground/25 mx-auto mb-3" strokeWidth={1} />
+              <p className="text-muted-foreground/70 font-sans text-sm mb-4">Your vocabulary terms will appear here.</p>
+              <button onClick={openNewVocab} className="text-[13px] font-sans text-accent hover:text-accent/80 transition-colors duration-200">
+                Add your first term →
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {filteredVocab.map((v, i) => {
+                const colorClass = courseColors[v.course] || "bg-card border-border";
+                return (
+                  <div
+                    key={v.id}
+                    onClick={() => openEditVocab(v)}
+                    className={`group rounded-xl border p-5 cursor-pointer animate-fade-in [animation-fill-mode:backwards] hover:shadow-soft transition-all duration-200 ${colorClass}`}
+                    style={{ animationDelay: `${80 + i * 50}ms` }}
+                  >
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <h3 className="font-serif text-lg text-foreground leading-snug">{v.term}</h3>
+                      <span className="text-[10px] font-sans text-muted-foreground/50 shrink-0">{v.date}</span>
+                    </div>
+                    <p className="text-[13px] font-sans text-muted-foreground/80 leading-relaxed mb-2">{v.definition}</p>
+                    {v.example && (
+                      <p className="text-[12px] font-sans text-accent/70 bg-accent/5 rounded-lg px-3 py-2 leading-relaxed italic mb-2">
+                        "{v.example}"
+                      </p>
+                    )}
+                    <div className="flex items-center gap-3 mt-2 pt-2 border-t border-border/40">
+                      <span className="text-[10px] font-sans text-muted-foreground/60 flex items-center gap-1">
+                        <BookOpen className="h-3 w-3" strokeWidth={1.5} />
+                        {v.course}
+                      </span>
+                      {v.tags.length > 0 && (
+                        <div className="flex gap-1.5 ml-auto">
+                          {v.tags.map((tag) => (
+                            <span key={tag} className="text-[10px] font-sans text-accent/70 bg-accent/8 px-2 py-0.5 rounded-full">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
