@@ -1,13 +1,15 @@
 import {
   Search, BookOpen, Tag, Calendar, StickyNote, LayoutGrid, List,
   Plus, ArrowLeft, Trash2, Bold, Italic, Underline, ListOrdered, ListChecks, X, MoreHorizontal,
+  BookA,
 } from "lucide-react";
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
-import { useWorkspace, type NotebookEntry } from "@/context/WorkspaceContext";
+import { useWorkspace, type NotebookEntry, type VocabularyEntry } from "@/context/WorkspaceContext";
 import { toast } from "sonner";
 
 type SortKey = "recent" | "course" | "tag";
 type ViewMode = "list" | "cards";
+type PageTab = "notes" | "vocab";
 
 const courseColors: Record<string, string> = {
   "Foundations of Machine Learning": "bg-accent/[0.06] border-accent/15",
