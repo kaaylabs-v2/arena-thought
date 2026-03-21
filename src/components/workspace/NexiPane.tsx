@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useWorkspace, simulatedResponses } from "@/context/WorkspaceContext";
 import { toast } from "sonner";
+import { VocabSelectionPopover } from "./VocabSelectionPopover";
 
 interface NexiPaneProps {
   courseId: string;
