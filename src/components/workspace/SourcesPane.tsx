@@ -243,7 +243,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
                     className={`h-8 w-8 flex items-center justify-center rounded-lg transition-colors duration-200 ${
                       selectedSource === item.id
                         ? "bg-secondary text-foreground"
-                        : "hover:bg-secondary/70 text-muted-foreground/60"
+                        : "hover:bg-secondary/80 text-muted-foreground/60"
                     }`}
                   >
                     <Icon className="h-3.5 w-3.5" strokeWidth={1.5} />
@@ -444,7 +444,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
                     className={`w-full flex items-center gap-2.5 px-2.5 py-[7px] rounded-lg text-left transition-all duration-200 ${
                       isSelected
                         ? "bg-secondary text-foreground"
-                        : "text-foreground/75 hover:bg-muted/50 hover:text-foreground"
+                        : "text-foreground/75 hover:bg-secondary/80 hover:text-foreground"
                     }`}
                   >
                     <ItemIcon className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" strokeWidth={1.5} />
