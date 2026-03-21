@@ -60,9 +60,14 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
         const rect = range.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
 
+        // Position pill above selection, but clamp so it doesn't go above visible area
+        const scrollTop = container.scrollTop;
+        const rawTop = rect.top - containerRect.top + scrollTop - 40;
+        const clampedTop = Math.max(scrollTop + 4, rawTop);
+
         setSelection({
           text,
-          top: rect.top - containerRect.top - 40,
+          top: clampedTop,
           left: rect.left - containerRect.left + rect.width / 2,
         });
       });
