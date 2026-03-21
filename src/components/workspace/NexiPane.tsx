@@ -100,22 +100,8 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
     toast.success("Saved to Notebook", { description: title.slice(0, 40) + "…" });
   };
 
-  const handleSaveVocab = (msgId: string, content: string) => {
-    if (vocabSaved.has(msgId)) return;
-    setVocabSaved((prev) => new Set(prev).add(msgId));
-    // Extract first bold term as the vocab term, rest as definition
-    const boldMatch = content.match(/\*\*(.*?)\*\*/);
-    const term = boldMatch ? boldMatch[1] : content.slice(0, 40).replace(/\n/g, " ").trim();
-    const definition = content.slice(0, 200).replace(/\*\*/g, "").replace(/\n/g, " ").trim();
-    addVocabulary({
-      term,
-      definition,
-      course: courseTitle,
-      tags: [],
-      savedFrom: "nexi",
-    });
-    toast.success("Saved to Vocabulary", { description: term });
-  };
+
+
 
   const handleCopy = (msgId: string, content: string) => {
     navigator.clipboard.writeText(content);
