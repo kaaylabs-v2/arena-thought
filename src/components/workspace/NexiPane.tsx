@@ -195,7 +195,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                   <p className="text-[13.5px] font-sans leading-relaxed">{msg.content}</p>
                 </div>
               ) : (
-                <div className="max-w-full">
+                <div className="max-w-full" data-nexi-msg>
                   <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-5 py-4 shadow-soft">
                     <div className="text-[13.5px] font-sans text-foreground leading-[1.7] whitespace-pre-line">
                       {msg.content.split(/(\*\*.*?\*\*|\*.*?\*)/g).map((part, i) => {
