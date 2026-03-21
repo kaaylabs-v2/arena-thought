@@ -171,6 +171,38 @@ const seedNotebookEntries: NotebookEntry[] = [
   },
 ];
 
+const seedVocabulary: VocabularyEntry[] = [
+  {
+    id: "v1",
+    term: "Backpropagation",
+    definition: "An algorithm for training neural networks by computing gradients of the loss function with respect to each weight using the chain rule, propagating errors backward through the network.",
+    example: "During backpropagation, the gradient ∂L/∂w tells us how to adjust weight w to reduce the loss.",
+    course: "Foundations of Machine Learning",
+    tags: ["neural-networks"],
+    date: "Just now",
+    savedFrom: "nexi",
+  },
+  {
+    id: "v2",
+    term: "Gradient Descent",
+    definition: "An optimization algorithm that iteratively adjusts parameters in the direction that reduces the loss function, using the negative gradient as the update direction.",
+    example: "w_new = w_old - learning_rate × ∂L/∂w",
+    course: "Foundations of Machine Learning",
+    tags: ["optimization"],
+    date: "2 hours ago",
+    savedFrom: "nexi",
+  },
+  {
+    id: "v3",
+    term: "Posterior Probability",
+    definition: "The probability of a hypothesis after observing evidence, calculated using Bayes' theorem as proportional to the likelihood times the prior.",
+    course: "Advanced Statistical Methods",
+    tags: ["bayesian"],
+    date: "Yesterday",
+    savedFrom: "personal",
+  },
+];
+
 const seedChatMessages: Record<string, ChatMessage[]> = {
   "1": [
     {
