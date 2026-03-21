@@ -118,6 +118,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
     const selectedText = selection.text;
     setTerm(selectedText);
     setShowForm(true);
+    showFormRef.current = true;
     setDefinition("");
     setExample("");
     window.getSelection()?.removeAllRanges();
