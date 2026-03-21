@@ -78,7 +78,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
 
     container.addEventListener("mouseup", handleMouseUp);
     return () => container.removeEventListener("mouseup", handleMouseUp);
-  }, [containerRef, showForm]);
+  }, [containerRef]);
 
   // Close on Escape
   useEffect(() => {
