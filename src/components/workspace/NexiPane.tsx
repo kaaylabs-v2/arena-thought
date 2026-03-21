@@ -32,7 +32,7 @@ const followUpChips = [
 ];
 
 export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps) {
-  const { chatMessages, addMessage, addNotebookEntry, activeSource } = useWorkspace();
+  const { chatMessages, addMessage, addNotebookEntry, addVocabulary, activeSource } = useWorkspace();
   const messages = chatMessages[courseId] || [];
   const [input, setInput] = useState("");
   const [savedMessages, setSavedMessages] = useState<Set<string>>(new Set());
