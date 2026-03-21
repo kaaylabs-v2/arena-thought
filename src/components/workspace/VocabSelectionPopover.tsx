@@ -93,16 +93,18 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
       const target = e.target as HTMLElement;
       if (popoverRef.current?.contains(target)) return;
       if (formRef.current?.contains(target)) return;
+      // Don't close if clicking inside the messages container (allows re-selecting)
       clearSelection();
     };
+    // Longer delay to ensure form renders before attaching
     const timer = setTimeout(() => {
       document.addEventListener("mousedown", handleClickOutside);
-    }, 100);
+    }, 250);
     return () => {
       clearTimeout(timer);
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [selection, clearSelection]);
+  }, [selection, showForm, clearSelection]);
 
   const handleOpenForm = useCallback(() => {
     if (!selection) return;
