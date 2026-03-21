@@ -91,16 +91,19 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
   useEffect(() => {
     if (!selection) return;
     const handleClickOutside = (e: MouseEvent) => {
+      // Skip if we just opened the form (the pill click triggers this)
+      if (justOpenedFormRef.current) {
+        justOpenedFormRef.current = false;
+        return;
+      }
       const target = e.target as HTMLElement;
       if (popoverRef.current?.contains(target)) return;
       if (formRef.current?.contains(target)) return;
-      // Don't close if clicking inside the messages container (allows re-selecting)
       clearSelection();
     };
-    // Longer delay to ensure form renders before attaching
     const timer = setTimeout(() => {
       document.addEventListener("mousedown", handleClickOutside);
-    }, 250);
+    }, 200);
     return () => {
       clearTimeout(timer);
       document.removeEventListener("mousedown", handleClickOutside);
@@ -109,6 +112,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
 
   const handleOpenForm = useCallback(() => {
     if (!selection) return;
+    justOpenedFormRef.current = true;
     const selectedText = selection.text;
     setTerm(selectedText);
     setShowForm(true);
