@@ -251,21 +251,6 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                       )}
                       {copiedId === msg.id ? "Copied" : "Copy"}
                     </button>
-                    <button
-                      onClick={() => handleSaveVocab(msg.id, msg.content)}
-                      className={`flex items-center gap-1 text-[11px] font-sans px-2 py-1 rounded-md transition-all duration-200 ${
-                        vocabSaved.has(msg.id)
-                          ? "text-accent"
-                          : "text-muted-foreground/60 hover:text-foreground hover:bg-muted/50"
-                      }`}
-                    >
-                      {vocabSaved.has(msg.id) ? (
-                        <Check className="h-3 w-3" strokeWidth={2} />
-                      ) : (
-                        <BookA className="h-3 w-3" strokeWidth={1.5} />
-                      )}
-                      {vocabSaved.has(msg.id) ? "Saved" : "Save as Vocab"}
-                    </button>
                   </div>
                 </div>
               )}
