@@ -2,7 +2,6 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import {
   Send,
   BookmarkPlus,
-  BookA,
   Copy,
   Check,
   Sparkles,
