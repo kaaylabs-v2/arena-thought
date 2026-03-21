@@ -327,17 +327,44 @@ const Notebook = () => {
   // ─── Notes listing view ───
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-5xl mx-auto">
-      <div className="flex items-start justify-between mb-10 animate-fade-in">
+      <div className="flex items-start justify-between mb-6 animate-fade-in">
         <div>
           <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1]">Notebook</h1>
           <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Your collected insights and knowledge.</p>
         </div>
         <button
-          onClick={openNewNote}
+          onClick={pageTab === "notes" ? openNewNote : openNewVocab}
           className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-[13px] font-sans font-medium btn-apple shrink-0"
         >
           <Plus className="h-4 w-4" strokeWidth={1.5} />
-          New note
+          {pageTab === "notes" ? "New note" : "New term"}
+        </button>
+      </div>
+
+      {/* Page tabs */}
+      <div className="flex gap-1 mb-6 animate-fade-in [animation-delay:40ms] [animation-fill-mode:backwards]">
+        <button
+          onClick={() => setPageTab("notes")}
+          className={`px-4 py-2 text-[13px] font-sans font-medium rounded-lg transition-all duration-200 ${
+            pageTab === "notes"
+              ? "bg-primary text-primary-foreground shadow-soft"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+          }`}
+        >
+          Notes
+          <span className="ml-1.5 text-[11px] opacity-70">{notebookEntries.length}</span>
+        </button>
+        <button
+          onClick={() => setPageTab("vocab")}
+          className={`px-4 py-2 text-[13px] font-sans font-medium rounded-lg transition-all duration-200 flex items-center gap-1.5 ${
+            pageTab === "vocab"
+              ? "bg-primary text-primary-foreground shadow-soft"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+          }`}
+        >
+          <BookA className="h-3.5 w-3.5" strokeWidth={1.5} />
+          Vocabulary
+          <span className="text-[11px] opacity-70">{vocabulary.length}</span>
         </button>
       </div>
 
