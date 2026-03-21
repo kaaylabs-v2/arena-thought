@@ -32,6 +32,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
   const clearSelection = useCallback(() => {
     setSelection(null);
     setShowForm(false);
+    showFormRef.current = false;
     setTerm("");
     setDefinition("");
     setExample("");
