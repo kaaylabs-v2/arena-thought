@@ -32,11 +32,11 @@ const followUpChips = [
 ];
 
 export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps) {
-  const { chatMessages, addMessage, addNotebookEntry, addVocabulary, activeSource } = useWorkspace();
+  const { chatMessages, addMessage, addNotebookEntry, activeSource } = useWorkspace();
   const messages = chatMessages[courseId] || [];
   const [input, setInput] = useState("");
   const [savedMessages, setSavedMessages] = useState<Set<string>>(new Set());
-  const [vocabSaved, setVocabSaved] = useState<Set<string>>(new Set());
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
