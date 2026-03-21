@@ -321,6 +321,18 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setNotebookEntries((prev) => prev.filter((e) => e.id !== id));
   }, []);
 
+  const addVocabulary = useCallback((entry: Omit<VocabularyEntry, "id" | "date">) => {
+    setVocabulary((prev) => [{ ...entry, id: genId(), date: "Just now" }, ...prev]);
+  }, []);
+
+  const updateVocabulary = useCallback((id: string, updates: Partial<VocabularyEntry>) => {
+    setVocabulary((prev) => prev.map((v) => (v.id === id ? { ...v, ...updates } : v)));
+  }, []);
+
+  const deleteVocabulary = useCallback((id: string) => {
+    setVocabulary((prev) => prev.filter((v) => v.id !== id));
+  }, []);
+
   const addMessage = useCallback((courseId: string, message: Omit<ChatMessage, "id">) => {
     setChatMessages((prev) => ({
       ...prev,
