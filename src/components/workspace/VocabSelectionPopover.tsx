@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { BookA, X } from "lucide-react";
+import { BookA, X, Sparkles, Loader2 } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { toast } from "sonner";
+import { mockGenerateDefinition, mockGenerateExample } from "@/lib/mock-vocab-ai";
 
 interface SelectionState {
   text: string;
@@ -21,6 +22,8 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
   const [term, setTerm] = useState("");
   const [definition, setDefinition] = useState("");
   const [example, setExample] = useState("");
+  const [genDef, setGenDef] = useState(false);
+  const [genEx, setGenEx] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +33,8 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
     setTerm("");
     setDefinition("");
     setExample("");
+    setGenDef(false);
+    setGenEx(false);
   }, []);
 
   // Listen for text selection within the messages container
@@ -38,17 +43,14 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
     if (!container) return;
 
     const handleMouseUp = () => {
-      // Small delay to let browser finalize selection
       requestAnimationFrame(() => {
         const sel = window.getSelection();
         if (!sel || sel.isCollapsed || !sel.toString().trim()) {
-          // Don't clear if form is open
           if (!showForm) setSelection(null);
           return;
         }
 
         const text = sel.toString().trim();
-        // Check selection is within a nexi message (data-nexi-msg attribute)
         const anchorNode = sel.anchorNode;
         if (!anchorNode) return;
         const msgEl = (anchorNode.nodeType === Node.TEXT_NODE ? anchorNode.parentElement : anchorNode as HTMLElement)?.closest("[data-nexi-msg]");
@@ -88,7 +90,6 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
       if (formRef.current?.contains(target)) return;
       clearSelection();
     };
-    // Delay to avoid immediate close from the mouseup that created the selection
     const timer = setTimeout(() => {
       document.addEventListener("mousedown", handleClickOutside);
     }, 100);
@@ -98,12 +99,31 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
     };
   }, [selection, clearSelection]);
 
-  const handleOpenForm = () => {
+  const handleOpenForm = useCallback(() => {
     if (!selection) return;
-    setTerm(selection.text);
+    const selectedText = selection.text;
+    setTerm(selectedText);
     setShowForm(true);
+    setDefinition("");
+    setExample("");
     window.getSelection()?.removeAllRanges();
-  };
+
+    // Auto-generate definition
+    setGenDef(true);
+    mockGenerateDefinition(selectedText).then((def) => {
+      setDefinition(def);
+      setGenDef(false);
+    });
+  }, [selection]);
+
+  const handleGenerateExample = useCallback(() => {
+    if (!term.trim()) return;
+    setGenEx(true);
+    mockGenerateExample(term.trim()).then((ex) => {
+      setExample(ex);
+      setGenEx(false);
+    });
+  }, [term]);
 
   const handleSave = () => {
     if (!term.trim()) return;
@@ -155,7 +175,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
             transform: "translateX(-50%)",
           }}
         >
-          <div className="w-[280px] bg-popover border border-border rounded-xl shadow-lifted p-4">
+          <div className="w-[300px] bg-popover border border-border rounded-xl shadow-lifted p-4">
             <div className="flex items-center justify-between mb-3">
               <span className="text-[12px] font-sans font-medium text-foreground flex items-center gap-1.5">
                 <BookA className="h-3.5 w-3.5 text-accent" strokeWidth={1.5} />
@@ -167,6 +187,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
             </div>
 
             <div className="space-y-2.5">
+              {/* Term */}
               <div>
                 <label className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-wider mb-1 block">Term</label>
                 <input
@@ -176,23 +197,56 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
                   autoFocus
                 />
               </div>
+
+              {/* Definition with auto-generate */}
               <div>
-                <label className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-wider mb-1 block">Definition</label>
-                <textarea
-                  value={definition}
-                  onChange={(e) => setDefinition(e.target.value)}
-                  placeholder="What does it mean?"
-                  rows={2}
-                  className="w-full bg-background border border-border rounded-lg px-3 py-1.5 text-[12.5px] font-sans text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-ring/40 transition-colors resize-none"
-                />
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-wider">Definition</label>
+                  {genDef && (
+                    <span className="flex items-center gap-1 text-[9px] font-sans text-accent/70">
+                      <Loader2 className="h-2.5 w-2.5 animate-spin" strokeWidth={2} />
+                      Generating…
+                    </span>
+                  )}
+                </div>
+                <div className="relative">
+                  <textarea
+                    value={definition}
+                    onChange={(e) => setDefinition(e.target.value)}
+                    placeholder={genDef ? "" : "What does it mean?"}
+                    rows={2}
+                    className={`w-full bg-background border border-border rounded-lg px-3 py-1.5 text-[12.5px] font-sans text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-ring/40 transition-colors resize-none ${genDef ? "animate-pulse opacity-60" : ""}`}
+                  />
+                </div>
               </div>
+
+              {/* Example with on-demand generate */}
               <div>
-                <label className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-wider mb-1 block">Example <span className="normal-case text-muted-foreground/50">(optional)</span></label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-wider">
+                    Example <span className="normal-case text-muted-foreground/50">(optional)</span>
+                  </label>
+                  {!genEx && !example && (
+                    <button
+                      onClick={handleGenerateExample}
+                      className="flex items-center gap-1 text-[9px] font-sans text-accent/80 hover:text-accent transition-colors"
+                    >
+                      <Sparkles className="h-2.5 w-2.5" strokeWidth={2} />
+                      Generate
+                    </button>
+                  )}
+                  {genEx && (
+                    <span className="flex items-center gap-1 text-[9px] font-sans text-accent/70">
+                      <Loader2 className="h-2.5 w-2.5 animate-spin" strokeWidth={2} />
+                      Generating…
+                    </span>
+                  )}
+                </div>
                 <input
                   value={example}
                   onChange={(e) => setExample(e.target.value)}
-                  placeholder="Use it in context…"
-                  className="w-full bg-background border border-border rounded-lg px-3 py-1.5 text-[12.5px] font-sans text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-ring/40 transition-colors"
+                  placeholder={genEx ? "" : "Use it in context…"}
+                  className={`w-full bg-background border border-border rounded-lg px-3 py-1.5 text-[12.5px] font-sans text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-ring/40 transition-colors ${genEx ? "animate-pulse opacity-60" : ""}`}
                 />
               </div>
             </div>
@@ -206,7 +260,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
               </button>
               <button
                 onClick={handleSave}
-                disabled={!term.trim()}
+                disabled={!term.trim() || genDef}
                 className="px-3 py-1.5 text-[11px] font-sans font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-40"
               >
                 Save

@@ -7,11 +7,14 @@ import {
   Tag,
   BookA,
   Trash2,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
 import type { PaneState } from "@/pages/Workspace";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { toast } from "sonner";
+import { mockGenerateDefinition, mockGenerateExample } from "@/lib/mock-vocab-ai";
 
 interface NotebookPaneProps {
   state: PaneState;
@@ -29,6 +32,8 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
   const [vocabDef, setVocabDef] = useState("");
   const [vocabExample, setVocabExample] = useState("");
   const [showVocabForm, setShowVocabForm] = useState(false);
+  const [genDef, setGenDef] = useState(false);
+  const [genEx, setGenEx] = useState(false);
   const { notebookEntries, addNotebookEntry, vocabulary, addVocabulary, deleteVocabulary } = useWorkspace();
 
   const courseVocab = vocabulary.filter((v) => v.course === courseTitle);
@@ -66,12 +71,32 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
     setVocabDef("");
     setVocabExample("");
     setShowVocabForm(false);
+    setGenDef(false);
+    setGenEx(false);
     toast.success("Term saved");
   };
 
   const handleDeleteVocab = (id: string) => {
     deleteVocabulary(id);
     toast.success("Term removed");
+  };
+
+  const handleGenDef = () => {
+    if (!vocabTerm.trim()) return;
+    setGenDef(true);
+    mockGenerateDefinition(vocabTerm.trim()).then((def) => {
+      setVocabDef(def);
+      setGenDef(false);
+    });
+  };
+
+  const handleGenEx = () => {
+    if (!vocabTerm.trim()) return;
+    setGenEx(true);
+    mockGenerateExample(vocabTerm.trim()).then((ex) => {
+      setVocabExample(ex);
+      setGenEx(false);
+    });
   };
 
   if (isMini) {
@@ -229,30 +254,75 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                   autoFocus
                   className="w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-muted/60 transition-colors"
                 />
-                <textarea
-                  value={vocabDef}
-                  onChange={(e) => setVocabDef(e.target.value)}
-                  placeholder="Definition"
-                  rows={2}
-                  className="w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-muted/60 transition-colors resize-none"
-                />
-                <input
-                  type="text"
-                  value={vocabExample}
-                  onChange={(e) => setVocabExample(e.target.value)}
-                  placeholder="Example (optional)"
-                  onKeyDown={(e) => e.key === "Enter" && handleAddVocab()}
-                  className="w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-muted/60 transition-colors"
-                />
+                {/* Definition with generate */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-wider">Definition</label>
+                    {!genDef && !vocabDef && vocabTerm.trim() && (
+                      <button
+                        onClick={handleGenDef}
+                        className="flex items-center gap-1 text-[9px] font-sans text-accent/80 hover:text-accent transition-colors"
+                      >
+                        <Sparkles className="h-2.5 w-2.5" strokeWidth={2} />
+                        Generate
+                      </button>
+                    )}
+                    {genDef && (
+                      <span className="flex items-center gap-1 text-[9px] font-sans text-accent/70">
+                        <Loader2 className="h-2.5 w-2.5 animate-spin" strokeWidth={2} />
+                        Generating…
+                      </span>
+                    )}
+                  </div>
+                  <textarea
+                    value={vocabDef}
+                    onChange={(e) => setVocabDef(e.target.value)}
+                    placeholder={genDef ? "" : "Definition"}
+                    rows={2}
+                    className={`w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-muted/60 transition-colors resize-none ${genDef ? "animate-pulse opacity-60" : ""}`}
+                  />
+                </div>
+                {/* Example with generate */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-wider">
+                      Example <span className="normal-case text-muted-foreground/50">(optional)</span>
+                    </label>
+                    {!genEx && !vocabExample && vocabTerm.trim() && (
+                      <button
+                        onClick={handleGenEx}
+                        className="flex items-center gap-1 text-[9px] font-sans text-accent/80 hover:text-accent transition-colors"
+                      >
+                        <Sparkles className="h-2.5 w-2.5" strokeWidth={2} />
+                        Generate
+                      </button>
+                    )}
+                    {genEx && (
+                      <span className="flex items-center gap-1 text-[9px] font-sans text-accent/70">
+                        <Loader2 className="h-2.5 w-2.5 animate-spin" strokeWidth={2} />
+                        Generating…
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    type="text"
+                    value={vocabExample}
+                    onChange={(e) => setVocabExample(e.target.value)}
+                    placeholder={genEx ? "" : "Example (optional)"}
+                    onKeyDown={(e) => e.key === "Enter" && handleAddVocab()}
+                    className={`w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-muted/60 transition-colors ${genEx ? "animate-pulse opacity-60" : ""}`}
+                  />
+                </div>
                 <div className="flex items-center gap-2 justify-end">
                   <button
-                    onClick={() => { setShowVocabForm(false); setVocabTerm(""); setVocabDef(""); setVocabExample(""); }}
+                    onClick={() => { setShowVocabForm(false); setVocabTerm(""); setVocabDef(""); setVocabExample(""); setGenDef(false); setGenEx(false); }}
                     className="px-2.5 py-1 text-[11px] font-sans text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleAddVocab}
+                    disabled={genDef}
                     className="px-3 py-1 rounded-md bg-primary text-primary-foreground text-[11px] font-sans font-medium hover:bg-primary/90 transition-colors active:scale-[0.97]"
                   >
                     Save
