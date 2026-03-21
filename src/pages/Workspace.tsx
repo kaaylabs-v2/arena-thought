@@ -133,7 +133,6 @@ const Workspace = () => {
 
         {/* ── Sources ↔ Nexi handle ── */}
         <ResizableHandle
-          withHandle={showSourcesHandle}
           className={`transition-opacity duration-200 ${showSourcesHandle ? "opacity-100" : "opacity-0 pointer-events-none w-0"}`}
         />
 
