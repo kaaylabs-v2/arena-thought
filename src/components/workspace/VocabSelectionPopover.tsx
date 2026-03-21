@@ -26,10 +26,13 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
   const [genEx, setGenEx] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
+  const justOpenedFormRef = useRef(false);
+  const showFormRef = useRef(false);
 
   const clearSelection = useCallback(() => {
     setSelection(null);
     setShowForm(false);
+    showFormRef.current = false;
     setTerm("");
     setDefinition("");
     setExample("");
@@ -46,7 +49,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
       requestAnimationFrame(() => {
         const sel = window.getSelection();
         if (!sel || sel.isCollapsed || !sel.toString().trim()) {
-          if (!showForm) setSelection(null);
+          if (!showFormRef.current) setSelection(null);
           return;
         }
 
@@ -60,9 +63,14 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
         const rect = range.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
 
+        // Position pill above selection, but clamp so it doesn't go above visible area
+        const scrollTop = container.scrollTop;
+        const rawTop = rect.top - containerRect.top + scrollTop - 40;
+        const clampedTop = Math.max(scrollTop + 4, rawTop);
+
         setSelection({
           text,
-          top: rect.top - containerRect.top - 40,
+          top: clampedTop,
           left: rect.left - containerRect.left + rect.width / 2,
         });
       });
@@ -70,7 +78,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
 
     container.addEventListener("mouseup", handleMouseUp);
     return () => container.removeEventListener("mouseup", handleMouseUp);
-  }, [containerRef, showForm]);
+  }, [containerRef]);
 
   // Close on Escape
   useEffect(() => {
@@ -85,6 +93,11 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
   useEffect(() => {
     if (!selection) return;
     const handleClickOutside = (e: MouseEvent) => {
+      // Skip if we just opened the form (the pill click triggers this)
+      if (justOpenedFormRef.current) {
+        justOpenedFormRef.current = false;
+        return;
+      }
       const target = e.target as HTMLElement;
       if (popoverRef.current?.contains(target)) return;
       if (formRef.current?.contains(target)) return;
@@ -92,18 +105,20 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
     };
     const timer = setTimeout(() => {
       document.addEventListener("mousedown", handleClickOutside);
-    }, 100);
+    }, 200);
     return () => {
       clearTimeout(timer);
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [selection, clearSelection]);
+  }, [selection, showForm, clearSelection]);
 
   const handleOpenForm = useCallback(() => {
     if (!selection) return;
+    justOpenedFormRef.current = true;
     const selectedText = selection.text;
     setTerm(selectedText);
     setShowForm(true);
+    showFormRef.current = true;
     setDefinition("");
     setExample("");
     window.getSelection()?.removeAllRanges();
