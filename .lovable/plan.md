@@ -1,42 +1,49 @@
 
 
-# Generate Nexus² Product Walkthrough Report
+# Text Selection → Add to Vocab in Nexi Pane
 
-## What I'll Create
+## What Changes
 
-A comprehensive ~30-page DOCX document covering every aspect of the Nexus² frontend, structured as a professional product walkthrough and architecture report.
+### 1. Add a floating "Add to Vocab" tooltip on text selection in Nexi responses
 
-## Document Structure
+When a user highlights/selects any word or phrase inside a Nexi AI response bubble, a small floating popover appears near the selection with an "Add to Vocab" button (BookA icon + label).
 
-1. **Executive Summary** — What Nexus² is, tech stack, current state
-2. **Product Identity** — Design philosophy, privacy-first approach, no-gamification stance
-3. **Global Design and App Shell** — Layout architecture, WorkspaceProvider, font scaling
-4. **Navigation and Sidebar** — 6-item nav (reordered today), collapse behavior, user menu with language submenu
-5. **Theme and Typography** — Light/Dark/Auto modes, Source Serif 4 + Inter + OpenDyslexic, font family selection
-6. **Page-by-Page Walkthrough** — Detailed coverage of all 8 pages:
-   - Home (greeting, continue learning, tasks, quick actions)
-   - Library (search, filters, course cards)
-   - Study Plan (task CRUD, calendar, sync panel)
-   - Notebook (editor, search, sort, view modes)
-   - Progress (hero summary, weekly chart, course cards, scroll reveal)
-   - Reflections (mood tags, voice input, date grouping, prompts)
-   - Settings (5 tabs redesigned today: General with visual cards, Nexi with new settings, Account, Privacy, Connectors)
-   - Profile (standalone page, edit mode, stats)
-7. **Core Workspace Walkthrough** — Detailed 3-pane layout: Sources (3 modes, 10 source types), Nexi (chat, citations, follow-ups, voice, save-to-notebook), Notebook pane
-8. **Interaction and State Logic** — WorkspaceContext, theme state, pane coordination, toasts
-9. **Motion and Polish** — Spring easing, scroll reveal, card hover, toggle animations, what's polished vs prototype
-10. **Today's Refinements** — Settings restructure, visual card pickers, auto theme, font system, Nexi settings, language submenu, sidebar reorder
-11. **Current Gaps and Next Priorities** — Status tables, missing features, recommended next steps
-12. **Final Summary**
+**How it works:**
+- Listen for `mouseup` / `selectionchange` on Nexi response content
+- If `window.getSelection()` returns non-empty text within a Nexi message, calculate position and show a small floating pill/button
+- Clicking it opens a compact inline form (term pre-filled with selected text, definition + example fields)
+- On save, calls `addVocabulary()` with `course: courseTitle` and `savedFrom: "nexi"`
+- Dismiss on click-outside or Escape
+- The popover uses absolute positioning based on selection range bounding rect
+
+### 2. Remove the existing per-message "Save as Vocab" button
+
+The current button on every Nexi message that auto-extracts bold terms is clunky — replace it entirely with the selection-based flow. Keep "Save to Notebook" and "Copy" buttons.
+
+### 3. Vocab form in the floating popover
+
+A minimal form:
+- **Term** — pre-filled with highlighted text (editable)
+- **Definition** — empty textarea for user to type meaning
+- **Example** — optional input
+- Save / Cancel buttons
+
+Styled consistently with design system: `bg-popover`, `border-border`, `shadow-lifted`, `rounded-xl`, small text sizes.
+
+### 4. Notebook pane vocab tab already works
+
+The existing vocab tab in NotebookPane already shows course-filtered vocabulary entries. No changes needed there — new entries from the selection flow will appear automatically.
+
+## Files to Change
+
+| File | Change |
+|------|--------|
+| `src/components/workspace/NexiPane.tsx` | Add selection detection logic, floating popover component, remove old "Save as Vocab" button from action row |
 
 ## Technical Approach
 
-- Generate using `docx` (Node.js library) with proper headings, tables, bullet lists, and professional formatting
-- US Letter size, 1-inch margins, Arial font, header/footer with page numbers
-- Output to `/mnt/documents/Nexus2_Product_Walkthrough_Report.docx`
-- QA by converting to images and verifying layout
-
-## Source of Truth
-
-All content derived exclusively from the codebase files I've read (Settings.tsx, WorkspaceContext.tsx, all page files, all workspace pane files, ThemeProvider, AppSidebar, SidebarUserMenu, Layout, index.css, tailwind.config) and the conversation history. No invented features.
+- Use a `useEffect` with `document.addEventListener('selectionchange')` scoped to the messages container ref
+- Track selection state: `{ text: string, rect: DOMRect, msgId: string } | null`
+- Render a portal-free absolutely positioned div when selection is active
+- The popover form is a small controlled component rendered inline
 
