@@ -133,7 +133,6 @@ const Workspace = () => {
 
         {/* ── Sources ↔ Nexi handle ── */}
         <ResizableHandle
-          withHandle={showSourcesHandle}
           className={`transition-opacity duration-200 ${showSourcesHandle ? "opacity-100" : "opacity-0 pointer-events-none w-0"}`}
         />
 
@@ -149,7 +148,6 @@ const Workspace = () => {
 
         {/* ── Nexi ↔ Notebook handle ── */}
         <ResizableHandle
-          withHandle={showNotebookHandle}
           className={`transition-opacity duration-200 ${showNotebookHandle ? "opacity-100" : "opacity-0 pointer-events-none w-0"}`}
         />
 
