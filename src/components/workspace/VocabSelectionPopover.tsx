@@ -48,7 +48,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
       requestAnimationFrame(() => {
         const sel = window.getSelection();
         if (!sel || sel.isCollapsed || !sel.toString().trim()) {
-          if (!showForm) setSelection(null);
+          if (!showFormRef.current) setSelection(null);
           return;
         }
 
