@@ -27,6 +27,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
   const popoverRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const justOpenedFormRef = useRef(false);
+  const showFormRef = useRef(false);
 
   const clearSelection = useCallback(() => {
     setSelection(null);
