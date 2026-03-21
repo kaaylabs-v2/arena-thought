@@ -301,6 +301,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [chatMessages, setChatMessages] = useState<Record<string, ChatMessage[]>>(seedChatMessages);
   const [activeSource, setActiveSource] = useState<SourceItem | null>(null);
   const [reflections, setReflections] = useState<Reflection[]>(seedReflections);
+  const [vocabulary, setVocabulary] = useState<VocabularyEntry[]>(seedVocabulary);
   const [userProfile, setUserProfile] = useState<UserProfile>(defaultProfile);
 
   const addNotebookEntry = useCallback((entry: Omit<NotebookEntry, "id" | "date">) => {
