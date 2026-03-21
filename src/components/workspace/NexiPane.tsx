@@ -36,6 +36,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
   const messages = chatMessages[courseId] || [];
   const [input, setInput] = useState("");
   const [savedMessages, setSavedMessages] = useState<Set<string>>(new Set());
+  const [vocabSaved, setVocabSaved] = useState<Set<string>>(new Set());
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
