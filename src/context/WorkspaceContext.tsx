@@ -12,6 +12,17 @@ export interface NotebookEntry {
   savedFrom: "nexi" | "personal" | "source";
 }
 
+export interface VocabularyEntry {
+  id: string;
+  term: string;
+  definition: string;
+  example?: string;
+  course: string;
+  tags: string[];
+  date: string;
+  savedFrom: "nexi" | "personal" | "source";
+}
+
 export interface ChatMessage {
   id: string;
   role: "user" | "nexi" | "system";
