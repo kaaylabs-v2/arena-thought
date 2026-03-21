@@ -25,7 +25,8 @@ const courseOptions = [
 ];
 
 const Notebook = () => {
-  const { notebookEntries, addNotebookEntry, updateNotebookEntry, deleteNotebookEntry } = useWorkspace();
+  const { notebookEntries, addNotebookEntry, updateNotebookEntry, deleteNotebookEntry, vocabulary, addVocabulary, updateVocabulary, deleteVocabulary } = useWorkspace();
+  const [pageTab, setPageTab] = useState<PageTab>("notes");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortKey>("recent");
   const [view, setView] = useState<ViewMode>("cards");
