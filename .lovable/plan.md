@@ -1,49 +1,36 @@
 
 
-# Text Selection → Add to Vocab in Nexi Pane
+# AI-Generated Definitions & Examples for Vocab Popover
 
 ## What Changes
 
-### 1. Add a floating "Add to Vocab" tooltip on text selection in Nexi responses
+### 1. Auto-generate definition when form opens (`VocabSelectionPopover.tsx`)
 
-When a user highlights/selects any word or phrase inside a Nexi AI response bubble, a small floating popover appears near the selection with an "Add to Vocab" button (BookA icon + label).
+When the user clicks "Add to Vocab" on a highlighted term, the form opens with:
+- **Term** pre-filled (as now)
+- **Definition** auto-populated after a short simulated delay (~800ms) with a mock AI-generated definition based on the term text. Shows a small loading shimmer/skeleton while "generating."
+- **Example** field starts empty, with a small "Generate example" link/button beside the label. Clicking it triggers another mock delay and fills in a contextual example sentence. This is more tasteful than a checkbox — it's an on-demand action.
+- Both fields remain fully editable — the user can override or clear the AI suggestion and type manually.
 
-**How it works:**
-- Listen for `mouseup` / `selectionchange` on Nexi response content
-- If `window.getSelection()` returns non-empty text within a Nexi message, calculate position and show a small floating pill/button
-- Clicking it opens a compact inline form (term pre-filled with selected text, definition + example fields)
-- On save, calls `addVocabulary()` with `course: courseTitle` and `savedFrom: "nexi"`
-- Dismiss on click-outside or Escape
-- The popover uses absolute positioning based on selection range bounding rect
+### 2. Mock AI generation logic
 
-### 2. Remove the existing per-message "Save as Vocab" button
+A simple function that returns plausible definitions and examples based on keyword matching or generic academic-sounding text. No real API call — just a `setTimeout` with curated mock responses for common terms (e.g., "backpropagation", "gradient", "neural network") and a sensible fallback for unknown terms.
 
-The current button on every Nexi message that auto-extracts bold terms is clunky — replace it entirely with the selection-based flow. Keep "Save to Notebook" and "Copy" buttons.
+### 3. Visual treatment
 
-### 3. Vocab form in the floating popover
+- While generating: a subtle pulse animation on the field (or skeleton lines inside the textarea)
+- After generation: text appears with a brief fade-in
+- A small `Sparkles` icon on the "Generate example" button to indicate AI
+- Fields stay editable with normal styling after generation
 
-A minimal form:
-- **Term** — pre-filled with highlighted text (editable)
-- **Definition** — empty textarea for user to type meaning
-- **Example** — optional input
-- Save / Cancel buttons
+### 4. NotebookPane vocab quick-add form gets the same treatment
 
-Styled consistently with design system: `bg-popover`, `border-border`, `shadow-lifted`, `rounded-xl`, small text sizes.
-
-### 4. Notebook pane vocab tab already works
-
-The existing vocab tab in NotebookPane already shows course-filtered vocabulary entries. No changes needed there — new entries from the selection flow will appear automatically.
+The manual add form in the Notebook pane sidebar also gets a "Generate" button for definition and example fields, using the same mock logic, so the experience is consistent.
 
 ## Files to Change
 
 | File | Change |
 |------|--------|
-| `src/components/workspace/NexiPane.tsx` | Add selection detection logic, floating popover component, remove old "Save as Vocab" button from action row |
-
-## Technical Approach
-
-- Use a `useEffect` with `document.addEventListener('selectionchange')` scoped to the messages container ref
-- Track selection state: `{ text: string, rect: DOMRect, msgId: string } | null`
-- Render a portal-free absolutely positioned div when selection is active
-- The popover form is a small controlled component rendered inline
+| `src/components/workspace/VocabSelectionPopover.tsx` | Add mock AI generation for definition on form open, add "Generate example" button, loading states |
+| `src/components/workspace/NotebookPane.tsx` | Add generate buttons to the vocab quick-add form for consistency |
 
