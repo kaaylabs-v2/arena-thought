@@ -103,7 +103,11 @@ export interface StudyTask {
   createdAt: string;
 }
 
+export type UserRole = "learner" | "admin";
+
 interface WorkspaceState {
+  userRole: UserRole;
+  setUserRole: (role: UserRole) => void;
   notebookEntries: NotebookEntry[];
   addNotebookEntry: (entry: Omit<NotebookEntry, "id" | "date">) => void;
   updateNotebookEntry: (id: string, updates: Partial<NotebookEntry>) => void;
