@@ -1,24 +1,20 @@
-import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { AdminSidebar } from "./AdminSidebar";
 import { AdminTopBar } from "./AdminTopBar";
-import { cn } from "@/lib/utils";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 
 export function AdminLayout() {
-  const [collapsed, setCollapsed] = useState(false);
-
   return (
-    <div className="min-h-screen font-sans" style={{ backgroundColor: "#F5F0EA" }}>
-      <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
-      <AdminTopBar sidebarCollapsed={collapsed} />
-      <main
-        className={cn(
-          "pt-14 min-h-screen transition-all duration-200",
-          collapsed ? "ml-[60px]" : "ml-[240px]"
-        )}
-      >
-        <Outlet />
-      </main>
-    </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full font-sans admin-sidebar-theme" style={{ backgroundColor: "#F5F0EA" }}>
+        <AdminSidebar />
+        <SidebarInset className="flex-1 flex flex-col">
+          <AdminTopBar />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
   );
 }
