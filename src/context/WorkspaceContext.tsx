@@ -69,6 +69,30 @@ export interface AppSettings {
 
 export type TaskPriority = "high" | "medium" | "low";
 
+// Admin types
+export interface AdminSourceItem {
+  id: string;
+  title: string;
+  type: SourceType;
+}
+
+export interface AdminModule {
+  id: string;
+  title: string;
+  items: AdminSourceItem[];
+}
+
+export interface AdminCourse {
+  id: string;
+  title: string;
+  description: string;
+  status: "draft" | "published";
+  modules: AdminModule[];
+  assignedUsers: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface StudyTask {
   id: string;
   title: string;
