@@ -5,14 +5,6 @@ const cardStyle: React.CSSProperties = {
   boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
 };
 
-export function AdminContentLibrary() {
-  return <StubPage title="Content Library" description="All uploaded files and sources across all courses" />;
-}
-
-export function AdminMembers() {
-  return <StubPage title="Members" description="Manage all learners and admins in the organization" />;
-}
-
 export function AdminDepartments() {
   return <StubPage title="Departments" description="Organize learners into groups, teams, and cohorts" />;
 }
