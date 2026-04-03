@@ -55,7 +55,10 @@ export default function AdminSettingsPage() {
             </div>
             <div>
               <Label className="text-xs">Logo</Label>
-              <div className="mt-1 border-2 border-dashed rounded-xl p-8 text-center border-border transition-all duration-250 hover:bg-accent/5 hover:border-accent/30 cursor-pointer active:scale-[0.99]">
+              <div
+                onClick={() => toast("Coming in next phase", { description: "Logo upload" })}
+                className="mt-1 border-2 border-dashed rounded-xl p-8 text-center border-border transition-all duration-250 hover:bg-accent/5 hover:border-accent/30 cursor-pointer active:scale-[0.99]"
+              >
                 <p className="text-sm text-muted-foreground">Drag and drop your logo here, or click to browse</p>
                 <p className="text-xs mt-1 text-muted-foreground/60">PNG, SVG — max 2 MB</p>
               </div>
