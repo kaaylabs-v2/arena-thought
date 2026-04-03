@@ -15,6 +15,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { currentAdmin, roleBadgeLabel } from "@/admin/data/mock-data";
 
 const navItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard, end: true },
@@ -25,8 +26,6 @@ const navItems = [
   { title: "Outcomes", url: "/admin/outcomes", icon: Target },
   { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
   { title: "Announcements", url: "/admin/announcements", icon: Megaphone },
-  { title: "Settings", url: "/admin/settings", icon: Settings },
-  { title: "Help", url: "/admin/help", icon: HelpCircle },
 ];
 
 interface AdminSidebarProps {
@@ -42,6 +41,12 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
     if (end) return location.pathname === url;
     return location.pathname.startsWith(url);
   };
+
+  const initials = currentAdmin.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
 
   return (
     <aside
@@ -100,6 +105,71 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
 
       {/* Bottom section */}
       <div className="px-2 pb-4 pt-2 space-y-1">
+        {/* Divider */}
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", margin: "8px 0" }} />
+
+        {/* Admin user row */}
+        {collapsed ? (
+          <button
+            onClick={() => navigate("/admin/settings")}
+            className="flex items-center justify-center w-full py-2"
+            title="Settings"
+          >
+            <div
+              className="h-8 w-8 rounded-full flex items-center justify-center text-[12px] font-medium shrink-0"
+              style={{
+                backgroundColor: "rgba(201,150,58,0.20)",
+                border: "1px solid rgba(201,150,58,0.30)",
+                color: "#C9963A",
+                fontFamily: "Inter, sans-serif",
+              }}
+            >
+              {initials}
+            </div>
+          </button>
+        ) : (
+          <div
+            className="flex items-center gap-2.5"
+            style={{ padding: "10px 16px" }}
+          >
+            <div
+              className="h-8 w-8 rounded-full flex items-center justify-center text-[12px] font-medium shrink-0"
+              style={{
+                backgroundColor: "rgba(201,150,58,0.20)",
+                border: "1px solid rgba(201,150,58,0.30)",
+                color: "#C9963A",
+                fontFamily: "Inter, sans-serif",
+              }}
+            >
+              {initials}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p
+                className="text-[13px] font-medium leading-tight truncate"
+                style={{ color: "rgba(255,255,255,0.85)", fontFamily: "Inter, sans-serif" }}
+              >
+                {currentAdmin.name}
+              </p>
+              <p
+                className="text-[11px] leading-tight"
+                style={{ color: "rgba(255,255,255,0.40)", fontFamily: "Inter, sans-serif" }}
+              >
+                {roleBadgeLabel(currentAdmin.role)}
+              </p>
+            </div>
+            <button
+              onClick={() => navigate("/admin/settings")}
+              className="shrink-0 p-1 rounded-md transition-colors"
+              style={{ color: "rgba(255,255,255,0.35)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.70)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
+              title="Settings"
+            >
+              <Settings className="h-[15px] w-[15px]" strokeWidth={1.5} />
+            </button>
+          </div>
+        )}
+
         {/* Back to Arena */}
         <button
           onClick={() => navigate("/")}
@@ -108,11 +178,28 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
             collapsed ? "justify-center" : "px-3"
           )}
           style={{ color: "rgba(255,255,255,0.35)" }}
-          onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}
-          onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
+          title={collapsed ? "Back to Arena" : undefined}
         >
           <ArrowLeft className="h-3 w-3" strokeWidth={1.5} />
           {!collapsed && <span>Back to Arena</span>}
+        </button>
+
+        {/* Help link */}
+        <button
+          onClick={() => navigate("/admin/help")}
+          className={cn(
+            "flex items-center gap-2 w-full py-1.5 text-[12px] font-sans transition-colors duration-150",
+            collapsed ? "justify-center" : "px-3"
+          )}
+          style={{ color: "rgba(255,255,255,0.35)" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.65)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
+          title={collapsed ? "Help" : undefined}
+        >
+          <HelpCircle className="h-[13px] w-[13px]" strokeWidth={1.5} />
+          {!collapsed && <span>Help</span>}
         </button>
 
         {/* Collapse toggle */}
@@ -120,8 +207,8 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
           onClick={onToggle}
           className="flex items-center justify-center w-full rounded-md py-2 transition-colors"
           style={{ color: "rgba(255,255,255,0.3)" }}
-          onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}
-          onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.3)")}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.3)")}
         >
           {collapsed ? (
             <ChevronsRight className="h-4 w-4" />
