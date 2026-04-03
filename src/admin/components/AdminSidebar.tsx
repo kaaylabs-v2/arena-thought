@@ -104,14 +104,14 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
         <button
           onClick={() => navigate("/")}
           className={cn(
-            "flex items-center gap-2 w-full rounded-md py-2 text-[12px] transition-colors",
-            collapsed ? "justify-center px-2" : "px-3"
+            "flex items-center gap-2 w-full py-1.5 text-[12px] font-sans transition-colors duration-150",
+            collapsed ? "justify-center" : "px-3"
           )}
           style={{ color: "rgba(255,255,255,0.35)" }}
-          onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}
+          onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}
           onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
         >
-          <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.5} />
+          <ArrowLeft className="h-3 w-3" strokeWidth={1.5} />
           {!collapsed && <span>Back to Arena</span>}
         </button>
 

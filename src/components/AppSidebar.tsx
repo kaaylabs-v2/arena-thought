@@ -12,7 +12,8 @@ import {
   Shield,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { useTheme } from "@/components/ThemeProvider";
 import {
@@ -37,19 +38,17 @@ const mainNav = [
   { title: "Notebook", url: "/notebook", icon: BookOpen },
   { title: "Progress", url: "/progress", icon: BarChart3 },
   { title: "Reflections", url: "/reflections", icon: Sparkles },
-  { title: "Admin Studio", url: "/admin", icon: Shield },
 ];
 
 export function AppSidebar() {
   const { state, toggleSidebar } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
+  const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { userRole } = useWorkspace();
 
-  const filteredNav = mainNav.filter(
-    (item) => item.url !== "/admin" || userRole === "admin"
-  );
+  const filteredNav = mainNav;
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
@@ -113,7 +112,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer — theme toggle + user menu */}
+      {/* Footer — theme toggle + admin link + user menu */}
       <SidebarFooter className="px-2 pb-3">
         <SidebarSeparator className="mx-0" />
         <SidebarMenu>
@@ -132,6 +131,22 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        {userRole === "admin" && (
+          <button
+            onClick={() => navigate("/admin")}
+            className={cn(
+              "flex items-center gap-2 w-full text-[12px] font-sans transition-colors duration-150",
+              collapsed ? "justify-center py-1.5" : "px-3 py-1.5"
+            )}
+            style={{ color: "rgba(255,255,255,0.35)" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.65)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
+            title={collapsed ? "Admin Studio" : undefined}
+          >
+            <Shield className="h-3.5 w-3.5" strokeWidth={1.5} />
+            {!collapsed && <span>Admin Studio</span>}
+          </button>
+        )}
         <SidebarUserMenu />
       </SidebarFooter>
     </Sidebar>

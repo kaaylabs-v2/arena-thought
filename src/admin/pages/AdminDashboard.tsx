@@ -72,9 +72,9 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between mb-3">
               <div
                 className="h-9 w-9 rounded-lg flex items-center justify-center"
-                style={{ backgroundColor: AMBER_LIGHT, color: AMBER }}
+                style={{ backgroundColor: "rgba(201,150,58,0.10)", color: AMBER, padding: 8 }}
               >
-                <stat.icon className="h-[18px] w-[18px]" strokeWidth={1.5} />
+                <stat.icon className="h-5 w-5" strokeWidth={1.5} />
               </div>
             </div>
             <p className="text-2xl font-semibold" style={{ color: "rgba(0,0,0,0.85)" }}>{stat.value}</p>
@@ -91,9 +91,8 @@ export default function AdminDashboard() {
             {recentActivity.slice(0, 6).map((event) => (
               <div key={event.id} className="flex items-start gap-3">
                 <div className="mt-1 h-2 w-2 rounded-full shrink-0" style={{
-                  backgroundColor: event.type === "mastery" ? AMBER :
-                    event.type === "completion" ? "#22c55e" :
-                    event.type === "deploy" ? "#8b5cf6" : "#64748b"
+                  backgroundColor:
+                    (event.type === "mastery" || event.type === "completion") ? AMBER : "rgba(0,0,0,0.2)"
                 }} />
                 <div className="flex-1 min-w-0">
                   <p className="text-[13px] leading-snug" style={{ color: "rgba(0,0,0,0.7)" }}>{event.text}</p>
