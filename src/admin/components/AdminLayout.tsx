@@ -8,7 +8,7 @@ export function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
+    <div className="min-h-screen font-sans" style={{ backgroundColor: "#F5F0EA" }}>
       <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <AdminTopBar sidebarCollapsed={collapsed} />
       <main

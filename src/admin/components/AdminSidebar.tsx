@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   GraduationCap,
@@ -12,6 +12,7 @@ import {
   HelpCircle,
   ChevronsLeft,
   ChevronsRight,
+  ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +36,7 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (url: string, end?: boolean) => {
     if (end) return location.pathname === url;
@@ -44,49 +46,82 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
   return (
     <aside
       className={cn(
-        "fixed left-0 top-0 bottom-0 z-40 flex flex-col bg-slate-900 text-slate-300 border-r border-slate-800 transition-all duration-200",
+        "fixed left-0 top-0 bottom-0 z-40 flex flex-col border-r transition-all duration-200",
         collapsed ? "w-[60px]" : "w-[240px]"
       )}
+      style={{ backgroundColor: "#0F0F0F", borderColor: "rgba(255,255,255,0.07)" }}
     >
       {/* Logo */}
-      <div className={cn("flex items-center gap-2 px-4 pt-5 pb-1", collapsed && "justify-center px-0")}>
-        {collapsed ? (
-          <span className="text-white font-bold text-sm">N²</span>
-        ) : (
-          <div>
-            <span className="text-white font-bold text-lg tracking-tight">Nexus²</span>
-            <p className="text-[10px] text-slate-500 tracking-wide uppercase mt-0.5">Admin Studio</p>
-          </div>
+      <div className={cn("flex flex-col px-4 pt-5 pb-1", collapsed && "items-center px-0")}>
+        <span className="font-serif text-base text-white leading-none" style={{ fontSize: collapsed ? 14 : 18 }}>
+          N²
+        </span>
+        {!collapsed && (
+          <p className="text-[10px] tracking-[0.15em] uppercase mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>
+            Admin Studio
+          </p>
         )}
       </div>
 
       {/* Nav */}
       <nav className="flex-1 mt-4 px-2 space-y-0.5 overflow-y-auto scrollbar-thin">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.url}
-            to={item.url}
-            end={item.end}
-            className={cn(
-              "flex items-center gap-3 rounded-md text-[13px] font-medium transition-colors duration-150",
-              collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2",
-              isActive(item.url, item.end)
-                ? "bg-slate-800 text-white"
-                : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
-            )}
-            title={collapsed ? item.title : undefined}
-          >
-            <item.icon className="h-4 w-4 shrink-0" strokeWidth={1.5} />
-            {!collapsed && <span>{item.title}</span>}
-          </NavLink>
-        ))}
+        {navItems.map((item) => {
+          const active = isActive(item.url, item.end);
+          return (
+            <NavLink
+              key={item.url}
+              to={item.url}
+              end={item.end}
+              className={cn(
+                "flex items-center gap-3 rounded-md text-[13px] font-medium transition-colors duration-150 relative",
+                collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2",
+                active
+                  ? "text-white"
+                  : "hover:text-white"
+              )}
+              style={{
+                backgroundColor: active ? "rgba(201, 150, 58, 0.10)" : undefined,
+                color: active ? "#fff" : "rgba(255,255,255,0.4)",
+                borderLeft: active && !collapsed ? "2px solid #C9963A" : "2px solid transparent",
+                marginLeft: collapsed ? 0 : -2,
+              }}
+              title={collapsed ? item.title : undefined}
+            >
+              <item.icon
+                className="h-4 w-4 shrink-0"
+                strokeWidth={1.5}
+                style={{ color: active ? "#C9963A" : "rgba(255,255,255,0.4)" }}
+              />
+              {!collapsed && <span>{item.title}</span>}
+            </NavLink>
+          );
+        })}
       </nav>
 
-      {/* Collapse toggle */}
-      <div className="px-2 pb-4 pt-2">
+      {/* Bottom section */}
+      <div className="px-2 pb-4 pt-2 space-y-1">
+        {/* Back to Arena */}
+        <button
+          onClick={() => navigate("/")}
+          className={cn(
+            "flex items-center gap-2 w-full rounded-md py-2 text-[12px] transition-colors",
+            collapsed ? "justify-center px-2" : "px-3"
+          )}
+          style={{ color: "rgba(255,255,255,0.35)" }}
+          onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}
+          onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
+        >
+          <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.5} />
+          {!collapsed && <span>Back to Arena</span>}
+        </button>
+
+        {/* Collapse toggle */}
         <button
           onClick={onToggle}
-          className="flex items-center justify-center w-full rounded-md py-2 text-slate-500 hover:bg-slate-800 hover:text-slate-300 transition-colors"
+          className="flex items-center justify-center w-full rounded-md py-2 transition-colors"
+          style={{ color: "rgba(255,255,255,0.3)" }}
+          onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.6)")}
+          onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.3)")}
         >
           {collapsed ? (
             <ChevronsRight className="h-4 w-4" />
