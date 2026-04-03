@@ -436,12 +436,18 @@ let idCounter = 100;
 const genId = () => `gen-${++idCounter}`;
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
+  const [userRole, setUserRoleState] = useState<UserRole>("learner");
   const [notebookEntries, setNotebookEntries] = useState<NotebookEntry[]>(seedNotebookEntries);
   const [chatMessages, setChatMessages] = useState<Record<string, ChatMessage[]>>(seedChatMessages);
   const [activeSource, setActiveSource] = useState<SourceItem | null>(null);
   const [reflections, setReflections] = useState<Reflection[]>(seedReflections);
   const [vocabulary, setVocabulary] = useState<VocabularyEntry[]>(seedVocabulary);
   const [userProfile, setUserProfile] = useState<UserProfile>(defaultProfile);
+
+  const setUserRole = useCallback((role: UserRole) => {
+    setUserRoleState(role);
+    setUserProfile(role === "admin" ? adminProfile : learnerProfile);
+  }, []);
 
   const addNotebookEntry = useCallback((entry: Omit<NotebookEntry, "id" | "date">) => {
     setNotebookEntries((prev) => [
