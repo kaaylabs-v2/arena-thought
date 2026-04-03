@@ -1,21 +1,29 @@
 import { Search, Pin, BookOpen, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-
-const courses = [
-  { id: "1", title: "Foundations of Machine Learning", description: "Core concepts in supervised and unsupervised learning, optimization, and neural network architectures.", progress: 68, lastAccessed: "2 hours ago", pinned: true, status: "active" as const },
-  { id: "2", title: "Advanced Statistical Methods", description: "Deep dive into Bayesian inference, hypothesis testing, and multivariate analysis techniques.", progress: 42, lastAccessed: "Yesterday", pinned: false, status: "active" as const },
-  { id: "3", title: "Philosophy of Mind", description: "Exploring consciousness, intentionality, and the relationship between mind and brain.", progress: 85, lastAccessed: "3 days ago", pinned: true, status: "active" as const },
-  { id: "4", title: "Linear Algebra for Data Science", description: "Matrix operations, eigenvalues, SVD, and applications in dimensionality reduction.", progress: 100, lastAccessed: "2 weeks ago", pinned: false, status: "completed" as const },
-  { id: "5", title: "Cognitive Psychology", description: "Memory, attention, perception, and decision-making from a cognitive science perspective.", progress: 23, lastAccessed: "1 week ago", pinned: false, status: "active" as const },
-  { id: "6", title: "Research Methods in Social Science", description: "Qualitative and quantitative methodologies, experimental design, and ethical considerations.", progress: 100, lastAccessed: "1 month ago", pinned: false, status: "completed" as const },
-];
+import { useState, useMemo } from "react";
+import { useWorkspace } from "@/context/WorkspaceContext";
 
 type FilterTab = "all" | "active" | "completed" | "pinned";
 
 const Library = () => {
+  const { adminCourses } = useWorkspace();
   const [filter, setFilter] = useState<FilterTab>("all");
   const [search, setSearch] = useState("");
+
+  // Derive student-facing courses from published admin courses
+  const courses = useMemo(() => {
+    return adminCourses
+      .filter((c) => c.status === "published")
+      .map((c) => {
+        const sourceCount = c.modules.reduce((acc, m) => acc + m.items.length, 0);
+        // Mock progress/pinned/status based on seed IDs for demo continuity
+        const progress = c.id === "4" || c.id === "6" ? 100 : c.id === "1" ? 68 : c.id === "2" ? 42 : c.id === "3" ? 85 : c.id === "5" ? 23 : Math.floor(Math.random() * 80) + 10;
+        const pinned = c.id === "1" || c.id === "3";
+        const status: "active" | "completed" = progress === 100 ? "completed" : "active";
+        const lastAccessed = c.updatedAt;
+        return { id: c.id, title: c.title, description: c.description, progress, lastAccessed, pinned, status, sourceCount };
+      });
+  }, [adminCourses]);
 
   const filteredCourses = courses.filter((c) => {
     if (search && !c.title.toLowerCase().includes(search.toLowerCase())) return false;
