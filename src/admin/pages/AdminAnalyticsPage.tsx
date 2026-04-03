@@ -19,18 +19,18 @@ export default function AdminAnalyticsPage() {
   const avgMastery = Math.round(adminCourses.filter(c => c.status === "active").reduce((s, c) => s + c.masteryRate, 0) / (activeCourses || 1));
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
+    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
       <h1 className="font-serif text-[2rem] font-normal text-foreground">Analytics</h1>
       <p className="text-sm mt-0.5 mb-8 text-muted-foreground">Organization-level insights and engagement data</p>
 
-      <div className="grid grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-4 gap-4 mb-8 stagger-children">
         {[
           { icon: Users, label: "Active Members", value: activeMembers },
           { icon: BarChart3, label: "Active Courses", value: activeCourses },
           { icon: TrendingUp, label: "Avg Mastery", value: `${avgMastery}%` },
           { icon: Clock, label: "Avg Engagement", value: "4.2h/wk" },
         ].map((s, i) => (
-          <div key={i} className="p-5 bg-card border border-border rounded-xl shadow-sm">
+          <div key={i} className="card-interactive p-5">
             <div className="flex items-center gap-2 mb-1">
               <s.icon className="h-4 w-4 text-accent" />
               <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{s.label}</span>
@@ -41,7 +41,7 @@ export default function AdminAnalyticsPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-6 mb-8">
-        <div className="p-5 bg-card border border-border rounded-xl shadow-sm">
+        <div className="card-interactive p-5">
           <h3 className="font-serif text-base mb-4 text-foreground/75">Weekly Active Learners</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={weeklyActiveData}>
@@ -54,7 +54,7 @@ export default function AdminAnalyticsPage() {
           </ResponsiveContainer>
         </div>
 
-        <div className="p-5 bg-card border border-border rounded-xl shadow-sm">
+        <div className="card-interactive p-5">
           <h3 className="font-serif text-base mb-4 text-foreground/75">Course Completions</h3>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={completionData}>
@@ -68,7 +68,7 @@ export default function AdminAnalyticsPage() {
         </div>
       </div>
 
-      <div className="p-5 bg-card border border-border rounded-xl shadow-sm">
+      <div className="card-interactive p-5">
         <h3 className="font-serif text-base mb-4 text-foreground/75">Course Performance</h3>
         <table className="w-full text-sm">
           <thead>
@@ -80,7 +80,7 @@ export default function AdminAnalyticsPage() {
           </thead>
           <tbody>
             {adminCourses.map(c => (
-              <tr key={c.id} className="transition-colors border-b border-border/50 hover:bg-accent/5">
+              <tr key={c.id} className="transition-colors duration-200 border-b border-border/50 hover:bg-accent/5">
                 <td className="py-3 font-medium text-foreground/75">{c.name}</td>
                 <td className="py-3 text-muted-foreground">{c.enrolledCount}</td>
                 <td className="py-3" style={{ color: c.masteryRate >= 70 ? "#16a34a" : c.masteryRate >= 40 ? "#C9963A" : "#dc2626" }}>{c.masteryRate}%</td>
