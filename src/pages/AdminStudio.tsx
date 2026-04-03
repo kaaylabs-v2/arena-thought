@@ -266,8 +266,6 @@ const AdminStudio = () => {
       </div>
     );
   }
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [creating, setCreating] = useState(false);
 
   if (creating) {
     return (
