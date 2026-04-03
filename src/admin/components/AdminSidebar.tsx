@@ -34,11 +34,8 @@ import { AdminSidebarUserMenu } from "./AdminSidebarUserMenu";
 const navItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard, end: true },
   { title: "Courses", url: "/admin/courses", icon: GraduationCap },
-  { title: "Content Library", url: "/admin/library", icon: FolderOpen },
-  { title: "Members", url: "/admin/members", icon: Users },
-  { title: "Departments", url: "/admin/departments", icon: Building2 },
-  { title: "Outcomes", url: "/admin/outcomes", icon: Target },
-  { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
+  { title: "People", url: "/admin/people", icon: Users },
+  { title: "Insights", url: "/admin/insights", icon: BarChart3 },
   { title: "Announcements", url: "/admin/announcements", icon: Megaphone },
 ];
 
