@@ -20,9 +20,9 @@ const pendingActions = [
 ];
 
 const quickActions = [
-  { label: "Invite Members", icon: UserPlus, href: "/admin/members" },
+  { label: "Invite Members", icon: UserPlus, href: "/admin/people" },
   { label: "Deploy Course", icon: Rocket, href: "/admin/courses" },
-  { label: "Upload Content", icon: Upload, href: "/admin/library" },
+  { label: "Upload Content", icon: Upload, href: "/admin/courses" },
 ];
 
 export default function AdminDashboard() {

@@ -22,11 +22,8 @@ import NotFound from "./pages/NotFound";
 import { AdminLayout } from "@/admin/components/AdminLayout";
 import AdminDashboard from "@/admin/pages/AdminDashboard";
 import AdminCoursesPage from "@/admin/pages/AdminCourses";
-import AdminMembersPage from "@/admin/pages/AdminMembers";
-import AdminContentLibraryPage from "@/admin/pages/AdminContentLibrary";
-import AdminDepartmentsPage from "@/admin/pages/AdminDepartmentsPage";
-import AdminOutcomesPage from "@/admin/pages/AdminOutcomesPage";
-import AdminAnalyticsPage from "@/admin/pages/AdminAnalyticsPage";
+import AdminPeoplePage from "@/admin/pages/AdminPeoplePage";
+import AdminInsightsPage from "@/admin/pages/AdminInsightsPage";
 import AdminAnnouncementsPage from "@/admin/pages/AdminAnnouncementsPage";
 import AdminSettingsPage from "@/admin/pages/AdminSettingsPage";
 import AdminHelpPage from "@/admin/pages/AdminHelpPage";
@@ -67,11 +64,8 @@ const App = () => (
               <Route element={<AdminGuard />}>
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/courses" element={<AdminCoursesPage />} />
-                <Route path="/admin/library" element={<AdminContentLibraryPage />} />
-                <Route path="/admin/members" element={<AdminMembersPage />} />
-                <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
-                <Route path="/admin/outcomes" element={<AdminOutcomesPage />} />
-                <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
+                <Route path="/admin/people" element={<AdminPeoplePage />} />
+                <Route path="/admin/insights" element={<AdminInsightsPage />} />
                 <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
                 <Route path="/admin/settings" element={<AdminSettingsPage />} />
                 <Route path="/admin/help" element={<AdminHelpPage />} />

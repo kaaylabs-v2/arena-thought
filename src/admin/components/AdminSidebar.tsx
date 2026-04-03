@@ -1,18 +1,13 @@
-import { useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   GraduationCap,
-  FolderOpen,
   Users,
-  Building2,
-  Target,
   BarChart3,
   Megaphone,
   ChevronsLeft,
   ChevronsRight,
   Moon,
   Sun,
-  ArrowLeft,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/components/ThemeProvider";
@@ -34,18 +29,15 @@ import { AdminSidebarUserMenu } from "./AdminSidebarUserMenu";
 const navItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard, end: true },
   { title: "Courses", url: "/admin/courses", icon: GraduationCap },
-  { title: "Content Library", url: "/admin/library", icon: FolderOpen },
-  { title: "Members", url: "/admin/members", icon: Users },
-  { title: "Departments", url: "/admin/departments", icon: Building2 },
-  { title: "Outcomes", url: "/admin/outcomes", icon: Target },
-  { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
+  { title: "People", url: "/admin/people", icon: Users },
+  { title: "Insights", url: "/admin/insights", icon: BarChart3 },
   { title: "Announcements", url: "/admin/announcements", icon: Megaphone },
 ];
 
 export function AdminSidebar() {
   const { state, toggleSidebar } = useSidebar();
   const collapsed = state === "collapsed";
-  const navigate = useNavigate();
+  
   const { theme, toggleTheme } = useTheme();
 
   return (
