@@ -370,7 +370,27 @@ function AccountPanel() {
         <SettingRow label="Organization name" description="Managed by your school, company, or institution" action={<span className="text-[13px] font-sans text-foreground">Personal</span>} />
       </div>
 
-      {/* Active sessions */}
+      {/* Role (demo) */}
+      <div>
+        <SectionLabel>Role (demo)</SectionLabel>
+        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+          <SettingRow
+            label="Active role"
+            description="Switch between Learner and Admin personas for demo purposes"
+            action={
+              <SegmentedControl
+                value={userRole}
+                options={[{ value: "learner", label: "Learner" }, { value: "admin", label: "Admin" }]}
+                onChange={(v) => {
+                  setUserRole(v as "learner" | "admin");
+                  toast.success(`Switched to ${v === "admin" ? "Admin" : "Learner"}`);
+                }}
+              />
+            }
+          />
+        </div>
+      </div>
+
       <div>
         <SectionLabel>Active sessions</SectionLabel>
         <div className="rounded-xl border border-border bg-card overflow-hidden">
