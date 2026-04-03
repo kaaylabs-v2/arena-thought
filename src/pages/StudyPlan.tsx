@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useWorkspace, type StudyTask, type TaskPriority } from "@/context/WorkspaceContext";
-import { Plus, Check, Trash2, Calendar as CalendarIcon, BookOpen, ChevronRight, Clock, ExternalLink, Bell } from "lucide-react";
+import { Plus, Check, Trash2, Calendar as CalendarIcon, BookOpen, ChevronRight, Clock, ExternalLink, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -97,7 +97,7 @@ const StudyPlan = () => {
               showSync && "bg-muted/50 border-accent/20"
             )}
           >
-            <Bell className="h-3.5 w-3.5" strokeWidth={1.5} />
+            <RefreshCw className="h-3.5 w-3.5" strokeWidth={1.5} />
             Sync
           </button>
           <button

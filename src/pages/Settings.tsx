@@ -308,7 +308,13 @@ function NexiPanel() {
             action={
               <select
                 value={preferredLanguage}
-                onChange={(e) => setPreferredLanguage(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val !== "English") {
+                    toast("Language support coming in a future update");
+                    setPreferredLanguage("English");
+                  }
+                }}
                 className="px-3 py-1.5 rounded-lg border border-border bg-background text-[12px] font-sans text-foreground focus:outline-none focus:ring-1 focus:ring-ring/30 cursor-pointer"
               >
                 <option value="English">English</option>
@@ -373,21 +379,26 @@ function AccountPanel() {
       {/* Role (demo) */}
       <div>
         <SectionLabel>Role (demo)</SectionLabel>
-        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow
-            label="Active role"
-            description="Switch between Learner and Admin personas for demo purposes"
-            action={
-              <SegmentedControl
-                value={userRole}
-                options={[{ value: "learner", label: "Learner" }, { value: "admin", label: "Admin" }]}
-                onChange={(v) => {
-                  setUserRole(v as "learner" | "admin");
-                  toast.success(`Switched to ${v === "admin" ? "Admin" : "Learner"}`);
-                }}
-              />
-            }
-          />
+        <div className="rounded-xl border border-dashed border-[hsl(38_60%_50%/0.3)] bg-[hsl(38_60%_50%/0.06)] p-4">
+          <p className="text-[11px] font-sans italic text-[hsl(38_60%_50%/0.6)] mb-3">
+            Demo only — This switcher will be removed in production
+          </p>
+          <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+            <SettingRow
+              label="Active role"
+              description="Switch between Learner and Admin personas for demo purposes"
+              action={
+                <SegmentedControl
+                  value={userRole}
+                  options={[{ value: "learner", label: "Learner" }, { value: "admin", label: "Admin" }]}
+                  onChange={(v) => {
+                    setUserRole(v as "learner" | "admin");
+                    toast.success(`Switched to ${v === "admin" ? "Admin" : "Learner"}`);
+                  }}
+                />
+              }
+            />
+          </div>
         </div>
       </div>
 
@@ -419,9 +430,8 @@ function AccountPanel() {
                   <td className="px-4 py-3.5 text-[12px] font-sans text-muted-foreground">{s.updated}</td>
                   <td className="px-3 py-3.5">
                     <button
-                      onClick={() => i !== 0 && toast.success("Session terminated")}
-                      className={`h-7 w-7 rounded-md flex items-center justify-center transition-colors duration-200 ${i === 0 ? "opacity-30 cursor-not-allowed" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground active:scale-[0.95]"}`}
-                      disabled={i === 0}
+                      onClick={() => toast("Session management coming in a future update")}
+                      className="h-7 w-7 rounded-md flex items-center justify-center transition-colors duration-200 hover:bg-muted/50 text-muted-foreground hover:text-foreground active:scale-[0.95]"
                     >
                       <MoreHorizontal className="h-3.5 w-3.5" strokeWidth={1.5} />
                     </button>
@@ -579,12 +589,7 @@ function IntegrationRow({ name, description, svgLogo }: { name: string; descript
   const [connected, setConnected] = useState(false);
 
   const handleToggle = () => {
-    setConnected(!connected);
-    if (!connected) {
-      toast.success(`${name} connected`, { description: "Integration is now active." });
-    } else {
-      toast.success(`${name} disconnected`);
-    }
+    toast("Integration coming in a future update", { description: `${name} integration is not yet available.` });
   };
 
   return (
