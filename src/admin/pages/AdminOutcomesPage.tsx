@@ -14,7 +14,7 @@ export default function AdminOutcomesPage() {
       <h1 className="font-serif text-[2rem] font-normal text-foreground">Outcomes</h1>
       <p className="text-sm mt-0.5 mb-8 text-muted-foreground">Track mastery definitions and who achieved them</p>
 
-      <div className="grid grid-cols-4 gap-4 mb-8 stagger-children">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 stagger-children">
         {[
           { icon: Target, label: "Avg Mastery Rate", value: `${avgMastery}%` },
           { icon: Award, label: "Total Masteries", value: totalMasteries },
