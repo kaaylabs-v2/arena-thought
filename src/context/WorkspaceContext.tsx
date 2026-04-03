@@ -510,6 +510,29 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
   }, []);
 
+  // Admin courses
+  const [adminCourses, setAdminCourses] = useState<AdminCourse[]>(seedAdminCourses);
+
+  const addAdminCourse = useCallback((course: Omit<AdminCourse, "id" | "createdAt" | "updatedAt">) => {
+    setAdminCourses((prev) => [{ ...course, id: genId(), createdAt: "Just now", updatedAt: "Just now" }, ...prev]);
+  }, []);
+
+  const updateAdminCourse = useCallback((id: string, updates: Partial<AdminCourse>) => {
+    setAdminCourses((prev) => prev.map((c) => (c.id === id ? { ...c, ...updates, updatedAt: "Just now" } : c)));
+  }, []);
+
+  const deleteAdminCourse = useCallback((id: string) => {
+    setAdminCourses((prev) => prev.filter((c) => c.id !== id));
+  }, []);
+
+  const publishCourse = useCallback((id: string) => {
+    setAdminCourses((prev) => prev.map((c) => (c.id === id ? { ...c, status: "published" as const, updatedAt: "Just now" } : c)));
+  }, []);
+
+  const unpublishCourse = useCallback((id: string) => {
+    setAdminCourses((prev) => prev.map((c) => (c.id === id ? { ...c, status: "draft" as const, updatedAt: "Just now" } : c)));
+  }, []);
+
   return (
     <WorkspaceContext.Provider
       value={{
@@ -537,6 +560,12 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         updateTask,
         deleteTask,
         toggleTask,
+        adminCourses,
+        addAdminCourse,
+        updateAdminCourse,
+        deleteAdminCourse,
+        publishCourse,
+        unpublishCourse,
       }}
     >
       {children}
