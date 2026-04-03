@@ -94,10 +94,23 @@ export function SidebarUserMenu() {
             </div>
           </div>
         </DropdownMenuLabel>
-
         <DropdownMenuSeparator />
 
-        {/* Profile */}
+        {/* Role Switcher */}
+        <DropdownMenuItem
+          className="gap-2.5 px-3 py-2 cursor-pointer"
+          onClick={() => {
+            const newRole = userProfile.name.includes("Sarah") ? "learner" : "admin";
+            const { setUserRole } = require("@/context/WorkspaceContext") as any;
+          }}
+        >
+          <ShieldCheck className="h-4 w-4" strokeWidth={1.5} />
+          <span className="text-[13px] font-sans">
+            Switch to {userProfile.name.includes("Sarah") ? "Learner" : "Admin"}
+          </span>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           className="gap-2.5 px-3 py-2 cursor-pointer"
           onClick={() => navigate("/profile")}
