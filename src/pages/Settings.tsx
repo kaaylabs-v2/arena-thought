@@ -308,7 +308,13 @@ function NexiPanel() {
             action={
               <select
                 value={preferredLanguage}
-                onChange={(e) => setPreferredLanguage(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val !== "English") {
+                    toast("Language support coming in a future update");
+                    setPreferredLanguage("English");
+                  }
+                }}
                 className="px-3 py-1.5 rounded-lg border border-border bg-background text-[12px] font-sans text-foreground focus:outline-none focus:ring-1 focus:ring-ring/30 cursor-pointer"
               >
                 <option value="English">English</option>
