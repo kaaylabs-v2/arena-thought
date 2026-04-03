@@ -1,61 +1,41 @@
 
 
-# Admin Studio — Course Creation & Management
+# Role-Based Access: Admin vs Learner
 
-## Overview
+## Summary
 
-A new `/admin` section accessible from the sidebar where an admin can create courses, add source materials organized into modules, assign users, and publish courses. This is a mock/demo implementation using in-memory state (no backend), consistent with the rest of the app.
+Add a `userRole` state (`"learner" | "admin"`) to context. Admins see the Admin Studio nav and can access `/admin`. Learners see a styled "Access Denied" page if they try. Switching to admin shows a different persona (name/email). Role resets to learner on refresh.
 
-## What Gets Built
+## Changes
 
-### 1. Admin Studio page (`src/pages/AdminStudio.tsx`)
+### 1. WorkspaceContext (`src/context/WorkspaceContext.tsx`)
+- Add `userRole: "learner" | "admin"` state (default `"learner"`) and `setUserRole` method to context
+- Define two persona objects: learner profile (current "Alex Chen") and admin profile (e.g. "Dr. Sarah Mitchell", admin email). When `setUserRole` is called, also call `updateUserProfile` with the matching persona's data
+- Expose `userRole` and `setUserRole` in the provider
 
-A full-page admin dashboard with two views:
+### 2. Sidebar — hide Admin Studio for learners (`src/components/AppSidebar.tsx`)
+- Filter `mainNav` to exclude the Admin Studio item when `userRole !== "admin"`
 
-**Course list view** — table/grid of all courses showing title, status (draft/published), source count, assigned user count, and last edited. Actions: edit, delete, publish/unpublish.
+### 3. Admin Studio — access denied page (`src/pages/AdminStudio.tsx`)
+- At the top of the component, check `userRole` from context
+- If `"learner"`, render a styled access-denied view (Shield icon, "You don't have permission", explanation text) instead of the admin dashboard — no redirect
 
-**Course editor view** — opened when creating or editing a course:
-- **Details section**: title, description
-- **Modules & Sources section**: add modules, then add source items (title, type: video/lecture/reading/pdf/code/slides/link) within each module. Drag-free but reorderable via up/down buttons.
-- **Assign Users section**: multi-select from a mock user list to assign learners
-- **Publish toggle**: draft → published. Only published courses appear in the student Library.
+### 4. Role switcher in Sidebar User Menu (`src/components/SidebarUserMenu.tsx`)
+- Add a menu item with a `ShieldCheck` icon: "Switch to Admin" / "Switch to Learner"
+- Clicking it calls `setUserRole` and shows a toast confirming the switch
+- Visually distinguish which role is active (e.g. a small badge or check)
 
-### 2. Admin data in WorkspaceContext
+### 5. Role switcher in Settings (`src/pages/Settings.tsx`)
+- In the Account panel, add a "Role" setting row with a segmented control or toggle to switch between Learner and Admin
+- Label it clearly as a demo/dev tool
 
-Add to context:
-- `AdminCourse` type: `{ id, title, description, status: "draft" | "published", modules: AdminModule[], assignedUsers: string[], createdAt, updatedAt }`
-- `AdminModule` type: `{ id, title, items: AdminSourceItem[] }`
-- `AdminSourceItem` type: `{ id, title, type: SourceType }`
-- State: `adminCourses`, seed with existing hardcoded courses converted to admin format
-- CRUD: `addAdminCourse`, `updateAdminCourse`, `deleteAdminCourse`, `publishCourse`, `unpublishCourse`
-
-### 3. Library page update
-
-Instead of a hardcoded `courses` array, derive the student-facing course list from `adminCourses.filter(c => c.status === "published")` via context. This connects admin publishing to what students see.
-
-### 4. Sidebar nav update
-
-Add an "Admin Studio" entry to the sidebar nav with a `Shield` (or `Settings2`) icon, linking to `/admin`.
-
-### 5. Route
-
-Add `/admin` route in `App.tsx` pointing to `AdminStudio`.
-
-## Files to Change
+## Files
 
 | File | Change |
 |------|--------|
-| `src/pages/AdminStudio.tsx` | **New** — course list + course editor views |
-| `src/context/WorkspaceContext.tsx` | Add `AdminCourse` types, state, CRUD methods, seed data |
-| `src/pages/Library.tsx` | Read published courses from context instead of hardcoded array |
-| `src/components/AppSidebar.tsx` | Add Admin Studio nav item |
-| `src/App.tsx` | Add `/admin` route |
-
-## Design Notes
-
-- Follows existing design language: `font-serif` headings, `text-[13px] font-sans` body, `border-border`, `bg-card`, `rounded-xl`, `shadow-lifted` cards
-- Course editor uses a single-page form layout (not a dialog) for comfortable editing
-- Module/source management uses inline add/remove patterns similar to the notebook quick-add form
-- Mock user list: 4-5 fake users (name + email) for the assignment UI
-- No real auth/role gating — just a separate page accessible from sidebar
+| `src/context/WorkspaceContext.tsx` | Add `userRole`, `setUserRole`, persona switching logic |
+| `src/components/AppSidebar.tsx` | Conditionally render Admin Studio nav |
+| `src/pages/AdminStudio.tsx` | Add access-denied view for learners |
+| `src/components/SidebarUserMenu.tsx` | Add role switcher menu item |
+| `src/pages/Settings.tsx` | Add role toggle in Account panel |
 
