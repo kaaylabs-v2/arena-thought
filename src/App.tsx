@@ -14,6 +14,7 @@ import Progress from "./pages/Progress";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import StudyPlan from "./pages/StudyPlan";
+import AdminStudio from "./pages/AdminStudio";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
