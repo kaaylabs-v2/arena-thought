@@ -101,15 +101,26 @@
   }
 }
 
-/* Admin Studio blue sidebar theme */
+/* Admin Studio sidebar theme — adapts to light/dark */
 .admin-sidebar-theme {
-  --sidebar-background: 215 28% 14%;
+  --sidebar-background: 215 25% 18%;
   --sidebar-foreground: 210 20% 95%;
   --sidebar-primary: 37 55% 51%;
-  --sidebar-primary-foreground: 215 28% 14%;
+  --sidebar-primary-foreground: 215 25% 18%;
   --sidebar-accent: 210 20% 95% / 0.08;
   --sidebar-accent-foreground: 210 20% 95%;
   --sidebar-border: 210 20% 95% / 0.08;
+  --sidebar-ring: 37 55% 51%;
+}
+
+.dark .admin-sidebar-theme {
+  --sidebar-background: 215 28% 10%;
+  --sidebar-foreground: 210 15% 90%;
+  --sidebar-primary: 37 55% 51%;
+  --sidebar-primary-foreground: 215 28% 10%;
+  --sidebar-accent: 210 15% 90% / 0.07;
+  --sidebar-accent-foreground: 210 15% 90%;
+  --sidebar-border: 210 15% 90% / 0.06;
   --sidebar-ring: 37 55% 51%;
 }
 
