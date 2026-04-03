@@ -450,7 +450,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
                     <ItemIcon className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" strokeWidth={1.5} />
                     <span className="text-[12px] font-sans flex-1 truncate">{item.title}</span>
                     {item.completed && (
-                      <Check className="h-3 w-3 text-accent/60 shrink-0" strokeWidth={2} />
+                      <Check className="h-3 w-3 text-accent shrink-0" strokeWidth={2} />
                     )}
                   </button>
                 );

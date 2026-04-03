@@ -108,7 +108,7 @@ const Library = () => {
               <h3 className="font-serif text-[1.1rem] text-foreground mb-1.5 leading-snug">
                 {course.title}
               </h3>
-              <p className="text-[12px] text-muted-foreground font-sans leading-relaxed mb-4 line-clamp-2 tracking-[-0.01em]">
+              <p className="text-[12px] text-muted-foreground font-sans leading-relaxed mb-4 line-clamp-2 tracking-[-0.01em] min-h-[40px]">
                 {course.description}
               </p>
               <div className="flex items-center gap-3">

@@ -379,21 +379,26 @@ function AccountPanel() {
       {/* Role (demo) */}
       <div>
         <SectionLabel>Role (demo)</SectionLabel>
-        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow
-            label="Active role"
-            description="Switch between Learner and Admin personas for demo purposes"
-            action={
-              <SegmentedControl
-                value={userRole}
-                options={[{ value: "learner", label: "Learner" }, { value: "admin", label: "Admin" }]}
-                onChange={(v) => {
-                  setUserRole(v as "learner" | "admin");
-                  toast.success(`Switched to ${v === "admin" ? "Admin" : "Learner"}`);
-                }}
-              />
-            }
-          />
+        <div className="rounded-xl border border-dashed border-[hsl(38_60%_50%/0.3)] bg-[hsl(38_60%_50%/0.06)] p-4">
+          <p className="text-[11px] font-sans italic text-[hsl(38_60%_50%/0.6)] mb-3">
+            Demo only — This switcher will be removed in production
+          </p>
+          <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+            <SettingRow
+              label="Active role"
+              description="Switch between Learner and Admin personas for demo purposes"
+              action={
+                <SegmentedControl
+                  value={userRole}
+                  options={[{ value: "learner", label: "Learner" }, { value: "admin", label: "Admin" }]}
+                  onChange={(v) => {
+                    setUserRole(v as "learner" | "admin");
+                    toast.success(`Switched to ${v === "admin" ? "Admin" : "Learner"}`);
+                  }}
+                />
+              }
+            />
+          </div>
         </div>
       </div>
 

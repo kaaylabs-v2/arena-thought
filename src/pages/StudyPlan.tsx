@@ -97,7 +97,7 @@ const StudyPlan = () => {
               showSync && "bg-muted/50 border-accent/20"
             )}
           >
-            <Bell className="h-3.5 w-3.5" strokeWidth={1.5} />
+            <RefreshCw className="h-3.5 w-3.5" strokeWidth={1.5} />
             Sync
           </button>
           <button

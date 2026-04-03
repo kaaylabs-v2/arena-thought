@@ -87,6 +87,11 @@ const Index = () => {
                 </button>
                 <span className="flex-1 text-[13px] font-sans text-foreground truncate">{task.title}</span>
                 <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${priorityDot[task.priority]} transition-transform duration-300 ease-spring group-hover:scale-125`} />
+                <span className={`text-[11px] font-sans shrink-0 ${
+                  task.priority === "high" ? "text-destructive/70" : task.priority === "medium" ? "text-accent/70" : "text-muted-foreground/40"
+                }`}>
+                  {task.priority === "high" ? "High" : task.priority === "medium" ? "Medium" : "Low"}
+                </span>
                 {task.dueDate && (
                   <span className="text-[10px] font-sans text-muted-foreground/50 shrink-0 flex items-center gap-1">
                     <Calendar className="h-2.5 w-2.5" strokeWidth={1.5} />

@@ -317,6 +317,7 @@ function ReflectionCard({
   const reveal = useScrollReveal();
   const { isVisible } = reveal;
   const props = revealProps(isVisible, delay);
+  const [expanded, setExpanded] = useState(false);
 
   return (
     <div ref={reveal.ref} className={`group ${props.className}`} style={props.style}>
@@ -330,7 +331,20 @@ function ReflectionCard({
         )}
       </div>
       <div className="relative rounded-xl border border-border bg-card p-5 hover:shadow-soft hover:border-accent/15 transition-all duration-250">
-        <p className="text-[13.5px] font-sans text-foreground leading-[1.75] pr-8">{reflection.content}</p>
+        <div
+          className="overflow-hidden transition-[max-height] duration-300 ease-out"
+          style={{ maxHeight: expanded ? "2000px" : "120px" }}
+        >
+          <p className="text-[13.5px] font-sans text-foreground leading-[1.75] pr-8">{reflection.content}</p>
+        </div>
+        {reflection.content.length > 200 && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-[12px] font-sans text-muted-foreground hover:text-foreground transition-colors duration-200 mt-1"
+          >
+            {expanded ? "Show less" : "Read more"}
+          </button>
+        )}
 
         {/* Delete button */}
         <button

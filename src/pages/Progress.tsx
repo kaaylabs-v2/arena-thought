@@ -110,9 +110,10 @@ const Progress = () => {
                   className="w-full max-w-[28px] rounded-md transition-all duration-700 ease-smooth"
                   style={{
                     height: activityReveal.isVisible
-                      ? `${Math.max(day.hours > 0 ? 8 : 3, (day.hours / maxHours) * 52)}px`
-                      : "3px",
-                    backgroundColor: day.active ? "hsl(var(--accent) / 0.65)" : "hsl(var(--border))",
+                      ? `${Math.max(day.hours > 0 ? 8 : 2, (day.hours / maxHours) * 52)}px`
+                      : "2px",
+                    backgroundColor: day.hours > 0 ? "hsl(var(--accent) / 0.65)" : "hsl(var(--accent) / 0.15)",
+                    borderRadius: day.hours === 0 ? "1px" : undefined,
                     transitionDelay: activityReveal.isVisible ? `${200 + i * 80}ms` : "0ms",
                   }}
                 />
