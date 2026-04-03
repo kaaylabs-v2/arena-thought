@@ -425,9 +425,8 @@ function AccountPanel() {
                   <td className="px-4 py-3.5 text-[12px] font-sans text-muted-foreground">{s.updated}</td>
                   <td className="px-3 py-3.5">
                     <button
-                      onClick={() => i !== 0 && toast.success("Session terminated")}
-                      className={`h-7 w-7 rounded-md flex items-center justify-center transition-colors duration-200 ${i === 0 ? "opacity-30 cursor-not-allowed" : "hover:bg-muted/50 text-muted-foreground hover:text-foreground active:scale-[0.95]"}`}
-                      disabled={i === 0}
+                      onClick={() => toast("Session management coming in a future update")}
+                      className="h-7 w-7 rounded-md flex items-center justify-center transition-colors duration-200 hover:bg-muted/50 text-muted-foreground hover:text-foreground active:scale-[0.95]"
                     >
                       <MoreHorizontal className="h-3.5 w-3.5" strokeWidth={1.5} />
                     </button>
