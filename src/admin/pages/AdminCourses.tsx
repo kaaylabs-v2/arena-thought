@@ -11,22 +11,9 @@ import {
 import { cn } from "@/lib/utils";
 
 const AMBER = "#C9963A";
-const AMBER_HOVER = "#B8862E";
-const AMBER_LIGHT = "rgba(201, 150, 58, 0.08)";
-const ROW_HOVER = "rgba(201, 150, 58, 0.04)";
 
 type TabFilter = "all" | "active" | "draft" | "archived";
 type DeployPathway = null | "preloaded" | "custom" | "commission";
-
-const cardStyle: React.CSSProperties = {
-  backgroundColor: "#FFFFFF",
-  border: "1px solid rgba(0,0,0,0.08)",
-  borderRadius: 12,
-  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-};
-
-const inputStyle = "w-full h-9 px-3 rounded-lg text-[13px] focus:outline-none focus:ring-2 focus:ring-[rgba(201,150,58,0.3)] bg-white";
-const inputBorder = { border: "1px solid rgba(0,0,0,0.12)" };
 
 export default function AdminCoursesPage() {
   const [courses] = useState<AdminCourseItem[]>(seedCourses);
@@ -64,16 +51,15 @@ export default function AdminCoursesPage() {
     }
   };
 
-  const statusColor = (s: CourseStatus): React.CSSProperties => {
+  const statusColor = (s: CourseStatus): string => {
     switch (s) {
-      case "active": return { backgroundColor: "rgba(34,197,94,0.08)", color: "#16a34a" };
-      case "draft": return { backgroundColor: "rgba(0,0,0,0.05)", color: "rgba(0,0,0,0.5)" };
-      case "archived": return { backgroundColor: "rgba(201,150,58,0.08)", color: AMBER };
+      case "active": return "bg-green-500/10 text-green-600 dark:text-green-400";
+      case "draft": return "bg-muted text-muted-foreground";
+      case "archived": return "bg-accent/10 text-accent";
     }
   };
 
   const openDeploy = () => { setDrawerOpen(true); setPathway(null); };
-
   const closeDeploy = () => {
     setDrawerOpen(false); setPathway(null);
     setCustomTitle(""); setCustomDesc(""); setCustomMastery(""); setCustomDept("");
@@ -87,75 +73,67 @@ export default function AdminCoursesPage() {
     ]);
   };
 
-  const primaryBtn: React.CSSProperties = {
-    backgroundColor: "#1A1A1A", color: "#fff", borderRadius: 8,
-  };
-  const secondaryBtn: React.CSSProperties = {
-    backgroundColor: "transparent", border: "1px solid rgba(0,0,0,0.15)", borderRadius: 8, color: "rgba(0,0,0,0.65)",
-  };
-
   return (
     <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="font-serif text-[2rem] font-normal" style={{ color: "rgba(0,0,0,0.85)" }}>Courses</h1>
-          <p className="text-sm mt-0.5" style={{ color: "rgba(0,0,0,0.45)" }}>Manage deployed courses and create new ones</p>
+          <h1 className="font-serif text-[2rem] font-normal text-foreground">Courses</h1>
+          <p className="text-sm mt-0.5 text-muted-foreground">Manage deployed courses and create new ones</p>
         </div>
-        <button onClick={openDeploy} className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium transition-colors hover:opacity-90" style={primaryBtn}>
+        <button onClick={openDeploy} className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium transition-colors hover:opacity-90 bg-primary text-primary-foreground rounded-lg">
           <Plus className="h-4 w-4" /> Deploy New Course
         </button>
       </div>
 
       {/* Tabs + Search */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
-        <div className="flex gap-1 rounded-lg p-1" style={{ backgroundColor: "rgba(0,0,0,0.04)" }}>
+        <div className="flex gap-1 rounded-lg p-1 bg-muted/50">
           {tabs.map(t => (
             <button
               key={t.value}
               onClick={() => setTab(t.value)}
-              className="px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors"
-              style={{
-                backgroundColor: tab === t.value ? "#fff" : "transparent",
-                color: tab === t.value ? "rgba(0,0,0,0.85)" : "rgba(0,0,0,0.45)",
-                boxShadow: tab === t.value ? "0 1px 3px rgba(0,0,0,0.06)" : "none",
-                borderBottom: tab === t.value ? `2px solid ${AMBER}` : "2px solid transparent",
-              }}
+              className={cn(
+                "px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors",
+                tab === t.value
+                  ? "bg-card text-foreground shadow-sm border-b-2 border-accent"
+                  : "text-muted-foreground"
+              )}
             >
               {t.label}
             </button>
           ))}
         </div>
         <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: "rgba(0,0,0,0.3)" }} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search courses..."
-            className={cn(inputStyle, "pl-9 pr-3")} style={inputBorder}
+            className="w-full h-9 pl-9 pr-3 rounded-lg text-[13px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
         </div>
       </div>
 
       {/* Table */}
       {filtered.length === 0 ? (
-        <div className="text-center py-20" style={cardStyle}>
+        <div className="text-center py-20 bg-card border border-border rounded-xl shadow-sm">
           <GraduationCapIcon />
-          <p className="text-sm mt-2" style={{ color: "rgba(0,0,0,0.45)" }}>No courses found</p>
-          <button onClick={openDeploy} className="mt-3 text-sm font-medium hover:underline" style={{ color: AMBER }}>Deploy your first course</button>
+          <p className="text-sm mt-2 text-muted-foreground">No courses found</p>
+          <button onClick={openDeploy} className="mt-3 text-sm font-medium hover:underline text-accent">Deploy your first course</button>
         </div>
       ) : (
-        <div className="overflow-hidden" style={cardStyle}>
+        <div className="overflow-hidden bg-card border border-border rounded-xl shadow-sm">
           <table className="w-full text-left">
             <thead>
-              <tr style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
+              <tr className="border-b border-border">
                 {["Course Name", "Type", "Status", "Enrolled", "Mastery", "Deployed", ""].map((h, i) => (
                   <th key={i} className={cn(
-                    "px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em]",
+                    "px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground",
                     i === 1 && "hidden md:table-cell",
                     i === 3 && "hidden lg:table-cell",
                     i === 4 && "hidden lg:table-cell",
                     i === 5 && "hidden xl:table-cell",
-                  )} style={{ color: "rgba(0,0,0,0.4)" }}>
+                  )}>
                     {h}
                   </th>
                 ))}
@@ -163,37 +141,31 @@ export default function AdminCoursesPage() {
             </thead>
             <tbody>
               {filtered.map(course => (
-                <tr
-                  key={course.id}
-                  className="transition-colors group"
-                  style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}
-                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = ROW_HOVER)}
-                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}
-                >
+                <tr key={course.id} className="transition-colors group border-b border-border hover:bg-accent/5">
                   <td className="px-5 py-3.5">
-                    <span className="text-[13px] font-medium" style={{ color: "rgba(0,0,0,0.8)" }}>{course.name}</span>
+                    <span className="text-[13px] font-medium text-foreground/80">{course.name}</span>
                   </td>
                   <td className="px-5 py-3.5 hidden md:table-cell">
-                    <span className="text-[12px]" style={{ color: "rgba(0,0,0,0.45)" }}>{typeLabel(course.type)}</span>
+                    <span className="text-[12px] text-muted-foreground">{typeLabel(course.type)}</span>
                   </td>
                   <td className="px-5 py-3.5">
-                    <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium" style={statusColor(course.status)}>
+                    <span className={cn("inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium", statusColor(course.status))}>
                       {course.status.charAt(0).toUpperCase() + course.status.slice(1)}
                     </span>
                   </td>
                   <td className="px-5 py-3.5 hidden lg:table-cell">
-                    <span className="text-[13px]" style={{ color: "rgba(0,0,0,0.6)" }}>{course.enrolledCount}</span>
+                    <span className="text-[13px] text-foreground/60">{course.enrolledCount}</span>
                   </td>
                   <td className="px-5 py-3.5 hidden lg:table-cell">
-                    <span className="text-[13px]" style={{ color: "rgba(0,0,0,0.6)" }}>{course.masteryRate}%</span>
+                    <span className="text-[13px] text-foreground/60">{course.masteryRate}%</span>
                   </td>
                   <td className="px-5 py-3.5 hidden xl:table-cell">
-                    <span className="text-[12px]" style={{ color: "rgba(0,0,0,0.35)" }}>{course.dateDeployed}</span>
+                    <span className="text-[12px] text-muted-foreground/60">{course.dateDeployed}</span>
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       {[Pencil, Archive, Users, Copy].map((Icon, i) => (
-                        <button key={i} className="h-7 w-7 rounded-md flex items-center justify-center transition-colors" style={{ color: "rgba(0,0,0,0.3)" }}>
+                        <button key={i} className="h-7 w-7 rounded-md flex items-center justify-center transition-colors text-muted-foreground hover:text-foreground">
                           <Icon className="h-3.5 w-3.5" />
                         </button>
                       ))}
@@ -210,21 +182,20 @@ export default function AdminCoursesPage() {
       {drawerOpen && (
         <>
           <div className="fixed inset-0 bg-black/30 z-40" onClick={closeDeploy} />
-          <div className="fixed right-0 top-0 bottom-0 w-[480px] max-w-full z-50 flex flex-col overflow-hidden animate-slide-in-right" style={{ backgroundColor: "#FFFFFF", borderLeft: "1px solid rgba(0,0,0,0.08)" }}>
-            <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-              <h2 className="text-base font-semibold" style={{ color: "rgba(0,0,0,0.85)" }}>
+          <div className="fixed right-0 top-0 bottom-0 w-[480px] max-w-full z-50 flex flex-col overflow-hidden animate-slide-in-right bg-card border-l border-border">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <h2 className="text-base font-semibold text-foreground">
                 {!pathway ? "Deploy New Course" : pathway === "preloaded" ? "Nexi Preloaded Courses" : pathway === "custom" ? "Upload Custom Content" : "Commission Content"}
               </h2>
-              <button onClick={closeDeploy} className="h-8 w-8 rounded-md flex items-center justify-center" style={{ color: "rgba(0,0,0,0.35)" }}>
+              <button onClick={closeDeploy} className="h-8 w-8 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground">
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6">
-              {/* Pathway selector */}
               {!pathway && (
                 <div className="space-y-3">
-                  <p className="text-[13px] mb-4" style={{ color: "rgba(0,0,0,0.45)" }}>Choose how you'd like to add a course:</p>
+                  <p className="text-[13px] mb-4 text-muted-foreground">Choose how you'd like to add a course:</p>
                   {([
                     { key: "preloaded" as const, title: "Nexi Preloaded", desc: "Browse and deploy from our curated course library" },
                     { key: "custom" as const, title: "Upload Custom Content", desc: "Upload your own files and build a course" },
@@ -233,38 +204,33 @@ export default function AdminCoursesPage() {
                     <button
                       key={pw.key}
                       onClick={() => setPathway(pw.key)}
-                      className="w-full flex items-center justify-between p-4 text-left transition-colors"
-                      style={{ ...cardStyle, cursor: "pointer" }}
-                      onMouseEnter={e => (e.currentTarget.style.backgroundColor = AMBER_LIGHT)}
-                      onMouseLeave={e => (e.currentTarget.style.backgroundColor = "#FFFFFF")}
+                      className="w-full flex items-center justify-between p-4 text-left transition-colors bg-card border border-border rounded-xl shadow-sm cursor-pointer hover:bg-accent/5"
                     >
                       <div>
-                        <p className="text-[13px] font-medium" style={{ color: "rgba(0,0,0,0.8)" }}>{pw.title}</p>
-                        <p className="text-[12px] mt-0.5" style={{ color: "rgba(0,0,0,0.45)" }}>{pw.desc}</p>
+                        <p className="text-[13px] font-medium text-foreground/80">{pw.title}</p>
+                        <p className="text-[12px] mt-0.5 text-muted-foreground">{pw.desc}</p>
                       </div>
-                      <ChevronRight className="h-4 w-4" style={{ color: "rgba(0,0,0,0.25)" }} />
+                      <ChevronRight className="h-4 w-4 text-muted-foreground/40" />
                     </button>
                   ))}
                 </div>
               )}
 
-              {/* Preloaded */}
               {pathway === "preloaded" && (
                 <div>
-                  <button onClick={() => setPathway(null)} className="text-[12px] mb-4 flex items-center gap-1" style={{ color: "rgba(0,0,0,0.45)" }}>← Back</button>
+                  <button onClick={() => setPathway(null)} className="text-[12px] mb-4 flex items-center gap-1 text-muted-foreground">← Back</button>
                   <div className="grid grid-cols-1 gap-3">
                     {preloadedCourses.map(course => (
-                      <div key={course.id} className="p-4 transition-colors" style={cardStyle}>
+                      <div key={course.id} className="p-4 transition-colors bg-card border border-border rounded-xl shadow-sm">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="text-[13px] font-medium" style={{ color: "rgba(0,0,0,0.8)" }}>{course.title}</p>
-                            <p className="text-[12px] mt-0.5" style={{ color: "rgba(0,0,0,0.45)" }}>{course.description}</p>
-                            <span className="inline-block mt-2 text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ backgroundColor: AMBER_LIGHT, color: AMBER }}>{course.category}</span>
+                            <p className="text-[13px] font-medium text-foreground/80">{course.title}</p>
+                            <p className="text-[12px] mt-0.5 text-muted-foreground">{course.description}</p>
+                            <span className="inline-block mt-2 text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full bg-accent/10 text-accent">{course.category}</span>
                           </div>
                           <button
                             onClick={() => { toast.success(`${course.title} deployed successfully`); closeDeploy(); }}
-                            className="shrink-0 ml-3 px-3 py-1.5 text-[12px] font-medium transition-colors hover:opacity-90"
-                            style={primaryBtn}
+                            className="shrink-0 ml-3 px-3 py-1.5 text-[12px] font-medium transition-colors hover:opacity-90 bg-primary text-primary-foreground rounded-lg"
                           >Deploy</button>
                         </div>
                       </div>
@@ -273,35 +239,30 @@ export default function AdminCoursesPage() {
                 </div>
               )}
 
-              {/* Custom Upload */}
               {pathway === "custom" && (
                 <div className="space-y-5">
-                  <button onClick={() => setPathway(null)} className="text-[12px] mb-2 flex items-center gap-1" style={{ color: "rgba(0,0,0,0.45)" }}>← Back</button>
-
+                  <button onClick={() => setPathway(null)} className="text-[12px] mb-2 flex items-center gap-1 text-muted-foreground">← Back</button>
                   <div
                     onClick={handleFakeUpload}
-                    className="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors"
-                    style={{ borderColor: "rgba(0,0,0,0.12)" }}
-                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = AMBER_LIGHT)}
-                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = "transparent")}
+                    className="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors border-border hover:bg-accent/5"
                   >
-                    <Upload className="h-8 w-8 mx-auto mb-2" style={{ color: "rgba(0,0,0,0.2)" }} />
-                    <p className="text-[13px] font-medium" style={{ color: "rgba(0,0,0,0.6)" }}>Click to upload files</p>
-                    <p className="text-[11px] mt-1" style={{ color: "rgba(0,0,0,0.35)" }}>PDF, DOCX, PPT, MP4, or URLs</p>
+                    <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground/40" />
+                    <p className="text-[13px] font-medium text-foreground/60">Click to upload files</p>
+                    <p className="text-[11px] mt-1 text-muted-foreground">PDF, DOCX, PPT, MP4, or URLs</p>
                   </div>
 
                   {uploadedFiles.length > 0 && (
                     <div className="space-y-2">
                       {uploadedFiles.map((f, i) => (
-                        <div key={i} className="flex items-center justify-between rounded-lg px-3 py-2" style={{ border: "1px solid rgba(0,0,0,0.08)" }}>
+                        <div key={i} className="flex items-center justify-between rounded-lg px-3 py-2 border border-border">
                           <div className="flex items-center gap-2">
-                            <div className="h-7 w-7 rounded flex items-center justify-center text-[10px] font-bold uppercase" style={{ backgroundColor: AMBER_LIGHT, color: AMBER }}>{f.type}</div>
+                            <div className="h-7 w-7 rounded flex items-center justify-center text-[10px] font-bold uppercase bg-accent/10 text-accent">{f.type}</div>
                             <div>
-                              <p className="text-[12px] font-medium" style={{ color: "rgba(0,0,0,0.7)" }}>{f.name}</p>
-                              <p className="text-[10px]" style={{ color: "rgba(0,0,0,0.35)" }}>{f.size}</p>
+                              <p className="text-[12px] font-medium text-foreground/70">{f.name}</p>
+                              <p className="text-[10px] text-muted-foreground">{f.size}</p>
                             </div>
                           </div>
-                          <button onClick={() => setUploadedFiles(prev => prev.filter((_, j) => j !== i))} style={{ color: "rgba(0,0,0,0.3)" }}>
+                          <button onClick={() => setUploadedFiles(prev => prev.filter((_, j) => j !== i))} className="text-muted-foreground hover:text-foreground">
                             <X className="h-3.5 w-3.5" />
                           </button>
                         </div>
@@ -310,62 +271,60 @@ export default function AdminCoursesPage() {
                   )}
 
                   <div>
-                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5" style={{ color: "rgba(0,0,0,0.4)" }}>Course Title</label>
-                    <input value={customTitle} onChange={e => setCustomTitle(e.target.value)} placeholder="Enter course title" className={inputStyle} style={inputBorder} />
+                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5 text-muted-foreground">Course Title</label>
+                    <input value={customTitle} onChange={e => setCustomTitle(e.target.value)} placeholder="Enter course title" className="w-full h-9 px-3 rounded-lg text-[13px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30" />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5" style={{ color: "rgba(0,0,0,0.4)" }}>Description</label>
-                    <textarea value={customDesc} onChange={e => setCustomDesc(e.target.value)} placeholder="What is this course about?" rows={3} className="w-full px-3 py-2 rounded-lg text-[13px] focus:outline-none focus:ring-2 focus:ring-[rgba(201,150,58,0.3)] resize-none" style={inputBorder} />
+                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5 text-muted-foreground">Description</label>
+                    <textarea value={customDesc} onChange={e => setCustomDesc(e.target.value)} placeholder="What is this course about?" rows={3} className="w-full px-3 py-2 rounded-lg text-[13px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30 resize-none" />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5" style={{ color: "rgba(0,0,0,0.4)" }}>Mastery Outcome</label>
-                    <input value={customMastery} onChange={e => setCustomMastery(e.target.value)} placeholder="What does mastery mean for this course?" className={inputStyle} style={inputBorder} />
+                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5 text-muted-foreground">Mastery Outcome</label>
+                    <input value={customMastery} onChange={e => setCustomMastery(e.target.value)} placeholder="What does mastery mean for this course?" className="w-full h-9 px-3 rounded-lg text-[13px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30" />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5" style={{ color: "rgba(0,0,0,0.4)" }}>Department</label>
-                    <select value={customDept} onChange={e => setCustomDept(e.target.value)} className={cn(inputStyle, "bg-white")} style={inputBorder}>
+                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5 text-muted-foreground">Department</label>
+                    <select value={customDept} onChange={e => setCustomDept(e.target.value)} className="w-full h-9 px-3 rounded-lg text-[13px] bg-background border border-input focus:outline-none">
                       <option value="">Select department</option>
                       {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
                     </select>
                   </div>
 
                   <div className="flex gap-3 pt-2">
-                    <button onClick={() => { toast.success("Course saved as draft"); closeDeploy(); }} className="flex-1 h-10 text-[13px] font-medium transition-colors" style={secondaryBtn}>
+                    <button onClick={() => { toast.success("Course saved as draft"); closeDeploy(); }} className="flex-1 h-10 text-[13px] font-medium transition-colors border border-border rounded-lg text-foreground/65 hover:bg-muted">
                       Save as Draft
                     </button>
-                    <button onClick={() => { toast.success("Course deployed successfully"); closeDeploy(); }} className="flex-1 h-10 text-[13px] font-medium transition-colors hover:opacity-90" style={primaryBtn}>
+                    <button onClick={() => { toast.success("Course deployed successfully"); closeDeploy(); }} className="flex-1 h-10 text-[13px] font-medium transition-colors hover:opacity-90 bg-primary text-primary-foreground rounded-lg">
                       Deploy Now
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* Commission */}
               {pathway === "commission" && (
                 <div className="space-y-5">
-                  <button onClick={() => setPathway(null)} className="text-[12px] mb-2 flex items-center gap-1" style={{ color: "rgba(0,0,0,0.45)" }}>← Back</button>
-                  <p className="text-[13px]" style={{ color: "rgba(0,0,0,0.6)" }}>Describe what you need and our content team will work with you to build it.</p>
+                  <button onClick={() => setPathway(null)} className="text-[12px] mb-2 flex items-center gap-1 text-muted-foreground">← Back</button>
+                  <p className="text-[13px] text-foreground/60">Describe what you need and our content team will work with you to build it.</p>
                   <div>
-                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5" style={{ color: "rgba(0,0,0,0.4)" }}>Objective</label>
-                    <textarea value={commObjective} onChange={e => setCommObjective(e.target.value)} placeholder="Describe the learning objective and audience..." rows={4} className="w-full px-3 py-2 rounded-lg text-[13px] focus:outline-none focus:ring-2 focus:ring-[rgba(201,150,58,0.3)] resize-none" style={inputBorder} />
+                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5 text-muted-foreground">Objective</label>
+                    <textarea value={commObjective} onChange={e => setCommObjective(e.target.value)} placeholder="Describe the learning objective and audience..." rows={4} className="w-full px-3 py-2 rounded-lg text-[13px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30 resize-none" />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5" style={{ color: "rgba(0,0,0,0.4)" }}>Timeline</label>
-                    <select value={commTimeline} onChange={e => setCommTimeline(e.target.value)} className={cn(inputStyle, "bg-white")} style={inputBorder}>
+                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5 text-muted-foreground">Timeline</label>
+                    <select value={commTimeline} onChange={e => setCommTimeline(e.target.value)} className="w-full h-9 px-3 rounded-lg text-[13px] bg-background border border-input focus:outline-none">
                       <option>2 weeks</option>
                       <option>4 weeks</option>
                       <option>6 weeks</option>
                       <option>8+ weeks</option>
                     </select>
                   </div>
-                  <label className="flex items-center gap-2 text-[13px] cursor-pointer" style={{ color: "rgba(0,0,0,0.65)" }}>
-                    <input type="checkbox" checked={commHasMaterials} onChange={e => setCommHasMaterials(e.target.checked)} className="rounded" style={{ borderColor: "rgba(0,0,0,0.2)" }} />
+                  <label className="flex items-center gap-2 text-[13px] cursor-pointer text-foreground/65">
+                    <input type="checkbox" checked={commHasMaterials} onChange={e => setCommHasMaterials(e.target.checked)} className="rounded border-border" />
                     I have existing materials to provide
                   </label>
                   <button
                     onClick={() => { toast.success("Commission request submitted"); closeDeploy(); }}
-                    className="w-full h-10 text-[13px] font-medium transition-colors hover:opacity-90 flex items-center justify-center gap-2"
-                    style={primaryBtn}
+                    className="w-full h-10 text-[13px] font-medium transition-colors hover:opacity-90 flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-lg"
                   >
                     <Send className="h-4 w-4" /> Submit Request
                   </button>
@@ -381,7 +340,7 @@ export default function AdminCoursesPage() {
 
 function GraduationCapIcon() {
   return (
-    <svg className="h-10 w-10 mx-auto" style={{ color: "rgba(0,0,0,0.2)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+    <svg className="h-10 w-10 mx-auto text-muted-foreground/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
       <path d="M12 14l9-5-9-5-9 5 9 5z" />
       <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
     </svg>

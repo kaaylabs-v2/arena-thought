@@ -6,7 +6,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 export function AdminLayout() {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full font-sans admin-sidebar-theme" style={{ backgroundColor: "#F5F0EA" }}>
+      <div className="min-h-screen flex w-full font-sans bg-background admin-sidebar-theme">
         <AdminSidebar />
         <SidebarInset className="flex-1 flex flex-col">
           <AdminTopBar />
