@@ -177,21 +177,6 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
           {!collapsed && <span>Back to Arena</span>}
         </button>
 
-        {/* Help link */}
-        <button
-          onClick={() => navigate("/admin/help")}
-          className={cn(
-            "flex items-center gap-2 w-full py-1.5 text-[12px] font-sans transition-colors duration-150",
-            collapsed ? "justify-center" : "px-3"
-          )}
-          style={{ color: "rgba(255,255,255,0.35)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.65)")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
-          title={collapsed ? "Help" : undefined}
-        >
-          <HelpCircle className="h-[13px] w-[13px]" strokeWidth={1.5} />
-          {!collapsed && <span>Help</span>}
-        </button>
 
         {/* Collapse toggle */}
         <button
