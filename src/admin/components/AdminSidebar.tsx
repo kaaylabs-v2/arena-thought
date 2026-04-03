@@ -158,16 +158,6 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                 {roleBadgeLabel(currentAdmin.role)}
               </p>
             </div>
-            <button
-              onClick={() => navigate("/admin/settings")}
-              className="shrink-0 p-1 rounded-md transition-colors"
-              style={{ color: "rgba(255,255,255,0.35)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.70)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
-              title="Settings"
-            >
-              <Settings className="h-[15px] w-[15px]" strokeWidth={1.5} />
-            </button>
           </div>
         )}
 
