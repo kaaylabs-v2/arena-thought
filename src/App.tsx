@@ -23,15 +23,13 @@ import AdminDashboard from "@/admin/pages/AdminDashboard";
 import AdminCoursesPage from "@/admin/pages/AdminCourses";
 import AdminMembersPage from "@/admin/pages/AdminMembers";
 import AdminContentLibraryPage from "@/admin/pages/AdminContentLibrary";
+import AdminDepartmentsPage from "@/admin/pages/AdminDepartmentsPage";
+import AdminOutcomesPage from "@/admin/pages/AdminOutcomesPage";
+import AdminAnalyticsPage from "@/admin/pages/AdminAnalyticsPage";
+import AdminAnnouncementsPage from "@/admin/pages/AdminAnnouncementsPage";
+import AdminSettingsPage from "@/admin/pages/AdminSettingsPage";
+import AdminHelpPage from "@/admin/pages/AdminHelpPage";
 import AdminAccessDenied from "@/admin/pages/AdminAccessDenied";
-import {
-  AdminDepartments,
-  AdminOutcomes,
-  AdminAnalytics,
-  AdminAnnouncements,
-  AdminSettings as AdminSettingsPage,
-  AdminHelp,
-} from "@/admin/pages/AdminStubPages";
 import { useAdminAuth } from "@/admin/hooks/useAdminAuth";
 
 const queryClient = new QueryClient();
@@ -69,12 +67,12 @@ const App = () => (
               <Route path="/admin/courses" element={<AdminCoursesPage />} />
               <Route path="/admin/library" element={<AdminContentLibraryPage />} />
               <Route path="/admin/members" element={<AdminMembersPage />} />
-              <Route path="/admin/departments" element={<AdminDepartments />} />
-              <Route path="/admin/outcomes" element={<AdminOutcomes />} />
-              <Route path="/admin/analytics" element={<AdminAnalytics />} />
-              <Route path="/admin/announcements" element={<AdminAnnouncements />} />
+              <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
+              <Route path="/admin/outcomes" element={<AdminOutcomesPage />} />
+              <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
+              <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
               <Route path="/admin/settings" element={<AdminSettingsPage />} />
-              <Route path="/admin/help" element={<AdminHelp />} />
+              <Route path="/admin/help" element={<AdminHelpPage />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />
