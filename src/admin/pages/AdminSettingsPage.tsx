@@ -104,7 +104,7 @@ export default function AdminSettingsPage() {
             </div>
             <div>
               <Label className="text-xs">Session Timeout (minutes)</Label>
-              <Input type="number" defaultValue={60} className="max-w-[200px]" />
+              <Input type="number" value={sessionTimeout} onChange={e => setSessionTimeout(Number(e.target.value))} className="max-w-[200px]" />
             </div>
             <Button onClick={handleSave} className="btn-apple bg-accent text-accent-foreground hover:bg-accent/90">Save Changes</Button>
           </div>

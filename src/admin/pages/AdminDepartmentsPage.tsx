@@ -45,7 +45,7 @@ export default function AdminDepartmentsPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-8 stagger-children">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 stagger-children">
         {[
           { icon: Building2, label: "Departments", value: depts.length },
           { icon: Users, label: "Total Members", value: totalMembers },

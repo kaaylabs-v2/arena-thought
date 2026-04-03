@@ -164,8 +164,18 @@ export default function AdminCoursesPage() {
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      {[Pencil, Archive, Users, Copy].map((Icon, i) => (
-                        <button key={i} className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground">
+                      {[
+                        { Icon: Pencil, label: "Edit course" },
+                        { Icon: Archive, label: "Archive course" },
+                        { Icon: Users, label: "Manage enrollments" },
+                        { Icon: Copy, label: "Duplicate course" },
+                      ].map(({ Icon, label }, i) => (
+                        <button
+                          key={i}
+                          title="Coming in next phase"
+                          onClick={(e) => { e.stopPropagation(); toast("Coming in next phase", { description: label }); }}
+                          className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground cursor-not-allowed"
+                        >
                           <Icon className="h-3.5 w-3.5" />
                         </button>
                       ))}

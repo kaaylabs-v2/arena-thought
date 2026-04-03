@@ -74,7 +74,7 @@ export default function AdminAnalyticsPage() {
           <thead>
             <tr className="border-b border-border">
               {["Course", "Enrolled", "Mastery Rate", "Department", "Status"].map(h => (
-                <th key={h} className="text-left pb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">{h}</th>
+                <th key={h} className="text-left pb-3 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">{h}</th>
               ))}
             </tr>
           </thead>
