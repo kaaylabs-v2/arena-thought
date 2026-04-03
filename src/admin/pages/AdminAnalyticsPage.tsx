@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { BarChart3, Users, TrendingUp, Clock, Download, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area } from "recharts";
-import { weeklyActiveData, adminCourses, members, departments } from "@/admin/data/mock-data";
+import { useWorkspace } from "@/context/WorkspaceContext";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 

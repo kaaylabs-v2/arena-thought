@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Building2, Users, GraduationCap, Plus, Pencil } from "lucide-react";
-import { departments, members, adminCourses, type Department } from "@/admin/data/mock-data";
+import { useWorkspace } from "@/context/WorkspaceContext";
+import type { Department } from "@/admin/data/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

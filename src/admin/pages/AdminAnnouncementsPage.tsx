@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Megaphone, Plus, Calendar, User } from "lucide-react";
-import { announcements as seedAnnouncements, departments, type Announcement } from "@/admin/data/mock-data";
+import { useWorkspace } from "@/context/WorkspaceContext";
+import { type Announcement } from "@/admin/data/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";

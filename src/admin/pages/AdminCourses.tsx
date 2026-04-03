@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { Search, Plus, Archive, Copy, Users, Pencil, X, Upload, ChevronRight, Check, Send, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
+import { useWorkspace } from "@/context/WorkspaceContext";
 import {
-  adminCourses as seedCourses,
   preloadedCourses,
-  departments,
-  members,
   type AdminCourseItem,
   type CourseStatus,
 } from "@/admin/data/mock-data";
