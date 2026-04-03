@@ -23,7 +23,7 @@ export default function AdminAnalyticsPage() {
       <h1 className="font-serif text-[2rem] font-normal text-foreground">Analytics</h1>
       <p className="text-sm mt-0.5 mb-8 text-muted-foreground">Organization-level insights and engagement data</p>
 
-      <div className="grid grid-cols-4 gap-4 mb-8 stagger-children">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 stagger-children">
         {[
           { icon: Users, label: "Active Members", value: activeMembers },
           { icon: BarChart3, label: "Active Courses", value: activeCourses },
@@ -40,7 +40,7 @@ export default function AdminAnalyticsPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div className="card-interactive p-5">
           <h3 className="font-serif text-base mb-4 text-foreground/75">Weekly Active Learners</h3>
           <ResponsiveContainer width="100%" height={220}>
@@ -74,19 +74,19 @@ export default function AdminAnalyticsPage() {
           <thead>
             <tr className="border-b border-border">
               {["Course", "Enrolled", "Mastery Rate", "Department", "Status"].map(h => (
-                <th key={h} className="text-left pb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">{h}</th>
+                <th key={h} className="text-left pb-3 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {adminCourses.map(c => (
               <tr key={c.id} className="transition-colors duration-200 border-b border-border/50 hover:bg-accent/5">
-                <td className="py-3 font-medium text-foreground/75">{c.name}</td>
-                <td className="py-3 text-muted-foreground">{c.enrolledCount}</td>
-                <td className="py-3" style={{ color: c.masteryRate >= 70 ? "#16a34a" : c.masteryRate >= 40 ? "#C9963A" : "#dc2626" }}>{c.masteryRate}%</td>
-                <td className="py-3 text-muted-foreground">{c.department}</td>
-                <td className="py-3">
-                  <span className={`text-[11px] px-2 py-0.5 rounded-full capitalize ${c.status === "active" ? "bg-green-500/10 text-green-600 dark:text-green-400" : "bg-muted text-muted-foreground"}`}>
+                <td className="py-3 px-4 font-medium text-foreground/75">{c.name}</td>
+                <td className="py-3 px-4 text-muted-foreground">{c.enrolledCount}</td>
+                <td className={`py-3 px-4 ${c.masteryRate >= 70 ? "text-accent" : c.masteryRate >= 40 ? "text-accent/70" : "text-muted-foreground"}`}>{c.masteryRate}%</td>
+                <td className="py-3 px-4 text-muted-foreground">{c.department}</td>
+                <td className="py-3 px-4">
+                  <span className={`text-[11px] px-2 py-0.5 rounded-full capitalize ${c.status === "active" ? "bg-accent/10 text-accent" : "bg-muted text-muted-foreground"}`}>
                     {c.status}
                   </span>
                 </td>

@@ -1,4 +1,5 @@
 import { Users, Activity, GraduationCap, Award, UserPlus, Rocket, Upload, ChevronRight, AlertTriangle } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   members,
   adminCourses,
@@ -93,7 +94,7 @@ export default function AdminDashboard() {
             <div className="space-y-2.5">
               {pendingActions.map((action, i) => (
                 <div key={i} className="flex items-start gap-2.5 text-[13px]">
-                  <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-accent" strokeWidth={2} />
+                  <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-accent" strokeWidth={1.5} />
                   <span className="text-foreground/60 leading-snug">{action.text}</span>
                 </div>
               ))}
@@ -104,15 +105,15 @@ export default function AdminDashboard() {
             <h2 className="text-sm font-semibold mb-3 text-foreground/75">Quick Actions</h2>
             <div className="space-y-1.5">
               {quickActions.map((action) => (
-                <a
+                <Link
                   key={action.label}
-                  href={action.href}
+                  to={action.href}
                   className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-all duration-200 group text-foreground/65 hover:bg-accent/8 active:scale-[0.98]"
                 >
                   <action.icon className="h-4 w-4 text-muted-foreground group-hover:text-accent transition-colors duration-200" strokeWidth={1.5} />
                   <span className="flex-1">{action.label}</span>
                   <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:translate-x-0.5 transition-transform duration-200" />
-                </a>
+                </Link>
               ))}
             </div>
           </div>

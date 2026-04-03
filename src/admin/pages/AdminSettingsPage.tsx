@@ -12,6 +12,8 @@ import { toast } from "sonner";
 export default function AdminSettingsPage() {
   const [org, setOrg] = useState(organization);
   const [notifications, setNotifications] = useState({ email: true, inApp: true, weeklyDigest: false });
+  const [twoFactor, setTwoFactor] = useState(false);
+  const [sessionTimeout, setSessionTimeout] = useState(60);
   const handleSave = () => toast.success("Settings saved");
 
   return (
@@ -53,7 +55,10 @@ export default function AdminSettingsPage() {
             </div>
             <div>
               <Label className="text-xs">Logo</Label>
-              <div className="mt-1 border-2 border-dashed rounded-xl p-8 text-center border-border transition-all duration-250 hover:bg-accent/5 hover:border-accent/30 cursor-pointer active:scale-[0.99]">
+              <div
+                onClick={() => toast("Coming in next phase", { description: "Logo upload" })}
+                className="mt-1 border-2 border-dashed rounded-xl p-8 text-center border-border transition-all duration-250 hover:bg-accent/5 hover:border-accent/30 cursor-pointer active:scale-[0.99]"
+              >
                 <p className="text-sm text-muted-foreground">Drag and drop your logo here, or click to browse</p>
                 <p className="text-xs mt-1 text-muted-foreground/60">PNG, SVG — max 2 MB</p>
               </div>
@@ -88,7 +93,7 @@ export default function AdminSettingsPage() {
                 <p className="text-sm font-medium text-foreground/75">Two-Factor Authentication</p>
                 <p className="text-xs text-muted-foreground">Require 2FA for all admin accounts</p>
               </div>
-              <Switch />
+              <Switch checked={twoFactor} onCheckedChange={(v) => { setTwoFactor(v); toast.success(v ? "2FA enabled" : "2FA disabled"); }} />
             </div>
             <div className="setting-row flex items-center justify-between py-3 px-3 -mx-3 rounded-lg">
               <div>
@@ -99,7 +104,7 @@ export default function AdminSettingsPage() {
             </div>
             <div>
               <Label className="text-xs">Session Timeout (minutes)</Label>
-              <Input type="number" defaultValue={60} className="max-w-[200px]" />
+              <Input type="number" value={sessionTimeout} onChange={e => setSessionTimeout(Number(e.target.value))} className="max-w-[200px]" />
             </div>
             <Button onClick={handleSave} className="btn-apple bg-accent text-accent-foreground hover:bg-accent/90">Save Changes</Button>
           </div>

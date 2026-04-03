@@ -1,4 +1,5 @@
 import { HelpCircle, BookOpen, MessageCircle, Mail, ExternalLink } from "lucide-react";
+import { toast } from "sonner";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const faqs = [
@@ -22,9 +23,14 @@ export default function AdminHelpPage() {
       <h1 className="font-serif text-[2rem] font-normal text-foreground">Help</h1>
       <p className="text-sm mt-0.5 mb-8 text-muted-foreground">Documentation and support resources</p>
 
-      <div className="grid grid-cols-3 gap-4 mb-8 stagger-children">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 stagger-children">
         {resources.map((r, i) => (
-          <a key={i} href={r.url} className="card-interactive p-5 block group">
+          <a
+            key={i}
+            href={r.url}
+            onClick={r.url === "#" ? (e) => { e.preventDefault(); toast("Coming in next phase", { description: r.title }); } : undefined}
+            className="card-interactive p-5 block group"
+          >
             <div className="flex items-center gap-3 mb-2">
               <div className="h-9 w-9 rounded-lg flex items-center justify-center bg-accent/10">
                 <r.icon className="h-4 w-4 text-accent" />

@@ -14,7 +14,7 @@ export default function AdminOutcomesPage() {
       <h1 className="font-serif text-[2rem] font-normal text-foreground">Outcomes</h1>
       <p className="text-sm mt-0.5 mb-8 text-muted-foreground">Track mastery definitions and who achieved them</p>
 
-      <div className="grid grid-cols-4 gap-4 mb-8 stagger-children">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 stagger-children">
         {[
           { icon: Target, label: "Avg Mastery Rate", value: `${avgMastery}%` },
           { icon: Award, label: "Total Masteries", value: totalMasteries },
@@ -40,7 +40,7 @@ export default function AdminOutcomesPage() {
                 <h3 className="font-medium text-sm text-foreground/80">{course.name}</h3>
                 <p className="text-xs mt-1 text-muted-foreground">{course.department} · {course.enrolledCount} enrolled</p>
               </div>
-              <Badge variant="outline" style={{ borderColor: course.masteryRate >= 70 ? "rgba(34,197,94,0.3)" : course.masteryRate >= 40 ? "rgba(201,150,58,0.3)" : "rgba(239,68,68,0.3)", color: course.masteryRate >= 70 ? "#16a34a" : course.masteryRate >= 40 ? "#C9963A" : "#dc2626" }}>
+              <Badge variant="outline" className={course.masteryRate >= 70 ? "border-accent/30 text-accent" : course.masteryRate >= 40 ? "border-accent/20 text-accent/70" : "border-border text-muted-foreground"}>
                 {course.masteryRate}%
               </Badge>
             </div>

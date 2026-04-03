@@ -43,7 +43,7 @@ export default function AdminAnnouncementsPage() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-8 stagger-children">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 stagger-children">
         <div className="card-interactive p-5">
           <div className="flex items-center gap-2 mb-1">
             <Megaphone className="h-4 w-4 text-accent" />

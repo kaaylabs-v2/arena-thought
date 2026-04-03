@@ -174,13 +174,13 @@ export function AdminSidebarUserMenu() {
             <DropdownMenuSubContent sideOffset={8} className="w-48 rounded-xl">
               <DropdownMenuItem
                 className="gap-2.5 px-3 py-2 cursor-pointer"
-                onClick={() => window.open("#", "_blank")}
+                onClick={() => toast("Coming in next phase", { description: "About Nexus²" })}
               >
                 <span className="text-[13px] font-sans">About Nexus²</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="gap-2.5 px-3 py-2 cursor-pointer"
-                onClick={() => window.open("#", "_blank")}
+                onClick={() => toast("Coming in next phase", { description: "Tutorials" })}
               >
                 <span className="text-[13px] font-sans">Tutorials</span>
               </DropdownMenuItem>
@@ -201,13 +201,13 @@ export function AdminSidebarUserMenu() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="gap-2.5 px-3 py-2 cursor-pointer"
-                onClick={() => window.open("#", "_blank")}
+                onClick={() => toast("Coming in next phase", { description: "Usage policy" })}
               >
                 <span className="text-[13px] font-sans">Usage policy</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="gap-2.5 px-3 py-2 cursor-pointer"
-                onClick={() => window.open("#", "_blank")}
+                onClick={() => toast("Coming in next phase", { description: "Privacy policy" })}
               >
                 <span className="text-[13px] font-sans">Privacy policy</span>
               </DropdownMenuItem>
