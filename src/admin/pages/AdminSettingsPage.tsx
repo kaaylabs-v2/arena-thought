@@ -12,6 +12,8 @@ import { toast } from "sonner";
 export default function AdminSettingsPage() {
   const [org, setOrg] = useState(organization);
   const [notifications, setNotifications] = useState({ email: true, inApp: true, weeklyDigest: false });
+  const [twoFactor, setTwoFactor] = useState(false);
+  const [sessionTimeout, setSessionTimeout] = useState(60);
   const handleSave = () => toast.success("Settings saved");
 
   return (
