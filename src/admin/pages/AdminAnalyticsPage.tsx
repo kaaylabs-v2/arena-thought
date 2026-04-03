@@ -84,9 +84,9 @@ export default function AdminAnalyticsPage() {
                 <td className="py-3 px-4 font-medium text-foreground/75">{c.name}</td>
                 <td className="py-3 px-4 text-muted-foreground">{c.enrolledCount}</td>
                 <td className={`py-3 px-4 ${c.masteryRate >= 70 ? "text-accent" : c.masteryRate >= 40 ? "text-accent/70" : "text-muted-foreground"}`}>{c.masteryRate}%</td>
-                <td className="py-3 text-muted-foreground">{c.department}</td>
-                <td className="py-3">
-                  <span className={`text-[11px] px-2 py-0.5 rounded-full capitalize ${c.status === "active" ? "bg-green-500/10 text-green-600 dark:text-green-400" : "bg-muted text-muted-foreground"}`}>
+                <td className="py-3 px-4 text-muted-foreground">{c.department}</td>
+                <td className="py-3 px-4">
+                  <span className={`text-[11px] px-2 py-0.5 rounded-full capitalize ${c.status === "active" ? "bg-accent/10 text-accent" : "bg-muted text-muted-foreground"}`}>
                     {c.status}
                   </span>
                 </td>
