@@ -124,18 +124,28 @@ export default function AdminCoursesPage() {
     ? members.filter(m => m.department === enrollCourse.department && m.status === "active")
     : [];
 
+  const [viewTab, setViewTab] = useState("courses");
+
   return (
     <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="font-serif text-[2rem] font-normal text-foreground">Courses</h1>
-          <p className="text-sm mt-0.5 text-muted-foreground">Manage deployed courses and create new ones</p>
+          <p className="text-sm mt-0.5 text-muted-foreground">Manage deployed courses, content, and create new ones</p>
         </div>
         <button onClick={openDeploy} className="btn-apple flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">
           <Plus className="h-4 w-4" /> Deploy New Course
         </button>
       </div>
+
+      <Tabs value={viewTab} onValueChange={setViewTab}>
+        <TabsList className="mb-6 bg-muted/50">
+          <TabsTrigger value="courses" className="text-[13px]">Courses</TabsTrigger>
+          <TabsTrigger value="content" className="text-[13px]">Content Library</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="courses">
 
       {/* Tabs + Search */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
