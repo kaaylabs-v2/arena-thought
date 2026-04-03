@@ -41,7 +41,6 @@ const navItems = [
   { title: "Outcomes", url: "/admin/outcomes", icon: Target },
   { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
   { title: "Announcements", url: "/admin/announcements", icon: Megaphone },
-  { title: "Settings", url: "/admin/settings", icon: Settings },
 ];
 
 export function AdminSidebar() {
