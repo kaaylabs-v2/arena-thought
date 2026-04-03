@@ -1,9 +1,9 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Outlet } from "react-router-dom";
-import { WorkspaceProvider, useWorkspace } from "@/context/WorkspaceContext";
+import { useWorkspace } from "@/context/WorkspaceContext";
 
-function LayoutInner() {
+export function Layout() {
   const { appSettings } = useWorkspace();
 
   const fontScale =
@@ -27,13 +27,5 @@ function LayoutInner() {
         </main>
       </div>
     </SidebarProvider>
-  );
-}
-
-export function Layout() {
-  return (
-    <WorkspaceProvider>
-      <LayoutInner />
-    </WorkspaceProvider>
   );
 }

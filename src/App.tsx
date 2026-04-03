@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { WorkspaceProvider } from "@/context/WorkspaceContext";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -46,38 +47,40 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Learner Arena */}
-            <Route element={<Layout />}>
-              <Route path="/" element={<Index />} />
-              <Route path="/library" element={<Library />} />
-              <Route path="/workspace/:id" element={<Workspace />} />
-              <Route path="/notebook" element={<Notebook />} />
-              <Route path="/reflections" element={<Reflections />} />
-              <Route path="/progress" element={<Progress />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/study-plan" element={<StudyPlan />} />
-            </Route>
+        <WorkspaceProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Learner Arena */}
+              <Route element={<Layout />}>
+                <Route path="/" element={<Index />} />
+                <Route path="/library" element={<Library />} />
+                <Route path="/workspace/:id" element={<Workspace />} />
+                <Route path="/notebook" element={<Notebook />} />
+                <Route path="/reflections" element={<Reflections />} />
+                <Route path="/progress" element={<Progress />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/study-plan" element={<StudyPlan />} />
+              </Route>
 
-            {/* Admin Studio — completely separate layout */}
-            <Route element={<AdminGuard />}>
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/courses" element={<AdminCoursesPage />} />
-              <Route path="/admin/library" element={<AdminContentLibraryPage />} />
-              <Route path="/admin/members" element={<AdminMembersPage />} />
-              <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
-              <Route path="/admin/outcomes" element={<AdminOutcomesPage />} />
-              <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
-              <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
-              <Route path="/admin/settings" element={<AdminSettingsPage />} />
-              <Route path="/admin/help" element={<AdminHelpPage />} />
-            </Route>
+              {/* Admin Studio — completely separate layout */}
+              <Route element={<AdminGuard />}>
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/courses" element={<AdminCoursesPage />} />
+                <Route path="/admin/library" element={<AdminContentLibraryPage />} />
+                <Route path="/admin/members" element={<AdminMembersPage />} />
+                <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
+                <Route path="/admin/outcomes" element={<AdminOutcomesPage />} />
+                <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
+                <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
+                <Route path="/admin/settings" element={<AdminSettingsPage />} />
+                <Route path="/admin/help" element={<AdminHelpPage />} />
+              </Route>
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </WorkspaceProvider>
       </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>
