@@ -10,7 +10,8 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter, DrawerC
 import { toast } from "sonner";
 
 export default function AdminDepartmentsPage() {
-  const [depts, setDepts] = useState<Department[]>(departments);
+  const { studioDepartments, studioMembers: members, studioCourses: adminCourses } = useWorkspace();
+  const [depts, setDepts] = useState<Department[]>(studioDepartments);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editDept, setEditDept] = useState<Department | null>(null);
   const [form, setForm] = useState({ name: "", description: "", manager: "" });

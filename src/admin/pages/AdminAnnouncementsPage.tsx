@@ -12,7 +12,8 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter, DrawerC
 import { toast } from "sonner";
 
 export default function AdminAnnouncementsPage() {
-  const [items, setItems] = useState<Announcement[]>(seedAnnouncements);
+  const { studioAnnouncements, studioDepartments: departments } = useWorkspace();
+  const [items, setItems] = useState<Announcement[]>(studioAnnouncements);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [form, setForm] = useState({ title: "", body: "", audience: "All Members" });
 

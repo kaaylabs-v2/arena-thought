@@ -13,21 +13,6 @@ import {
 
 const AMBER = "#C9963A";
 
-const stats = [
-  { label: "Total Members", value: members.length, icon: Users },
-  { label: "Active This Week", value: members.filter(m => !["30 days ago", "Never"].includes(m.lastActive)).length, icon: Activity },
-  { label: "Courses Deployed", value: adminCourses.filter(c => c.status === "active").length, icon: GraduationCap },
-  { label: "Mastery Achieved", value: members.reduce((acc, m) => acc + m.masteryAchieved, 0), icon: Award },
-];
-
-const masteryChartData = adminCourses
-  .filter(c => c.status === "active")
-  .map(c => ({
-    name: c.name.length > 20 ? c.name.slice(0, 20) + "…" : c.name,
-    achieved: Math.round(c.enrolledCount * c.masteryRate / 100),
-    notAchieved: c.enrolledCount - Math.round(c.enrolledCount * c.masteryRate / 100),
-  }));
-
 const pendingActions = [
   { text: "2 members haven't started any course in 14 days" },
   { text: "1 course has no mastery outcome defined" },
@@ -41,6 +26,23 @@ const quickActions = [
 ];
 
 export default function AdminDashboard() {
+  const { studioMembers: members, studioCourses: adminCourses, studioActivity: recentActivity } = useWorkspace();
+
+  const stats = [
+    { label: "Total Members", value: members.length, icon: Users },
+    { label: "Active This Week", value: members.filter(m => !["30 days ago", "Never"].includes(m.lastActive)).length, icon: Activity },
+    { label: "Courses Deployed", value: adminCourses.filter(c => c.status === "active").length, icon: GraduationCap },
+    { label: "Mastery Achieved", value: members.reduce((acc, m) => acc + m.masteryAchieved, 0), icon: Award },
+  ];
+
+  const masteryChartData = adminCourses
+    .filter(c => c.status === "active")
+    .map(c => ({
+      name: c.name.length > 20 ? c.name.slice(0, 20) + "…" : c.name,
+      achieved: Math.round(c.enrolledCount * c.masteryRate / 100),
+      notAchieved: c.enrolledCount - Math.round(c.enrolledCount * c.masteryRate / 100),
+    }));
+
   return (
     <div className="p-6 lg:p-8 max-w-[1200px] mx-auto space-y-6 animate-fade-in">
       {/* Header */}

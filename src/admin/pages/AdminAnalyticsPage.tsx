@@ -12,16 +12,7 @@ type TimeRange = "7d" | "30d" | "90d" | "all";
 type DeptFilter = "all" | string;
 
 // Richer mock data keyed by time range
-const weeklyDataByRange: Record<TimeRange, { week: string; active: number }[]> = {
-  "7d": weeklyActiveData.slice(-2),
-  "30d": weeklyActiveData.slice(-4),
-  "90d": weeklyActiveData,
-  "all": [
-    { week: "W1", active: 4 }, { week: "W2", active: 5 }, { week: "W3", active: 6 },
-    { week: "W4", active: 7 }, { week: "W5", active: 6 }, { week: "W6", active: 8 },
-    ...weeklyActiveData,
-  ],
-};
+// weeklyDataByRange is built inside the component to access workspace state
 
 const completionDataByRange: Record<TimeRange, { month: string; completions: number }[]> = {
   "7d": [{ month: "This Week", completions: 3 }],
