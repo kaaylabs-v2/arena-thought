@@ -1,4 +1,5 @@
 import { HelpCircle, BookOpen, MessageCircle, Mail, ExternalLink } from "lucide-react";
+import { toast } from "sonner";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const faqs = [
