@@ -1,5 +1,5 @@
 import { Target, TrendingUp, Award, AlertTriangle } from "lucide-react";
-import { adminCourses, members, knowledgeGaps } from "@/admin/data/mock-data";
+import { useWorkspace } from "@/context/WorkspaceContext";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 

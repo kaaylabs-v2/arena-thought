@@ -11,7 +11,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { currentAdmin, roleBadgeLabel } from "@/admin/data/mock-data";
+import { useWorkspace, roleBadgeLabel } from "@/context/WorkspaceContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,

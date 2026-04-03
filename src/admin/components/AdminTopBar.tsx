@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Bell, X, Check, CheckCheck } from "lucide-react";
-import { organization, recentActivity } from "@/admin/data/mock-data";
+import { useWorkspace } from "@/context/WorkspaceContext";
 import { cn } from "@/lib/utils";
 
 interface Notification {
