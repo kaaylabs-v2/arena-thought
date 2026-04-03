@@ -1,4 +1,9 @@
-// Stub pages for remaining admin routes — will be fully built in phase 2
+const cardStyle: React.CSSProperties = {
+  backgroundColor: "#FFFFFF",
+  border: "1px solid rgba(0,0,0,0.08)",
+  borderRadius: 12,
+  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+};
 
 export function AdminContentLibrary() {
   return <StubPage title="Content Library" description="All uploaded files and sources across all courses" />;
@@ -35,13 +40,13 @@ export function AdminHelp() {
 function StubPage({ title, description }: { title: string; description: string }) {
   return (
     <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
-      <h1 className="text-2xl font-semibold text-slate-900">{title}</h1>
-      <p className="text-sm text-slate-500 mt-0.5 mb-8">{description}</p>
-      <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-        <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center mx-auto mb-3">
-          <span className="text-slate-400 text-lg">🚧</span>
+      <h1 className="font-serif text-[2rem] font-normal" style={{ color: "rgba(0,0,0,0.85)" }}>{title}</h1>
+      <p className="text-sm mt-0.5 mb-8" style={{ color: "rgba(0,0,0,0.45)" }}>{description}</p>
+      <div className="p-12 text-center" style={cardStyle}>
+        <div className="h-12 w-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: "rgba(201,150,58,0.08)" }}>
+          <span className="text-lg">🚧</span>
         </div>
-        <p className="text-sm text-slate-500">This page will be built in the next phase.</p>
+        <p className="text-sm" style={{ color: "rgba(0,0,0,0.45)" }}>This page will be built in the next phase.</p>
       </div>
     </div>
   );
