@@ -37,7 +37,7 @@ const navItems = [
 export function AdminSidebar() {
   const { state, toggleSidebar } = useSidebar();
   const collapsed = state === "collapsed";
-  const navigate = useNavigate();
+  
   const { theme, toggleTheme } = useTheme();
 
   return (
