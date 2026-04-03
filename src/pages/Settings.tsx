@@ -579,12 +579,7 @@ function IntegrationRow({ name, description, svgLogo }: { name: string; descript
   const [connected, setConnected] = useState(false);
 
   const handleToggle = () => {
-    setConnected(!connected);
-    if (!connected) {
-      toast.success(`${name} connected`, { description: "Integration is now active." });
-    } else {
-      toast.success(`${name} disconnected`);
-    }
+    toast("Integration coming in a future update", { description: `${name} integration is not yet available.` });
   };
 
   return (
