@@ -278,25 +278,14 @@ const Workspace = () => {
           style={{ transition: "flex 280ms cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           {!sourcesCollapsed && (
-            <div className="h-full relative">
-              {sourcesAtMin && (
-                <button
-                  onClick={collapseSources}
-                  className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-md bg-secondary/80 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all duration-150"
-                  title="Collapse sources"
-                >
-                  <ChevronLeft className="h-3 w-3" strokeWidth={2} />
-                </button>
-              )}
-              <SourcesPane
-                mode={sourcesMode}
-                onToggle={handleSourcesToggle}
-                selectedSource={selectedSource}
-                onSelectSource={handleSelectSource}
-                onDeselectSource={handleDeselectSource}
-                courseTitle={course.title}
-              />
-            </div>
+            <SourcesPane
+              mode={sourcesMode}
+              onToggle={handleSourcesToggle}
+              selectedSource={selectedSource}
+              onSelectSource={handleSelectSource}
+              onDeselectSource={handleDeselectSource}
+              courseTitle={course.title}
+            />
           )}
         </ResizablePanel>
 
