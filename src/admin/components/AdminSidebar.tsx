@@ -139,18 +139,6 @@ export function AdminSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
 
-        {/* Back to Arena */}
-        <button
-          onClick={() => navigate("/")}
-          className={`flex items-center gap-2 w-full text-[12px] font-sans transition-colors duration-150 text-sidebar-foreground/35 hover:text-sidebar-foreground/65 ${
-            collapsed ? "justify-center py-1.5" : "px-3 py-1.5"
-          }`}
-          title={collapsed ? "Back to Arena" : undefined}
-        >
-          <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.5} />
-          {!collapsed && <span>Back to Arena</span>}
-        </button>
-
         {/* User menu dropdown */}
         <AdminSidebarUserMenu />
       </SidebarFooter>
