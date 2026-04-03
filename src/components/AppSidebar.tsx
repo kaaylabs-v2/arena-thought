@@ -113,7 +113,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer — theme toggle + user menu */}
+      {/* Footer — theme toggle + admin link + user menu */}
       <SidebarFooter className="px-2 pb-3">
         <SidebarSeparator className="mx-0" />
         <SidebarMenu>
@@ -132,6 +132,22 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        {userRole === "admin" && (
+          <button
+            onClick={() => navigate("/admin")}
+            className={cn(
+              "flex items-center gap-2 w-full text-[12px] font-sans transition-colors duration-150",
+              collapsed ? "justify-center py-1.5" : "px-3 py-1.5"
+            )}
+            style={{ color: "rgba(255,255,255,0.35)" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.65)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
+            title={collapsed ? "Admin Studio" : undefined}
+          >
+            <Shield className="h-3.5 w-3.5" strokeWidth={1.5} />
+            {!collapsed && <span>Admin Studio</span>}
+          </button>
+        )}
         <SidebarUserMenu />
       </SidebarFooter>
     </Sidebar>
