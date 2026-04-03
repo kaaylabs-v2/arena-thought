@@ -41,6 +41,7 @@ type TabFilter = "all" | "learners" | "admins" | "invited" | "inactive";
 let nextId = 100;
 
 const initials = (name: string) => name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
+// departments reference will come from useWorkspace inside component
 
 const roleBadgeCls = (r: MemberRole) => {
   switch (r) {
@@ -61,6 +62,7 @@ const statusBadgeCls = (s: MemberStatus) => {
 // ─── Component ──────────────────────────────────────────────
 
 export default function AdminMembersPage() {
+  const { studioDepartments: departments } = useWorkspace();
   const [membersList, setMembersList] = useState<Member[]>(seedMembers);
   const [tab, setTab] = useState<TabFilter>("all");
   const [search, setSearch] = useState("");

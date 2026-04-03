@@ -15,7 +15,8 @@ type TabFilter = "all" | "active" | "draft" | "archived";
 type DeployPathway = null | "preloaded" | "custom" | "commission";
 
 export default function AdminCoursesPage() {
-  const [courses, setCourses] = useState<AdminCourseItem[]>(seedCourses);
+  const { studioCourses, studioMembers: members, studioDepartments: departments } = useWorkspace();
+  const [courses, setCourses] = useState<AdminCourseItem[]>(studioCourses);
   const [tab, setTab] = useState<TabFilter>("all");
   const [search, setSearch] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
