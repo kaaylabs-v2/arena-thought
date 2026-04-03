@@ -128,6 +128,13 @@ interface WorkspaceState {
   updateTask: (id: string, updates: Partial<StudyTask>) => void;
   deleteTask: (id: string) => void;
   toggleTask: (id: string) => void;
+  // Admin
+  adminCourses: AdminCourse[];
+  addAdminCourse: (course: Omit<AdminCourse, "id" | "createdAt" | "updatedAt">) => void;
+  updateAdminCourse: (id: string, updates: Partial<AdminCourse>) => void;
+  deleteAdminCourse: (id: string) => void;
+  publishCourse: (id: string) => void;
+  unpublishCourse: (id: string) => void;
 }
 
 const WorkspaceContext = createContext<WorkspaceState | null>(null);
