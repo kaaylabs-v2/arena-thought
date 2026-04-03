@@ -48,9 +48,7 @@ export function AppSidebar() {
   const { theme, toggleTheme } = useTheme();
   const { userRole } = useWorkspace();
 
-  const filteredNav = mainNav.filter(
-    (item) => item.url !== "/admin" || userRole === "admin"
-  );
+  const filteredNav = mainNav;
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";

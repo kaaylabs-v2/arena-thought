@@ -96,23 +96,6 @@ export function SidebarUserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        {/* Role Switcher */}
-        <DropdownMenuItem
-          className="gap-2.5 px-3 py-2 cursor-pointer"
-          onClick={() => {
-            const newRole = userRole === "admin" ? "learner" : "admin";
-            setUserRole(newRole);
-            toast.success(`Switched to ${newRole === "admin" ? "Admin" : "Learner"}`, {
-              description: newRole === "admin" ? "You now have access to Admin Studio." : "Admin features are now hidden.",
-            });
-          }}
-        >
-          <ShieldCheck className="h-4 w-4" strokeWidth={1.5} />
-          <span className="text-[13px] font-sans">
-            Switch to {userRole === "admin" ? "Learner" : "Admin"}
-          </span>
-        </DropdownMenuItem>
-
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="gap-2.5 px-3 py-2 cursor-pointer"

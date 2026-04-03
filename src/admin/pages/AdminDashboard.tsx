@@ -72,9 +72,9 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between mb-3">
               <div
                 className="h-9 w-9 rounded-lg flex items-center justify-center"
-                style={{ backgroundColor: AMBER_LIGHT, color: AMBER }}
+                style={{ backgroundColor: "rgba(201,150,58,0.10)", color: AMBER, padding: 8 }}
               >
-                <stat.icon className="h-[18px] w-[18px]" strokeWidth={1.5} />
+                <stat.icon className="h-5 w-5" strokeWidth={1.5} />
               </div>
             </div>
             <p className="text-2xl font-semibold" style={{ color: "rgba(0,0,0,0.85)" }}>{stat.value}</p>
