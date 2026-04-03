@@ -9,6 +9,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   ListChecks,
+  Shield,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -35,6 +36,7 @@ const mainNav = [
   { title: "Notebook", url: "/notebook", icon: BookOpen },
   { title: "Progress", url: "/progress", icon: BarChart3 },
   { title: "Reflections", url: "/reflections", icon: Sparkles },
+  { title: "Admin Studio", url: "/admin", icon: Shield },
 ];
 
 export function AppSidebar() {
