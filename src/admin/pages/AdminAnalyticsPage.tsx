@@ -83,7 +83,7 @@ export default function AdminAnalyticsPage() {
               <tr key={c.id} className="transition-colors duration-200 border-b border-border/50 hover:bg-accent/5">
                 <td className="py-3 font-medium text-foreground/75">{c.name}</td>
                 <td className="py-3 text-muted-foreground">{c.enrolledCount}</td>
-                <td className="py-3" style={{ color: c.masteryRate >= 70 ? "#16a34a" : c.masteryRate >= 40 ? "#C9963A" : "#dc2626" }}>{c.masteryRate}%</td>
+                <td className={`py-3 px-4 ${c.masteryRate >= 70 ? "text-accent" : c.masteryRate >= 40 ? "text-accent/70" : "text-muted-foreground"}`}>{c.masteryRate}%</td>
                 <td className="py-3 text-muted-foreground">{c.department}</td>
                 <td className="py-3">
                   <span className={`text-[11px] px-2 py-0.5 rounded-full capitalize ${c.status === "active" ? "bg-green-500/10 text-green-600 dark:text-green-400" : "bg-muted text-muted-foreground"}`}>
