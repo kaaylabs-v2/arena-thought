@@ -34,6 +34,7 @@ export function AdminSidebarUserMenu() {
   const collapsed = state === "collapsed";
   const navigate = useNavigate();
   const [language, setLanguage] = useState("English");
+  const { studioCurrentAdmin: currentAdmin } = useWorkspace();
 
   const initials = currentAdmin.name
     .split(" ")

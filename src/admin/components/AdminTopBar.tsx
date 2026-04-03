@@ -10,12 +10,6 @@ interface Notification {
   read: boolean;
 }
 
-const seedNotifications: Notification[] = recentActivity.map(a => ({
-  id: a.id,
-  text: a.text,
-  time: a.time,
-  read: false,
-}));
 
 export function AdminTopBar() {
   const { studioOrganization: organization, studioActivity: recentActivity } = useWorkspace();

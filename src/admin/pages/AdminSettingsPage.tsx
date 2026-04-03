@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
 export default function AdminSettingsPage() {
+  const { studioOrganization: organization, studioCurrentAdmin: currentAdmin } = useWorkspace();
   const [org, setOrg] = useState(organization);
   const [notifications, setNotifications] = useState({ email: true, inApp: true, weeklyDigest: false });
   const [twoFactor, setTwoFactor] = useState(false);
