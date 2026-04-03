@@ -218,6 +218,23 @@ export function SidebarUserMenu() {
 
         <DropdownMenuSeparator />
 
+        {/* Role switcher (demo) */}
+        <DropdownMenuItem
+          className="gap-2.5 px-3 py-2 cursor-pointer"
+          onClick={() => {
+            const newRole = userRole === "admin" ? "learner" : "admin";
+            setUserRole(newRole);
+            toast.success(`Switched to ${newRole === "admin" ? "Admin" : "Learner"} role`);
+          }}
+        >
+          <ShieldCheck className="h-4 w-4" strokeWidth={1.5} />
+          <span className="text-[13px] font-sans">
+            {userRole === "admin" ? "Switch to Learner" : "Switch to Admin"}
+          </span>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
         {/* Logout */}
         <DropdownMenuItem
           className="gap-2.5 px-3 py-2 cursor-pointer text-destructive focus:text-destructive"
