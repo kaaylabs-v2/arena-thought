@@ -71,86 +71,91 @@ export interface ContentItem {
 
 export const organization = {
   name: "Meridian Institute",
-  industry: "Education & Training",
+  industry: "Education & Research",
   contactEmail: "admin@meridian.edu",
-  timezone: "America/New_York",
+  timezone: "America/Los_Angeles",
   logo: null as string | null,
   accentColor: "#e67e22",
   welcomeMessage: "Welcome to Meridian Institute's learning platform. Your journey to mastery starts here.",
 };
 
 export const currentAdmin = {
-  name: "Jordan Reeves",
-  email: "j.reeves@meridian.edu",
+  name: "Dr. Sarah Mitchell",
+  email: "s.mitchell@meridian.edu",
   role: "super_admin" as AdminRole,
   avatar: null as string | null,
 };
 
 // ─── Departments ────────────────────────────────────────────
+// Aligned with the course subjects used in the learner workspace
 
 export const departments: Department[] = [
-  { id: "dept-1", name: "Engineering", memberCount: 5, coursesAssigned: 3, manager: "Priya Sharma", description: "Software engineering and infrastructure team" },
-  { id: "dept-2", name: "Product", memberCount: 4, coursesAssigned: 2, manager: "Marcus Chen", description: "Product management and design team" },
-  { id: "dept-3", name: "Operations", memberCount: 3, coursesAssigned: 2, manager: "Elena Vasquez", description: "Operations, HR, and administration" },
+  { id: "dept-1", name: "Computer Science", memberCount: 5, coursesAssigned: 2, manager: "Dr. Sarah Mitchell", description: "Machine learning, data science, and computational methods" },
+  { id: "dept-2", name: "Mathematics & Statistics", memberCount: 4, coursesAssigned: 2, manager: "Priya Sharma", description: "Statistical methods, linear algebra, and applied mathematics" },
+  { id: "dept-3", name: "Humanities & Cognitive Science", memberCount: 3, coursesAssigned: 2, manager: "Marcus Johnson", description: "Philosophy of mind, cognitive psychology, and social science research" },
 ];
 
 // ─── Members ────────────────────────────────────────────────
+// Alex Chen (the learner persona) is included as a member
 
 export const members: AdminMember[] = [
-  { id: "m-1", name: "Aisha Patel", email: "a.patel@meridian.edu", role: "learner", department: "Engineering", status: "active", dateJoined: "2025-09-15", coursesEnrolled: 3, lastActive: "2 hours ago", masteryAchieved: 2 },
-  { id: "m-2", name: "James Liu", email: "j.liu@meridian.edu", role: "learner", department: "Engineering", status: "active", dateJoined: "2025-10-02", coursesEnrolled: 2, lastActive: "1 day ago", masteryAchieved: 1 },
-  { id: "m-3", name: "Priya Sharma", email: "p.sharma@meridian.edu", role: "manager", department: "Engineering", status: "active", dateJoined: "2025-08-20", coursesEnrolled: 2, lastActive: "3 hours ago", masteryAchieved: 2 },
-  { id: "m-4", name: "Marcus Chen", email: "m.chen@meridian.edu", role: "manager", department: "Product", status: "active", dateJoined: "2025-08-15", coursesEnrolled: 2, lastActive: "5 hours ago", masteryAchieved: 1 },
-  { id: "m-5", name: "Elena Vasquez", email: "e.vasquez@meridian.edu", role: "manager", department: "Operations", status: "active", dateJoined: "2025-07-30", coursesEnrolled: 1, lastActive: "1 day ago", masteryAchieved: 1 },
-  { id: "m-6", name: "David Okafor", email: "d.okafor@meridian.edu", role: "learner", department: "Engineering", status: "active", dateJoined: "2025-11-01", coursesEnrolled: 2, lastActive: "4 hours ago", masteryAchieved: 0 },
-  { id: "m-7", name: "Sophie Turner", email: "s.turner@meridian.edu", role: "learner", department: "Product", status: "active", dateJoined: "2025-10-15", coursesEnrolled: 1, lastActive: "6 hours ago", masteryAchieved: 1 },
-  { id: "m-8", name: "Raj Krishnamurthy", email: "r.krishnamurthy@meridian.edu", role: "learner", department: "Product", status: "active", dateJoined: "2025-11-10", coursesEnrolled: 2, lastActive: "12 hours ago", masteryAchieved: 0 },
-  { id: "m-9", name: "Lena Hoffmann", email: "l.hoffmann@meridian.edu", role: "learner", department: "Operations", status: "invited", dateJoined: "2026-03-20", coursesEnrolled: 0, lastActive: "Never", masteryAchieved: 0 },
-  { id: "m-10", name: "Carlos Rivera", email: "c.rivera@meridian.edu", role: "learner", department: "Operations", status: "active", dateJoined: "2025-12-05", coursesEnrolled: 2, lastActive: "8 days ago", masteryAchieved: 1 },
-  { id: "m-11", name: "Yuki Tanaka", email: "y.tanaka@meridian.edu", role: "learner", department: "Engineering", status: "inactive", dateJoined: "2025-09-01", coursesEnrolled: 1, lastActive: "30 days ago", masteryAchieved: 0 },
-  { id: "m-12", name: "Amara Diallo", email: "a.diallo@meridian.edu", role: "admin", department: "Operations", status: "active", dateJoined: "2025-07-15", coursesEnrolled: 0, lastActive: "1 hour ago", masteryAchieved: 0 },
+  { id: "m-1", name: "Alex Chen", email: "alex@meridian.edu", role: "learner", department: "Computer Science", status: "active", dateJoined: "2025-09-01", coursesEnrolled: 3, lastActive: "2 min ago", masteryAchieved: 1 },
+  { id: "m-2", name: "Jordan Chen", email: "jordan.chen@meridian.edu", role: "learner", department: "Computer Science", status: "active", dateJoined: "2025-09-15", coursesEnrolled: 2, lastActive: "1 day ago", masteryAchieved: 1 },
+  { id: "m-3", name: "Priya Sharma", email: "priya.s@meridian.edu", role: "manager", department: "Mathematics & Statistics", status: "active", dateJoined: "2025-08-20", coursesEnrolled: 2, lastActive: "3 hours ago", masteryAchieved: 2 },
+  { id: "m-4", name: "Marcus Johnson", email: "m.johnson@meridian.edu", role: "manager", department: "Humanities & Cognitive Science", status: "active", dateJoined: "2025-08-15", coursesEnrolled: 2, lastActive: "5 hours ago", masteryAchieved: 1 },
+  { id: "m-5", name: "Yuki Tanaka", email: "yuki.t@meridian.edu", role: "learner", department: "Computer Science", status: "active", dateJoined: "2025-10-02", coursesEnrolled: 3, lastActive: "4 hours ago", masteryAchieved: 0 },
+  { id: "m-6", name: "David Okafor", email: "d.okafor@meridian.edu", role: "learner", department: "Mathematics & Statistics", status: "active", dateJoined: "2025-11-01", coursesEnrolled: 2, lastActive: "4 hours ago", masteryAchieved: 0 },
+  { id: "m-7", name: "Sophie Turner", email: "s.turner@meridian.edu", role: "learner", department: "Humanities & Cognitive Science", status: "active", dateJoined: "2025-10-15", coursesEnrolled: 2, lastActive: "6 hours ago", masteryAchieved: 1 },
+  { id: "m-8", name: "Raj Krishnamurthy", email: "r.krishnamurthy@meridian.edu", role: "learner", department: "Mathematics & Statistics", status: "active", dateJoined: "2025-11-10", coursesEnrolled: 2, lastActive: "12 hours ago", masteryAchieved: 0 },
+  { id: "m-9", name: "Lena Hoffmann", email: "l.hoffmann@meridian.edu", role: "learner", department: "Humanities & Cognitive Science", status: "invited", dateJoined: "2026-03-20", coursesEnrolled: 0, lastActive: "Never", masteryAchieved: 0 },
+  { id: "m-10", name: "Carlos Rivera", email: "c.rivera@meridian.edu", role: "learner", department: "Computer Science", status: "active", dateJoined: "2025-12-05", coursesEnrolled: 2, lastActive: "8 days ago", masteryAchieved: 1 },
+  { id: "m-11", name: "Aisha Patel", email: "a.patel@meridian.edu", role: "learner", department: "Mathematics & Statistics", status: "inactive", dateJoined: "2025-09-01", coursesEnrolled: 1, lastActive: "30 days ago", masteryAchieved: 0 },
+  { id: "m-12", name: "Elena Vasquez", email: "e.vasquez@meridian.edu", role: "admin", department: "Humanities & Cognitive Science", status: "active", dateJoined: "2025-07-15", coursesEnrolled: 0, lastActive: "1 hour ago", masteryAchieved: 0 },
 ];
 
 // ─── Courses ────────────────────────────────────────────────
+// Same courses as the learner workspace sees
 
 export const adminCourses: AdminCourseItem[] = [
-  { id: "c-1", name: "Python Fundamentals", type: "nexi_preloaded", status: "active", enrolledCount: 8, masteryRate: 62, dateDeployed: "2025-10-01", masteryDefinition: "Learner can independently write, debug, and explain Python programs using core data structures, control flow, and functions.", department: "Engineering" },
-  { id: "c-2", name: "Leadership Basics", type: "custom", status: "active", enrolledCount: 6, masteryRate: 45, dateDeployed: "2025-11-15", masteryDefinition: "Learner demonstrates understanding of situational leadership, active listening, and team feedback frameworks.", department: "Product" },
-  { id: "c-3", name: "Data Privacy & Compliance", type: "nexi_preloaded", status: "active", enrolledCount: 12, masteryRate: 78, dateDeployed: "2025-09-20", masteryDefinition: "Learner can identify GDPR/CCPA requirements and apply data handling best practices in their work context.", department: "Operations" },
-  { id: "c-4", name: "Project Management Essentials", type: "commissioned", status: "draft", enrolledCount: 0, masteryRate: 0, dateDeployed: "2026-03-01", masteryDefinition: "Learner can plan, scope, and track a project using agile or waterfall methodology appropriate to context.", department: "Product" },
+  { id: "c-1", name: "Foundations of Machine Learning", type: "nexi_preloaded", status: "active", enrolledCount: 8, masteryRate: 62, dateDeployed: "2025-10-01", masteryDefinition: "Learner can independently explain and apply core supervised/unsupervised learning algorithms, optimization techniques, and neural network architectures.", department: "Computer Science" },
+  { id: "c-2", name: "Advanced Statistical Methods", type: "custom", status: "active", enrolledCount: 6, masteryRate: 45, dateDeployed: "2025-11-15", masteryDefinition: "Learner demonstrates proficiency in Bayesian inference, hypothesis testing, and multivariate analysis techniques.", department: "Mathematics & Statistics" },
+  { id: "c-3", name: "Philosophy of Mind", type: "nexi_preloaded", status: "active", enrolledCount: 5, masteryRate: 55, dateDeployed: "2025-09-20", masteryDefinition: "Learner can articulate key arguments around consciousness, intentionality, and the mind-body problem.", department: "Humanities & Cognitive Science" },
+  { id: "c-4", name: "Linear Algebra for Data Science", type: "nexi_preloaded", status: "active", enrolledCount: 7, masteryRate: 70, dateDeployed: "2025-08-15", masteryDefinition: "Learner can perform matrix operations, compute eigenvalues/SVD, and apply dimensionality reduction techniques.", department: "Mathematics & Statistics" },
+  { id: "c-5", name: "Cognitive Psychology", type: "custom", status: "active", enrolledCount: 5, masteryRate: 48, dateDeployed: "2025-10-20", masteryDefinition: "Learner understands core models of memory, attention, perception, and decision-making from a cognitive science perspective.", department: "Humanities & Cognitive Science" },
+  { id: "c-6", name: "Research Methods in Social Science", type: "commissioned", status: "draft", enrolledCount: 0, masteryRate: 0, dateDeployed: "2026-03-01", masteryDefinition: "Learner can design and evaluate qualitative and quantitative research methodologies with ethical considerations.", department: "Humanities & Cognitive Science" },
 ];
 
 // ─── Activity Feed ──────────────────────────────────────────
 
 export const recentActivity: ActivityEvent[] = [
-  { id: "a-1", text: "Aisha Patel completed Python Fundamentals", time: "2 hours ago", type: "completion" },
-  { id: "a-2", text: "3 new members joined from Operations", time: "5 hours ago", type: "join" },
-  { id: "a-3", text: "New course deployed: Leadership Basics", time: "1 day ago", type: "deploy" },
-  { id: "a-4", text: "James Liu achieved mastery in Data Privacy & Compliance", time: "1 day ago", type: "mastery" },
-  { id: "a-5", text: "David Okafor started Python Fundamentals", time: "2 days ago", type: "completion" },
-  { id: "a-6", text: "Priya Sharma achieved mastery in Python Fundamentals", time: "3 days ago", type: "mastery" },
-  { id: "a-7", text: "Sophie Turner completed Leadership Basics", time: "4 days ago", type: "completion" },
+  { id: "a-1", text: "Alex Chen completed Foundations of Machine Learning Module 2", time: "2 hours ago", type: "completion" },
+  { id: "a-2", text: "2 new members joined from Mathematics & Statistics", time: "5 hours ago", type: "join" },
+  { id: "a-3", text: "New course deployed: Research Methods in Social Science", time: "1 day ago", type: "deploy" },
+  { id: "a-4", text: "Jordan Chen achieved mastery in Advanced Statistical Methods", time: "1 day ago", type: "mastery" },
+  { id: "a-5", text: "Yuki Tanaka started Foundations of Machine Learning", time: "2 days ago", type: "completion" },
+  { id: "a-6", text: "Priya Sharma achieved mastery in Linear Algebra for Data Science", time: "3 days ago", type: "mastery" },
+  { id: "a-7", text: "Sophie Turner completed Philosophy of Mind", time: "4 days ago", type: "completion" },
 ];
 
 // ─── Announcements ──────────────────────────────────────────
 
 export const announcements: Announcement[] = [
-  { id: "ann-1", title: "Q2 Learning Goals Update", audience: "All Members", sentDate: "2026-03-28", sentBy: "Jordan Reeves", body: "We're excited to share our updated Q2 learning objectives. Focus areas include data literacy and leadership development." },
-  { id: "ann-2", title: "New Compliance Course Available", audience: "Operations", sentDate: "2026-03-15", sentBy: "Jordan Reeves", body: "A new Data Privacy & Compliance course is now available in your library. Please complete it by end of month." },
-  { id: "ann-3", title: "Welcome New Team Members", audience: "All Members", sentDate: "2026-03-01", sentBy: "Amara Diallo", body: "Please welcome our newest team members joining this quarter. We're thrilled to have you on board!" },
+  { id: "ann-1", title: "Q2 Learning Goals Update", audience: "All Members", sentDate: "2026-03-28", sentBy: "Dr. Sarah Mitchell", body: "We're excited to share our updated Q2 learning objectives. Focus areas include data literacy and research methodology." },
+  { id: "ann-2", title: "New Course Available: Research Methods", audience: "Humanities & Cognitive Science", sentDate: "2026-03-15", sentBy: "Dr. Sarah Mitchell", body: "A new Research Methods in Social Science course is now available in your library. Please review and provide feedback." },
+  { id: "ann-3", title: "Welcome New Team Members", audience: "All Members", sentDate: "2026-03-01", sentBy: "Elena Vasquez", body: "Please welcome our newest team members joining this quarter. We're thrilled to have you on board!" },
 ];
 
 // ─── Content Library ────────────────────────────────────────
 
 export const contentLibrary: ContentItem[] = [
-  { id: "cl-1", fileName: "Python Basics Handbook.pdf", fileType: "pdf", linkedCourse: "Python Fundamentals", uploadDate: "2025-09-28", uploaderName: "Jordan Reeves", fileSize: "2.4 MB" },
-  { id: "cl-2", fileName: "Variables & Data Types.mp4", fileType: "video", linkedCourse: "Python Fundamentals", uploadDate: "2025-09-29", uploaderName: "Jordan Reeves", fileSize: "145 MB" },
-  { id: "cl-3", fileName: "Leadership Framework Slides.pptx", fileType: "slides", linkedCourse: "Leadership Basics", uploadDate: "2025-11-10", uploaderName: "Marcus Chen", fileSize: "8.1 MB" },
-  { id: "cl-4", fileName: "Active Listening Guide.docx", fileType: "doc", linkedCourse: "Leadership Basics", uploadDate: "2025-11-12", uploaderName: "Marcus Chen", fileSize: "340 KB" },
-  { id: "cl-5", fileName: "GDPR Overview.pdf", fileType: "pdf", linkedCourse: "Data Privacy & Compliance", uploadDate: "2025-09-18", uploaderName: "Elena Vasquez", fileSize: "1.8 MB" },
-  { id: "cl-6", fileName: "Data Handling Best Practices.mp4", fileType: "video", linkedCourse: "Data Privacy & Compliance", uploadDate: "2025-09-19", uploaderName: "Elena Vasquez", fileSize: "210 MB" },
-  { id: "cl-7", fileName: "Compliance Checklist.pdf", fileType: "pdf", linkedCourse: "Data Privacy & Compliance", uploadDate: "2025-09-20", uploaderName: "Jordan Reeves", fileSize: "560 KB" },
-  { id: "cl-8", fileName: "Functions & Modules Lecture.mp4", fileType: "video", linkedCourse: "Python Fundamentals", uploadDate: "2025-10-05", uploaderName: "Jordan Reeves", fileSize: "198 MB" },
+  { id: "cl-1", fileName: "Neural Networks Handbook.pdf", fileType: "pdf", linkedCourse: "Foundations of Machine Learning", uploadDate: "2025-09-28", uploaderName: "Dr. Sarah Mitchell", fileSize: "2.4 MB" },
+  { id: "cl-2", fileName: "Backpropagation Walkthrough.mp4", fileType: "video", linkedCourse: "Foundations of Machine Learning", uploadDate: "2025-09-29", uploaderName: "Dr. Sarah Mitchell", fileSize: "145 MB" },
+  { id: "cl-3", fileName: "Bayesian Inference Slides.pptx", fileType: "slides", linkedCourse: "Advanced Statistical Methods", uploadDate: "2025-11-10", uploaderName: "Priya Sharma", fileSize: "8.1 MB" },
+  { id: "cl-4", fileName: "Prior Selection Guide.docx", fileType: "doc", linkedCourse: "Advanced Statistical Methods", uploadDate: "2025-11-12", uploaderName: "Priya Sharma", fileSize: "340 KB" },
+  { id: "cl-5", fileName: "The Conscious Mind Ch.1.pdf", fileType: "pdf", linkedCourse: "Philosophy of Mind", uploadDate: "2025-09-18", uploaderName: "Marcus Johnson", fileSize: "1.8 MB" },
+  { id: "cl-6", fileName: "Hard Problem of Consciousness Lecture.mp4", fileType: "video", linkedCourse: "Philosophy of Mind", uploadDate: "2025-09-19", uploaderName: "Marcus Johnson", fileSize: "210 MB" },
+  { id: "cl-7", fileName: "Matrix Operations Reference.pdf", fileType: "pdf", linkedCourse: "Linear Algebra for Data Science", uploadDate: "2025-08-20", uploaderName: "Priya Sharma", fileSize: "560 KB" },
+  { id: "cl-8", fileName: "Optimization Lecture.mp4", fileType: "video", linkedCourse: "Foundations of Machine Learning", uploadDate: "2025-10-05", uploaderName: "Dr. Sarah Mitchell", fileSize: "198 MB" },
 ];
 
 // ─── Preloaded Course Catalog ───────────────────────────────
@@ -187,11 +192,11 @@ export const weeklyActiveData = [
 ];
 
 export const knowledgeGaps = [
-  "Recursion & recursive algorithms",
-  "GDPR data subject rights",
-  "Situational leadership models",
-  "Error handling in Python",
-  "Cross-functional stakeholder management",
+  "Backpropagation through complex architectures",
+  "Bayesian prior selection strategies",
+  "Qualia and the explanatory gap",
+  "SVD applications in dimensionality reduction",
+  "Working memory capacity models",
 ];
 
 // ─── Helper ─────────────────────────────────────────────────
