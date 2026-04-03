@@ -23,7 +23,7 @@ export default function AdminAnalyticsPage() {
       <h1 className="font-serif text-[2rem] font-normal text-foreground">Analytics</h1>
       <p className="text-sm mt-0.5 mb-8 text-muted-foreground">Organization-level insights and engagement data</p>
 
-      <div className="grid grid-cols-4 gap-4 mb-8 stagger-children">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 stagger-children">
         {[
           { icon: Users, label: "Active Members", value: activeMembers },
           { icon: BarChart3, label: "Active Courses", value: activeCourses },
