@@ -93,7 +93,7 @@ export default function AdminSettingsPage() {
                 <p className="text-sm font-medium text-foreground/75">Two-Factor Authentication</p>
                 <p className="text-xs text-muted-foreground">Require 2FA for all admin accounts</p>
               </div>
-              <Switch />
+              <Switch checked={twoFactor} onCheckedChange={(v) => { setTwoFactor(v); toast.success(v ? "2FA enabled" : "2FA disabled"); }} />
             </div>
             <div className="setting-row flex items-center justify-between py-3 px-3 -mx-3 rounded-lg">
               <div>
