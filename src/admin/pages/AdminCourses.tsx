@@ -53,9 +53,9 @@ export default function AdminCoursesPage() {
 
   const statusColor = (s: CourseStatus): string => {
     switch (s) {
-      case "active": return "bg-green-500/10 text-green-600 dark:text-green-400";
+      case "active": return "bg-accent/10 text-accent";
       case "draft": return "bg-muted text-muted-foreground";
-      case "archived": return "bg-accent/10 text-accent";
+      case "archived": return "bg-muted/50 text-muted-foreground/60";
     }
   };
 
