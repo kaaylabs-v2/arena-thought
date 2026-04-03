@@ -94,7 +94,7 @@ export default function AdminDashboard() {
             <div className="space-y-2.5">
               {pendingActions.map((action, i) => (
                 <div key={i} className="flex items-start gap-2.5 text-[13px]">
-                  <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-accent" strokeWidth={2} />
+                  <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-accent" strokeWidth={1.5} />
                   <span className="text-foreground/60 leading-snug">{action.text}</span>
                 </div>
               ))}
