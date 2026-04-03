@@ -18,8 +18,9 @@ const seedNotifications: Notification[] = recentActivity.map(a => ({
 }));
 
 export function AdminTopBar() {
+  const { studioOrganization: organization, studioActivity: recentActivity } = useWorkspace();
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>(seedNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>(() => recentActivity.map(a => ({ id: a.id, text: a.text, time: a.time, read: false })));
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
