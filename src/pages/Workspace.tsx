@@ -274,29 +274,18 @@ const Workspace = () => {
           collapsedSize={0}
           order={1}
           onResize={handleSourcesResize}
-          className="border-r border-border/[0.06] dark:border-white/[0.06] bg-card"
+          className="border-r border-border bg-card"
           style={{ transition: "flex 280ms cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           {!sourcesCollapsed && (
-            <div className="h-full relative">
-              {sourcesAtMin && (
-                <button
-                  onClick={collapseSources}
-                  className="absolute top-2 right-2 z-10 h-6 w-6 flex items-center justify-center rounded-md bg-secondary/80 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all duration-150"
-                  title="Collapse sources"
-                >
-                  <ChevronLeft className="h-3 w-3" strokeWidth={2} />
-                </button>
-              )}
-              <SourcesPane
-                mode={sourcesMode}
-                onToggle={handleSourcesToggle}
-                selectedSource={selectedSource}
-                onSelectSource={handleSelectSource}
-                onDeselectSource={handleDeselectSource}
-                courseTitle={course.title}
-              />
-            </div>
+            <SourcesPane
+              mode={sourcesMode}
+              onToggle={handleSourcesToggle}
+              selectedSource={selectedSource}
+              onSelectSource={handleSelectSource}
+              onDeselectSource={handleDeselectSource}
+              courseTitle={course.title}
+            />
           )}
         </ResizablePanel>
 
@@ -380,26 +369,15 @@ const Workspace = () => {
           collapsedSize={0}
           order={3}
           onResize={handleNotebookResize}
-          className="border-l border-border/[0.06] dark:border-white/[0.06] bg-card"
+          className="border-l border-border bg-card"
           style={{ transition: "flex 280ms cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           {!notebookCollapsed && (
-            <div className="h-full relative">
-              {notebookAtMin && (
-                <button
-                  onClick={collapseNotebook}
-                  className="absolute top-2 left-2 z-10 h-6 w-6 flex items-center justify-center rounded-md bg-secondary/80 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all duration-150"
-                  title="Collapse notebook"
-                >
-                  <ChevronRight className="h-3 w-3" strokeWidth={2} />
-                </button>
-              )}
               <NotebookPane
                 state={notebookState}
                 onToggle={() => setNotebookState((s) => (s === "expanded" ? "mini" : "expanded"))}
                 courseTitle={course.title}
               />
-            </div>
           )}
         </ResizablePanel>
       </ResizablePanelGroup>
