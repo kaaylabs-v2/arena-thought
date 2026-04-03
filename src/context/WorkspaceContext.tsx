@@ -215,11 +215,11 @@ const seedAdminCourses: AdminCourse[] = [
 ];
 
 export const mockUsers = [
-  { id: "user-1", name: "Alex Rivera", email: "alex@university.edu" },
-  { id: "user-2", name: "Jordan Chen", email: "jordan.chen@university.edu" },
-  { id: "user-3", name: "Priya Sharma", email: "priya.s@university.edu" },
-  { id: "user-4", name: "Marcus Johnson", email: "m.johnson@university.edu" },
-  { id: "user-5", name: "Yuki Tanaka", email: "yuki.t@university.edu" },
+  { id: "user-1", name: "Alex Chen", email: "alex@meridian.edu" },
+  { id: "user-2", name: "Jordan Chen", email: "jordan.chen@meridian.edu" },
+  { id: "user-3", name: "Priya Sharma", email: "priya.s@meridian.edu" },
+  { id: "user-4", name: "Marcus Johnson", email: "m.johnson@meridian.edu" },
+  { id: "user-5", name: "Yuki Tanaka", email: "yuki.t@meridian.edu" },
 ];
 
 let idCounter = 100;
