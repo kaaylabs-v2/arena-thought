@@ -560,6 +560,12 @@ export default function AdminCoursesPage() {
           </div>
         </>
       )}
+        </TabsContent>
+
+        <TabsContent value="content">
+          <div className="-m-6 lg:-m-8"><AdminContentLibraryPage /></div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
