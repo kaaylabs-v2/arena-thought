@@ -1,36 +1,61 @@
 
 
-# AI-Generated Definitions & Examples for Vocab Popover
+# Admin Studio — Course Creation & Management
 
-## What Changes
+## Overview
 
-### 1. Auto-generate definition when form opens (`VocabSelectionPopover.tsx`)
+A new `/admin` section accessible from the sidebar where an admin can create courses, add source materials organized into modules, assign users, and publish courses. This is a mock/demo implementation using in-memory state (no backend), consistent with the rest of the app.
 
-When the user clicks "Add to Vocab" on a highlighted term, the form opens with:
-- **Term** pre-filled (as now)
-- **Definition** auto-populated after a short simulated delay (~800ms) with a mock AI-generated definition based on the term text. Shows a small loading shimmer/skeleton while "generating."
-- **Example** field starts empty, with a small "Generate example" link/button beside the label. Clicking it triggers another mock delay and fills in a contextual example sentence. This is more tasteful than a checkbox — it's an on-demand action.
-- Both fields remain fully editable — the user can override or clear the AI suggestion and type manually.
+## What Gets Built
 
-### 2. Mock AI generation logic
+### 1. Admin Studio page (`src/pages/AdminStudio.tsx`)
 
-A simple function that returns plausible definitions and examples based on keyword matching or generic academic-sounding text. No real API call — just a `setTimeout` with curated mock responses for common terms (e.g., "backpropagation", "gradient", "neural network") and a sensible fallback for unknown terms.
+A full-page admin dashboard with two views:
 
-### 3. Visual treatment
+**Course list view** — table/grid of all courses showing title, status (draft/published), source count, assigned user count, and last edited. Actions: edit, delete, publish/unpublish.
 
-- While generating: a subtle pulse animation on the field (or skeleton lines inside the textarea)
-- After generation: text appears with a brief fade-in
-- A small `Sparkles` icon on the "Generate example" button to indicate AI
-- Fields stay editable with normal styling after generation
+**Course editor view** — opened when creating or editing a course:
+- **Details section**: title, description
+- **Modules & Sources section**: add modules, then add source items (title, type: video/lecture/reading/pdf/code/slides/link) within each module. Drag-free but reorderable via up/down buttons.
+- **Assign Users section**: multi-select from a mock user list to assign learners
+- **Publish toggle**: draft → published. Only published courses appear in the student Library.
 
-### 4. NotebookPane vocab quick-add form gets the same treatment
+### 2. Admin data in WorkspaceContext
 
-The manual add form in the Notebook pane sidebar also gets a "Generate" button for definition and example fields, using the same mock logic, so the experience is consistent.
+Add to context:
+- `AdminCourse` type: `{ id, title, description, status: "draft" | "published", modules: AdminModule[], assignedUsers: string[], createdAt, updatedAt }`
+- `AdminModule` type: `{ id, title, items: AdminSourceItem[] }`
+- `AdminSourceItem` type: `{ id, title, type: SourceType }`
+- State: `adminCourses`, seed with existing hardcoded courses converted to admin format
+- CRUD: `addAdminCourse`, `updateAdminCourse`, `deleteAdminCourse`, `publishCourse`, `unpublishCourse`
+
+### 3. Library page update
+
+Instead of a hardcoded `courses` array, derive the student-facing course list from `adminCourses.filter(c => c.status === "published")` via context. This connects admin publishing to what students see.
+
+### 4. Sidebar nav update
+
+Add an "Admin Studio" entry to the sidebar nav with a `Shield` (or `Settings2`) icon, linking to `/admin`.
+
+### 5. Route
+
+Add `/admin` route in `App.tsx` pointing to `AdminStudio`.
 
 ## Files to Change
 
 | File | Change |
 |------|--------|
-| `src/components/workspace/VocabSelectionPopover.tsx` | Add mock AI generation for definition on form open, add "Generate example" button, loading states |
-| `src/components/workspace/NotebookPane.tsx` | Add generate buttons to the vocab quick-add form for consistency |
+| `src/pages/AdminStudio.tsx` | **New** — course list + course editor views |
+| `src/context/WorkspaceContext.tsx` | Add `AdminCourse` types, state, CRUD methods, seed data |
+| `src/pages/Library.tsx` | Read published courses from context instead of hardcoded array |
+| `src/components/AppSidebar.tsx` | Add Admin Studio nav item |
+| `src/App.tsx` | Add `/admin` route |
+
+## Design Notes
+
+- Follows existing design language: `font-serif` headings, `text-[13px] font-sans` body, `border-border`, `bg-card`, `rounded-xl`, `shadow-lifted` cards
+- Course editor uses a single-page form layout (not a dialog) for comfortable editing
+- Module/source management uses inline add/remove patterns similar to the notebook quick-add form
+- Mock user list: 4-5 fake users (name + email) for the assignment UI
+- No real auth/role gating — just a separate page accessible from sidebar
 
