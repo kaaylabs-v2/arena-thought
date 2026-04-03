@@ -82,7 +82,7 @@ const StudyPlan = () => {
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl mx-auto">
       {/* Header */}
-      <div className="flex items-start justify-between mb-10 animate-fade-in">
+      <div className="flex items-start justify-between mb-8 animate-fade-in">
         <div>
           <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1] font-medium">Study Plan</h1>
           <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">
