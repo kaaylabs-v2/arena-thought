@@ -8,6 +8,7 @@ import {
   User,
   Keyboard,
   Check,
+  ShieldCheck,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useWorkspace } from "@/context/WorkspaceContext";
@@ -28,7 +29,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { toast } from "sonner";
 
 export function SidebarUserMenu() {
-  const { userProfile, appSettings, updateAppSettings } = useWorkspace();
+  const { userProfile, appSettings, updateAppSettings, userRole, setUserRole } = useWorkspace();
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const navigate = useNavigate();
@@ -93,10 +94,26 @@ export function SidebarUserMenu() {
             </div>
           </div>
         </DropdownMenuLabel>
-
         <DropdownMenuSeparator />
 
-        {/* Profile */}
+        {/* Role Switcher */}
+        <DropdownMenuItem
+          className="gap-2.5 px-3 py-2 cursor-pointer"
+          onClick={() => {
+            const newRole = userRole === "admin" ? "learner" : "admin";
+            setUserRole(newRole);
+            toast.success(`Switched to ${newRole === "admin" ? "Admin" : "Learner"}`, {
+              description: newRole === "admin" ? "You now have access to Admin Studio." : "Admin features are now hidden.",
+            });
+          }}
+        >
+          <ShieldCheck className="h-4 w-4" strokeWidth={1.5} />
+          <span className="text-[13px] font-sans">
+            Switch to {userRole === "admin" ? "Learner" : "Admin"}
+          </span>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           className="gap-2.5 px-3 py-2 cursor-pointer"
           onClick={() => navigate("/profile")}

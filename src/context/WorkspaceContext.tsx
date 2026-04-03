@@ -103,7 +103,11 @@ export interface StudyTask {
   createdAt: string;
 }
 
+export type UserRole = "learner" | "admin";
+
 interface WorkspaceState {
+  userRole: UserRole;
+  setUserRole: (role: UserRole) => void;
   notebookEntries: NotebookEntry[];
   addNotebookEntry: (entry: Omit<NotebookEntry, "id" | "date">) => void;
   updateNotebookEntry: (id: string, updates: Partial<NotebookEntry>) => void;
@@ -139,14 +143,25 @@ interface WorkspaceState {
 
 const WorkspaceContext = createContext<WorkspaceState | null>(null);
 
-const defaultProfile: UserProfile = {
-  name: "Alex",
+const learnerProfile: UserProfile = {
+  name: "Alex Chen",
   email: "alex@university.edu",
   bio: "Graduate student exploring the intersection of machine learning and cognitive science.",
   learningGoal: "Build deep understanding of neural network architectures and their theoretical foundations.",
   institution: "Stanford University",
   timezone: "America/Los_Angeles",
 };
+
+const adminProfile: UserProfile = {
+  name: "Dr. Sarah Mitchell",
+  email: "s.mitchell@university.edu",
+  bio: "Associate Professor of Computer Science. Course designer and curriculum lead for the ML department.",
+  learningGoal: "Develop engaging, research-informed course materials for graduate students.",
+  institution: "Stanford University",
+  timezone: "America/Los_Angeles",
+};
+
+const defaultProfile = learnerProfile;
 
 // Seed data
 const seedNotebookEntries: NotebookEntry[] = [
@@ -421,12 +436,18 @@ let idCounter = 100;
 const genId = () => `gen-${++idCounter}`;
 
 export function WorkspaceProvider({ children }: { children: ReactNode }) {
+  const [userRole, setUserRoleState] = useState<UserRole>("learner");
   const [notebookEntries, setNotebookEntries] = useState<NotebookEntry[]>(seedNotebookEntries);
   const [chatMessages, setChatMessages] = useState<Record<string, ChatMessage[]>>(seedChatMessages);
   const [activeSource, setActiveSource] = useState<SourceItem | null>(null);
   const [reflections, setReflections] = useState<Reflection[]>(seedReflections);
   const [vocabulary, setVocabulary] = useState<VocabularyEntry[]>(seedVocabulary);
   const [userProfile, setUserProfile] = useState<UserProfile>(defaultProfile);
+
+  const setUserRole = useCallback((role: UserRole) => {
+    setUserRoleState(role);
+    setUserProfile(role === "admin" ? adminProfile : learnerProfile);
+  }, []);
 
   const addNotebookEntry = useCallback((entry: Omit<NotebookEntry, "id" | "date">) => {
     setNotebookEntries((prev) => [
@@ -536,6 +557,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   return (
     <WorkspaceContext.Provider
       value={{
+        userRole,
+        setUserRole,
         notebookEntries,
         addNotebookEntry,
         updateNotebookEntry,

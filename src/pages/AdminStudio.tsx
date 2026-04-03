@@ -246,9 +246,26 @@ function CourseEditor({
 // ─── Main Admin Studio ──────────────────────────────────────
 
 const AdminStudio = () => {
-  const { adminCourses, addAdminCourse, updateAdminCourse, deleteAdminCourse, publishCourse, unpublishCourse } = useWorkspace();
+  const { adminCourses, addAdminCourse, updateAdminCourse, deleteAdminCourse, publishCourse, unpublishCourse, userRole } = useWorkspace();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+
+  if (userRole !== "admin") {
+    return (
+      <div className="h-full min-h-screen flex flex-col items-center justify-center p-8 animate-fade-in">
+        <div className="flex flex-col items-center text-center max-w-md">
+          <div className="h-16 w-16 rounded-2xl bg-destructive/10 flex items-center justify-center mb-5">
+            <Shield className="h-8 w-8 text-destructive/60" strokeWidth={1.5} />
+          </div>
+          <h1 className="font-serif text-2xl text-foreground mb-2">Access Restricted</h1>
+          <p className="text-muted-foreground font-sans text-sm leading-relaxed mb-6">
+            The Admin Studio is only available to administrators. Switch to the Admin role from the user menu or Settings to access course management tools.
+          </p>
+          <Badge variant="secondary" className="text-[11px]">Current role: Learner</Badge>
+        </div>
+      </div>
+    );
+  }
 
   if (creating) {
     return (

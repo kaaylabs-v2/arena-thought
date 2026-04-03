@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
+import { useWorkspace } from "@/context/WorkspaceContext";
 import { useTheme } from "@/components/ThemeProvider";
 import {
   Sidebar,
@@ -44,6 +45,11 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { userRole } = useWorkspace();
+
+  const filteredNav = mainNav.filter(
+    (item) => item.url !== "/admin" || userRole === "admin"
+  );
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
@@ -82,7 +88,7 @@ export function AppSidebar() {
         <SidebarGroup className="p-0">
           <SidebarGroupContent>
             <SidebarMenu>
-              {mainNav.map((item) => (
+              {filteredNav.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
