@@ -12,7 +12,8 @@ import {
   Shield,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { useTheme } from "@/components/ThemeProvider";
 import {
