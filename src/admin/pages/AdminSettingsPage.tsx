@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Settings, Building2, Palette, Globe, Bell, Shield, Upload, X, Image } from "lucide-react";
-import { organization, currentAdmin } from "@/admin/data/mock-data";
+import { useWorkspace } from "@/context/WorkspaceContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 
 export default function AdminSettingsPage() {
+  const { studioOrganization: organization, studioCurrentAdmin: currentAdmin } = useWorkspace();
   const [org, setOrg] = useState(organization);
   const [notifications, setNotifications] = useState({ email: true, inApp: true, weeklyDigest: false });
   const [twoFactor, setTwoFactor] = useState(false);

@@ -5,7 +5,7 @@ import {
   BookOpen, Award, ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
-import { departments, adminCourses } from "@/admin/data/mock-data";
+import { useWorkspace } from "@/context/WorkspaceContext";
 import { cn } from "@/lib/utils";
 
 // ─── Types ──────────────────────────────────────────────────

@@ -1,9 +1,10 @@
 import { Target, TrendingUp, Award, AlertTriangle } from "lucide-react";
-import { adminCourses, members, knowledgeGaps } from "@/admin/data/mock-data";
+import { useWorkspace } from "@/context/WorkspaceContext";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 
 export default function AdminOutcomesPage() {
+  const { studioCourses: adminCourses, studioMembers: members, studioKnowledgeGaps: knowledgeGaps } = useWorkspace();
   const activeCourses = adminCourses.filter(c => c.status === "active");
   const avgMastery = Math.round(activeCourses.reduce((s, c) => s + c.masteryRate, 0) / (activeCourses.length || 1));
   const totalMasteries = members.reduce((s, m) => s + m.masteryAchieved, 0);

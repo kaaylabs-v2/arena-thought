@@ -11,7 +11,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { currentAdmin, roleBadgeLabel } from "@/admin/data/mock-data";
+import { useWorkspace, roleBadgeLabel } from "@/context/WorkspaceContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -34,6 +34,7 @@ export function AdminSidebarUserMenu() {
   const collapsed = state === "collapsed";
   const navigate = useNavigate();
   const [language, setLanguage] = useState("English");
+  const { studioCurrentAdmin: currentAdmin } = useWorkspace();
 
   const initials = currentAdmin.name
     .split(" ")

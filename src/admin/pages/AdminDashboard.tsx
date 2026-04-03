@@ -1,10 +1,6 @@
 import { Users, Activity, GraduationCap, Award, UserPlus, Rocket, Upload, ChevronRight, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  members,
-  adminCourses,
-  recentActivity,
-} from "@/admin/data/mock-data";
+import { useWorkspace } from "@/context/WorkspaceContext";
 import {
   BarChart,
   Bar,
