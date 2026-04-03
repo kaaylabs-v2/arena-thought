@@ -399,16 +399,16 @@ const Notebook = () => {
               <div className="flex gap-0.5 bg-muted/60 p-1 rounded-lg">
                 <button
                   onClick={() => setView("cards")}
-                  className={`h-8 w-8 flex items-center justify-center rounded-md transition-all duration-200 ${
-                    view === "cards" ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
+                  className={`min-w-[32px] min-h-[32px] flex items-center justify-center rounded-md cursor-pointer transition-all duration-200 ${
+                    view === "cards" ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.04] active:bg-foreground/[0.06]"
                   }`}
                 >
                   <LayoutGrid className="h-3.5 w-3.5" strokeWidth={1.5} />
                 </button>
                 <button
                   onClick={() => setView("list")}
-                  className={`h-8 w-8 flex items-center justify-center rounded-md transition-all duration-200 ${
-                    view === "list" ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground"
+                  className={`min-w-[32px] min-h-[32px] flex items-center justify-center rounded-md cursor-pointer transition-all duration-200 ${
+                    view === "list" ? "bg-background text-foreground shadow-soft" : "text-muted-foreground hover:text-foreground hover:bg-foreground/[0.04] active:bg-foreground/[0.06]"
                   }`}
                 >
                   <List className="h-3.5 w-3.5" strokeWidth={1.5} />

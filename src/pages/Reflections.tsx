@@ -221,7 +221,7 @@ const Reflections = () => {
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                   Listening...
                 </span>
-              ) : newReflection.length > 0 ? `${newReflection.length} chars` : "Enter to save · Shift+Enter for newline"}
+              ) : newReflection.length > 0 ? `${newReflection.length} chars` : <span className="hidden sm:inline">Enter to save · Shift+Enter for newline</span>}
             </span>
             <div className="flex items-center gap-2 shrink-0">
               <button

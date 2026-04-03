@@ -277,7 +277,7 @@ function TaskRow({ task, onToggle, onDelete, delay }: { task: StudyTask; onToggl
 
   return (
     <div
-      className={`group flex items-start gap-3 card-interactive px-4 py-3.5 animate-fade-in [animation-fill-mode:backwards] ${
+      className={`group flex items-start gap-3 card-interactive pl-5 pr-4 py-3.5 animate-fade-in [animation-fill-mode:backwards] ${
         task.completed ? "!border-border/50 opacity-60 hover:!shadow-none hover:!translate-y-0" : ""
       }`}
       style={{ animationDelay: `${delay}ms` }}
