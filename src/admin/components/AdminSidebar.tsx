@@ -6,10 +6,8 @@ import {
   Users,
   Building2,
   Target,
-
   BarChart3,
   Megaphone,
-  Settings,
   ChevronsLeft,
   ChevronsRight,
   Moon,
