@@ -34,24 +34,24 @@ export default function AdminDepartmentsPage() {
   };
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
+    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
       <div className="flex items-start justify-between mb-8">
         <div>
           <h1 className="font-serif text-[2rem] font-normal text-foreground">Departments</h1>
           <p className="text-sm mt-0.5 text-muted-foreground">Organize learners into groups, teams, and cohorts</p>
         </div>
-        <Button onClick={openNew} className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
+        <Button onClick={openNew} className="btn-apple gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
           <Plus className="h-4 w-4" /> New Department
         </Button>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-3 gap-4 mb-8 stagger-children">
         {[
           { icon: Building2, label: "Departments", value: depts.length },
           { icon: Users, label: "Total Members", value: totalMembers },
           { icon: GraduationCap, label: "Courses Assigned", value: totalCourses },
         ].map((s, i) => (
-          <div key={i} className="p-5 bg-card border border-border rounded-xl shadow-sm">
+          <div key={i} className="card-interactive p-5">
             <div className="flex items-center gap-2 mb-1">
               <s.icon className="h-4 w-4 text-accent" />
               <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{s.label}</span>
@@ -61,12 +61,12 @@ export default function AdminDepartmentsPage() {
         ))}
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-4 stagger-children">
         {depts.map(dept => {
           const deptMembers = members.filter(m => m.department === dept.name);
           const deptCourses = adminCourses.filter(c => c.department === dept.name);
           return (
-            <div key={dept.id} className="p-5 bg-card border border-border rounded-xl shadow-sm">
+            <div key={dept.id} className="card-interactive p-5">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-1">
@@ -84,7 +84,7 @@ export default function AdminDepartmentsPage() {
                   {deptMembers.length > 0 && (
                     <div className="flex items-center gap-1 mt-3">
                       {deptMembers.slice(0, 5).map(m => (
-                        <div key={m.id} className="h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-medium bg-accent/10 text-accent">
+                        <div key={m.id} className="h-7 w-7 rounded-full flex items-center justify-center text-[10px] font-medium bg-accent/10 text-accent transition-transform duration-200 hover:scale-110">
                           {m.name.split(" ").map(n => n[0]).join("")}
                         </div>
                       ))}
@@ -97,14 +97,14 @@ export default function AdminDepartmentsPage() {
                   {deptCourses.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
                       {deptCourses.map(c => (
-                        <span key={c.id} className="text-[11px] px-2 py-0.5 rounded-full bg-accent/5 text-muted-foreground">
+                        <span key={c.id} className="text-[11px] px-2 py-0.5 rounded-full bg-accent/5 text-muted-foreground transition-colors duration-200 hover:bg-accent/10">
                           {c.name}
                         </span>
                       ))}
                     </div>
                   )}
                 </div>
-                <button onClick={() => openEdit(dept)} className="p-2 rounded-lg transition-colors hover:bg-muted">
+                <button onClick={() => openEdit(dept)} className="toolbar-btn p-2 rounded-lg">
                   <Pencil className="h-3.5 w-3.5 text-muted-foreground" />
                 </button>
               </div>
@@ -125,8 +125,8 @@ export default function AdminDepartmentsPage() {
               <div><Label className="text-xs">Manager</Label><Input value={form.manager} onChange={e => setForm(f => ({ ...f, manager: e.target.value }))} placeholder="Manager name" /></div>
             </div>
             <DrawerFooter>
-              <Button onClick={handleSave} className="bg-accent text-accent-foreground hover:bg-accent/90">{editDept ? "Save Changes" : "Create Department"}</Button>
-              <DrawerClose asChild><Button variant="outline">Cancel</Button></DrawerClose>
+              <Button onClick={handleSave} className="btn-apple bg-accent text-accent-foreground hover:bg-accent/90">{editDept ? "Save Changes" : "Create Department"}</Button>
+              <DrawerClose asChild><Button variant="outline" className="btn-ghost">Cancel</Button></DrawerClose>
             </DrawerFooter>
           </div>
         </DrawerContent>

@@ -51,7 +51,7 @@ export default function AdminContentLibraryPage() {
     .filter(f => f.fileName.toLowerCase().includes(search.toLowerCase()) || f.linkedCourse.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
+    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
       <div className="mb-6">
         <h1 className="font-serif text-[2rem] font-normal text-foreground">Content Library</h1>
         <p className="text-[14px] mt-0.5 text-muted-foreground font-sans">All uploaded files and sources across all courses</p>
@@ -62,25 +62,25 @@ export default function AdminContentLibraryPage() {
         <div className="flex items-center gap-2 flex-1">
           <div className="relative flex-1 max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search files..." className="w-full h-9 pl-9 pr-3 rounded-lg text-[14px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30" />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search files..." className="w-full h-9 pl-9 pr-3 rounded-lg text-[14px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30 transition-shadow duration-200" />
           </div>
-          <select value={typeFilter} onChange={e => setTypeFilter(e.target.value as TypeFilter)} className="h-9 px-3 rounded-lg text-[13px] bg-background border border-input focus:outline-none">
+          <select value={typeFilter} onChange={e => setTypeFilter(e.target.value as TypeFilter)} className="h-9 px-3 rounded-lg text-[13px] bg-background border border-input focus:outline-none transition-shadow duration-200">
             <option value="all">All Types</option><option value="pdf">PDF</option><option value="video">Video</option><option value="slides">Slides</option><option value="doc">Document</option><option value="link">Link</option>
           </select>
-          <select value={courseFilter} onChange={e => setCourseFilter(e.target.value)} className="h-9 px-3 rounded-lg text-[13px] bg-background border border-input focus:outline-none hidden lg:block">
+          <select value={courseFilter} onChange={e => setCourseFilter(e.target.value)} className="h-9 px-3 rounded-lg text-[13px] bg-background border border-input focus:outline-none hidden lg:block transition-shadow duration-200">
             <option value="all">All Courses</option>{uniqueCourses.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex rounded-lg overflow-hidden border border-border">
-            <button onClick={() => setViewMode("grid")} className={cn("h-9 w-9 flex items-center justify-center transition-colors", viewMode === "grid" ? "bg-accent/12 text-accent" : "text-muted-foreground")}>
+            <button onClick={() => setViewMode("grid")} className={cn("segment-pill h-9 w-9 flex items-center justify-center transition-colors", viewMode === "grid" ? "bg-accent/12 text-accent" : "text-muted-foreground")}>
               <LayoutGrid className="h-4 w-4" strokeWidth={1.5} />
             </button>
-            <button onClick={() => setViewMode("list")} className={cn("h-9 w-9 flex items-center justify-center transition-colors border-l border-border", viewMode === "list" ? "bg-accent/12 text-accent" : "text-muted-foreground")}>
+            <button onClick={() => setViewMode("list")} className={cn("segment-pill h-9 w-9 flex items-center justify-center border-l border-border transition-colors", viewMode === "list" ? "bg-accent/12 text-accent" : "text-muted-foreground")}>
               <List className="h-4 w-4" strokeWidth={1.5} />
             </button>
           </div>
-          <button onClick={() => toast("Upload available through Course deployment", { description: "Files are uploaded within course context for proper organization." })} className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium transition-colors hover:opacity-90 bg-primary text-primary-foreground rounded-lg">
+          <button onClick={() => toast("Upload available through Course deployment", { description: "Files are uploaded within course context for proper organization." })} className="btn-apple flex items-center gap-2 px-4 py-2 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">
             <Upload className="h-4 w-4" /> Upload File
           </button>
         </div>
@@ -88,16 +88,16 @@ export default function AdminContentLibraryPage() {
 
       {/* Empty state */}
       {filtered.length === 0 ? (
-        <div className="text-center py-20 bg-card border border-border rounded-xl shadow-sm">
+        <div className="text-center py-20 card-interactive">
           <div className="h-12 w-12 rounded-xl flex items-center justify-center mx-auto mb-3 bg-accent/10"><FileText className="h-5 w-5 text-accent" /></div>
           <p className="text-sm font-medium mb-1 text-foreground/60">No files found</p>
           <p className="text-xs mb-4 text-muted-foreground">Try adjusting your filters or search</p>
-          <button onClick={() => { setSearch(""); setTypeFilter("all"); setCourseFilter("all"); }} className="px-4 py-2 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">Clear Filters</button>
+          <button onClick={() => { setSearch(""); setTypeFilter("all"); setCourseFilter("all"); }} className="btn-apple px-4 py-2 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">Clear Filters</button>
         </div>
       ) : viewMode === "grid" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 stagger-children">
           {filtered.map(file => (
-            <div key={file.id} className="p-4 cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.01] bg-card border border-border rounded-xl shadow-sm" onClick={() => setPreviewFile(file)}>
+            <div key={file.id} className="card-interactive p-4 cursor-pointer" onClick={() => setPreviewFile(file)}>
               <div className="h-10 w-10 rounded-lg flex items-center justify-center mb-3 bg-accent/10 text-accent">{typeIcon(file.fileType, "h-5 w-5")}</div>
               <p className="text-[14px] font-medium leading-snug line-clamp-2 mb-2 text-foreground font-sans">{file.fileName}</p>
               <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium mb-1 bg-accent/10 text-accent">{file.linkedCourse}</span>
@@ -114,7 +114,7 @@ export default function AdminContentLibraryPage() {
           ))}
         </div>
       ) : (
-        <div className="overflow-hidden bg-card border border-border rounded-xl shadow-sm">
+        <div className="overflow-hidden card-interactive">
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-border">
@@ -125,7 +125,7 @@ export default function AdminContentLibraryPage() {
             </thead>
             <tbody>
               {filtered.map(file => (
-                <tr key={file.id} className="transition-colors cursor-pointer border-b border-border/50 hover:bg-accent/5" onClick={() => setPreviewFile(file)}>
+                <tr key={file.id} className="transition-colors duration-200 cursor-pointer border-b border-border/50 hover:bg-accent/5" onClick={() => setPreviewFile(file)}>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0 bg-accent/10 text-accent">{typeIcon(file.fileType)}</div>
@@ -155,8 +155,8 @@ export default function AdminContentLibraryPage() {
       {/* File Preview Drawer */}
       {previewFile && (
         <>
-          <div className="fixed inset-0 z-40 bg-black/25" onClick={() => setPreviewFile(null)} />
-          <div className="fixed right-0 top-0 bottom-0 w-[480px] max-w-full z-50 flex flex-col bg-card border-l border-border">
+          <div className="fixed inset-0 z-40 bg-black/25 animate-fade-in-gentle" onClick={() => setPreviewFile(null)} />
+          <div className="fixed right-0 top-0 bottom-0 w-[480px] max-w-full z-50 flex flex-col animate-slide-in-right bg-card border-l border-border">
             <div className="flex items-center justify-between px-6 py-5 border-b border-border">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="h-9 w-9 rounded-lg flex items-center justify-center shrink-0 bg-accent/10 text-accent">{typeIcon(previewFile.fileType)}</div>
@@ -165,14 +165,14 @@ export default function AdminContentLibraryPage() {
                   <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium uppercase bg-accent/10 text-accent">{typeLabel(previewFile.fileType)}</span>
                 </div>
               </div>
-              <button onClick={() => setPreviewFile(null)} className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-muted shrink-0 text-muted-foreground"><X className="h-4 w-4" /></button>
+              <button onClick={() => setPreviewFile(null)} className="toolbar-btn h-8 w-8 rounded-md flex items-center justify-center shrink-0 text-muted-foreground"><X className="h-4 w-4" /></button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.08em] mb-3 text-muted-foreground">Details</p>
                 <div className="space-y-2.5">
                   {[{ label: "COURSE", value: previewFile.linkedCourse }, { label: "MODULE", value: previewFile.module }, { label: "UPLOADED BY", value: previewFile.uploaderName }, { label: "UPLOAD DATE", value: previewFile.uploadDate }, { label: "FILE SIZE", value: previewFile.fileSize }].map((row, i) => (
-                    <div key={i} className="flex items-center justify-between py-1.5">
+                    <div key={i} className="setting-row flex items-center justify-between py-1.5 px-2 -mx-2 rounded-lg">
                       <span className="text-[11px] uppercase tracking-wider text-muted-foreground/60">{row.label}</span>
                       <span className="text-[14px] text-foreground/75 font-sans">{row.value}</span>
                     </div>
@@ -202,7 +202,7 @@ export default function AdminContentLibraryPage() {
               </div>
             </div>
             <div className="px-6 py-4 border-t border-border">
-              <button className="flex items-center gap-2 text-[13px] font-medium text-accent">View in Course <ExternalLink className="h-3.5 w-3.5" /></button>
+              <button className="flex items-center gap-2 text-[13px] font-medium text-accent transition-colors duration-200 hover:text-accent/80">View in Course <ExternalLink className="h-3.5 w-3.5" /></button>
             </div>
           </div>
         </>

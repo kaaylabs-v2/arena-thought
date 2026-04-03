@@ -45,7 +45,7 @@ const quickActions = [
 
 export default function AdminDashboard() {
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto space-y-6">
+    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto space-y-6 animate-fade-in">
       {/* Header */}
       <div>
         <h1 className="font-serif text-[2rem] font-normal text-foreground">Dashboard</h1>
@@ -53,9 +53,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
         {stats.map((stat) => (
-          <div key={stat.label} className="p-5 bg-card border border-border rounded-xl shadow-sm">
+          <div key={stat.label} className="card-interactive p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="h-9 w-9 rounded-lg flex items-center justify-center bg-accent/10 text-accent p-2">
                 <stat.icon className="h-5 w-5" strokeWidth={1.5} />
@@ -69,11 +69,11 @@ export default function AdminDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Activity Feed */}
-        <div className="lg:col-span-2 p-5 bg-card border border-border rounded-xl shadow-sm">
+        <div className="lg:col-span-2 card-interactive p-5">
           <h2 className="text-sm font-semibold mb-4 text-foreground/75">Recent Activity</h2>
-          <div className="space-y-3">
+          <div className="space-y-3 scrollbar-thin max-h-[320px] overflow-y-auto pr-1">
             {recentActivity.slice(0, 6).map((event) => (
-              <div key={event.id} className="flex items-start gap-3">
+              <div key={event.id} className="flex items-start gap-3 setting-row rounded-lg px-2 py-1.5 -mx-2">
                 <div className="mt-1 h-2 w-2 rounded-full shrink-0" style={{
                   backgroundColor: (event.type === "mastery" || event.type === "completion") ? AMBER : "hsl(var(--muted-foreground) / 0.3)"
                 }} />
@@ -87,8 +87,8 @@ export default function AdminDashboard() {
         </div>
 
         {/* Pending + Quick Actions */}
-        <div className="space-y-5">
-          <div className="p-5 bg-card border border-border rounded-xl shadow-sm">
+        <div className="space-y-5 stagger-children">
+          <div className="card-interactive p-5">
             <h2 className="text-sm font-semibold mb-3 text-foreground/75">Pending Actions</h2>
             <div className="space-y-2.5">
               {pendingActions.map((action, i) => (
@@ -100,18 +100,18 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="p-5 bg-card border border-border rounded-xl shadow-sm">
+          <div className="card-interactive p-5">
             <h2 className="text-sm font-semibold mb-3 text-foreground/75">Quick Actions</h2>
             <div className="space-y-1.5">
               {quickActions.map((action) => (
                 <a
                   key={action.label}
                   href={action.href}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors group text-foreground/65 hover:bg-accent/8"
+                  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-all duration-200 group text-foreground/65 hover:bg-accent/8 active:scale-[0.98]"
                 >
-                  <action.icon className="h-4 w-4 text-muted-foreground group-hover:text-accent" strokeWidth={1.5} />
+                  <action.icon className="h-4 w-4 text-muted-foreground group-hover:text-accent transition-colors duration-200" strokeWidth={1.5} />
                   <span className="flex-1">{action.label}</span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40" />
+                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:translate-x-0.5 transition-transform duration-200" />
                 </a>
               ))}
             </div>
@@ -120,7 +120,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Mastery Overview Chart */}
-      <div className="p-5 bg-card border border-border rounded-xl shadow-sm">
+      <div className="card-interactive p-5">
         <h2 className="text-sm font-semibold mb-4 text-foreground/75">Mastery Overview by Course</h2>
         <div className="h-[220px]">
           <ResponsiveContainer width="100%" height="100%">

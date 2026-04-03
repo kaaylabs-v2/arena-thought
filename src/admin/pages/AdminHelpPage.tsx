@@ -18,18 +18,18 @@ const resources = [
 
 export default function AdminHelpPage() {
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
+    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
       <h1 className="font-serif text-[2rem] font-normal text-foreground">Help</h1>
       <p className="text-sm mt-0.5 mb-8 text-muted-foreground">Documentation and support resources</p>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-3 gap-4 mb-8 stagger-children">
         {resources.map((r, i) => (
-          <a key={i} href={r.url} className="p-5 block transition-shadow hover:shadow-md group bg-card border border-border rounded-xl shadow-sm">
+          <a key={i} href={r.url} className="card-interactive p-5 block group">
             <div className="flex items-center gap-3 mb-2">
               <div className="h-9 w-9 rounded-lg flex items-center justify-center bg-accent/10">
                 <r.icon className="h-4 w-4 text-accent" />
               </div>
-              <ExternalLink className="h-3 w-3 ml-auto opacity-0 group-hover:opacity-50 transition-opacity text-muted-foreground" />
+              <ExternalLink className="h-3 w-3 ml-auto opacity-0 group-hover:opacity-50 transition-opacity duration-200 text-muted-foreground" />
             </div>
             <h3 className="font-medium text-sm text-foreground/80">{r.title}</h3>
             <p className="text-xs mt-0.5 text-muted-foreground">{r.desc}</p>
@@ -38,7 +38,7 @@ export default function AdminHelpPage() {
       </div>
 
       <h2 className="font-serif text-lg mb-4 text-foreground/75">Frequently Asked Questions</h2>
-      <div className="p-2 bg-card border border-border rounded-xl shadow-sm">
+      <div className="card-interactive p-2">
         <Accordion type="single" collapsible>
           {faqs.map((faq, i) => (
             <AccordionItem key={i} value={`faq-${i}`} className="border-b-0">
@@ -53,13 +53,13 @@ export default function AdminHelpPage() {
         </Accordion>
       </div>
 
-      <div className="p-6 mt-6 text-center bg-card border border-border rounded-xl shadow-sm">
+      <div className="card-interactive p-6 mt-6 text-center">
         <div className="h-12 w-12 rounded-xl flex items-center justify-center mx-auto mb-3 bg-accent/10">
           <HelpCircle className="h-5 w-5 text-accent" />
         </div>
         <h3 className="font-serif text-base mb-1 text-foreground/75">Still need help?</h3>
         <p className="text-sm mb-4 text-muted-foreground">Our support team typically responds within 24 hours</p>
-        <a href="mailto:support@nexus-squared.com" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-accent text-accent-foreground hover:bg-accent/90">
+        <a href="mailto:support@nexus-squared.com" className="btn-apple inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-accent text-accent-foreground hover:bg-accent/90">
           <Mail className="h-4 w-4" /> Contact Support
         </a>
       </div>

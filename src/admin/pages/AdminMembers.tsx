@@ -99,7 +99,7 @@ export default function AdminMembersPage() {
   const handleRoleChange = (id: string, newRole: MemberRole) => { setMembersList(prev => prev.map(m => m.id === id ? { ...m, role: newRole } : m)); toast.success("Role updated"); setRoleChangeId(null); };
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
+    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -107,10 +107,10 @@ export default function AdminMembersPage() {
           <p className="text-[14px] mt-0.5 text-muted-foreground font-sans">Manage learners and admins in your organization</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setBulkOpen(true)} className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium transition-colors hover:opacity-80 border border-border rounded-lg text-foreground/65">
+          <button onClick={() => setBulkOpen(true)} className="btn-ghost flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium border border-border rounded-lg text-foreground/65">
             <Upload className="h-4 w-4" /> Bulk Import
           </button>
-          <button onClick={() => setInviteOpen(true)} className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium transition-colors hover:opacity-90 bg-primary text-primary-foreground rounded-lg">
+          <button onClick={() => setInviteOpen(true)} className="btn-apple flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">
             <UserPlus className="h-4 w-4" /> Invite Members
           </button>
         </div>
@@ -121,7 +121,7 @@ export default function AdminMembersPage() {
         <div className="flex gap-0">
           {tabs.map(t => (
             <button key={t.value} onClick={() => setTab(t.value)}
-              className={cn("px-3 py-2 text-[13px] font-medium transition-colors relative", tab === t.value ? "text-accent border-b-2 border-accent" : "text-muted-foreground border-b-2 border-transparent")}
+              className={cn("segment-pill px-3 py-2 text-[13px] font-medium transition-colors relative", tab === t.value ? "text-accent border-b-2 border-accent" : "text-muted-foreground border-b-2 border-transparent")}
             >
               {t.label} <span className="ml-1 text-[11px] text-muted-foreground/50">{t.count}</span>
             </button>
@@ -129,22 +129,22 @@ export default function AdminMembersPage() {
         </div>
         <div className="relative flex-1 max-w-xs ml-auto">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name or email..." className="w-full h-9 pl-9 pr-3 rounded-lg text-[14px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30" />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by name or email..." className="w-full h-9 pl-9 pr-3 rounded-lg text-[14px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30 transition-shadow duration-200" />
         </div>
       </div>
 
       {/* Table */}
       {filtered.length === 0 ? (
-        <div className="text-center py-20 bg-card border border-border rounded-xl shadow-sm">
+        <div className="text-center py-20 card-interactive">
           <div className="h-12 w-12 rounded-xl flex items-center justify-center mx-auto mb-3 bg-accent/10">
             <UserPlus className="h-5 w-5 text-accent" />
           </div>
           <p className="text-sm font-medium mb-1 text-foreground/60">No members found</p>
           <p className="text-xs mb-4 text-muted-foreground">Try adjusting your filters or search</p>
-          <button onClick={() => setInviteOpen(true)} className="px-4 py-2 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">Invite Members</button>
+          <button onClick={() => setInviteOpen(true)} className="btn-apple px-4 py-2 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">Invite Members</button>
         </div>
       ) : (
-        <div className="overflow-hidden bg-card border border-border rounded-xl shadow-sm">
+        <div className="overflow-hidden card-interactive">
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-border">
@@ -155,7 +155,7 @@ export default function AdminMembersPage() {
             </thead>
             <tbody>
               {filtered.map(member => (
-                <tr key={member.id} className="transition-colors group relative border-b border-border/50 hover:bg-accent/5">
+                <tr key={member.id} className="transition-colors duration-200 group relative border-b border-border/50 hover:bg-accent/5">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-medium shrink-0 bg-accent/15 text-accent">{initials(member.name)}</div>
@@ -169,11 +169,11 @@ export default function AdminMembersPage() {
                       {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
                     </span>
                     {roleChangeId === member.id && (
-                      <div className="absolute left-5 top-10 z-30 w-36 rounded-lg py-1 shadow-lg bg-popover border border-border">
+                      <div className="absolute left-5 top-10 z-30 w-36 rounded-xl py-1 shadow-elevated animate-scale-in bg-popover border border-border">
                         {(["learner", "manager", "admin"] as MemberRole[]).map(r => (
-                          <button key={r} onClick={() => handleRoleChange(member.id, r)} className={cn("w-full text-left px-3 py-2 text-[13px] hover:bg-muted transition-colors capitalize", r === member.role ? "text-accent font-semibold" : "text-foreground/70")}>{r}</button>
+                          <button key={r} onClick={() => handleRoleChange(member.id, r)} className={cn("w-full text-left px-3 py-2 text-[13px] hover:bg-muted transition-colors duration-150 capitalize", r === member.role ? "text-accent font-semibold" : "text-foreground/70")}>{r}</button>
                         ))}
-                        <button onClick={() => setRoleChangeId(null)} className="w-full text-left px-3 py-2 text-[12px] transition-colors text-muted-foreground">Cancel</button>
+                        <button onClick={() => setRoleChangeId(null)} className="w-full text-left px-3 py-2 text-[12px] transition-colors duration-150 text-muted-foreground">Cancel</button>
                       </div>
                     )}
                   </td>
@@ -184,17 +184,17 @@ export default function AdminMembersPage() {
                   <td className="px-5 py-3.5 hidden xl:table-cell"><span className="text-[12px] text-muted-foreground/60">{member.dateJoined}</span></td>
                   <td className="px-5 py-3.5">
                     {deactivatingId === member.id ? (
-                      <div className="flex items-center gap-2 text-[12px]">
+                      <div className="flex items-center gap-2 text-[12px] animate-fade-in-fast">
                         <span className="text-muted-foreground">Deactivate this member?</span>
                         <button onClick={() => handleDeactivate(member.id)} className="font-medium text-destructive">Confirm</button>
                         <button onClick={() => setDeactivatingId(null)} className="text-muted-foreground">Cancel</button>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => setDetailMember(member)} className="h-7 w-7 rounded-md flex items-center justify-center hover:bg-muted transition-colors" title="View details"><Pencil className="h-3.5 w-3.5 text-muted-foreground" /></button>
-                        <button onClick={() => setRoleChangeId(roleChangeId === member.id ? null : member.id)} className="h-7 w-7 rounded-md flex items-center justify-center hover:bg-muted transition-colors" title="Change role"><UserCog className="h-3.5 w-3.5 text-muted-foreground" /></button>
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <button onClick={() => setDetailMember(member)} className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center" title="View details"><Pencil className="h-3.5 w-3.5 text-muted-foreground" /></button>
+                        <button onClick={() => setRoleChangeId(roleChangeId === member.id ? null : member.id)} className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center" title="Change role"><UserCog className="h-3.5 w-3.5 text-muted-foreground" /></button>
                         {member.status !== "inactive" && (
-                          <button onClick={() => setDeactivatingId(member.id)} className="h-7 w-7 rounded-md flex items-center justify-center hover:bg-muted transition-colors" title="Deactivate"><UserMinus className="h-3.5 w-3.5 text-muted-foreground" /></button>
+                          <button onClick={() => setDeactivatingId(member.id)} className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center" title="Deactivate"><UserMinus className="h-3.5 w-3.5 text-muted-foreground" /></button>
                         )}
                       </div>
                     )}
@@ -216,21 +216,21 @@ export default function AdminMembersPage() {
       {/* Invite Drawer */}
       {inviteOpen && (
         <>
-          <div className="fixed inset-0 z-40 bg-black/25" onClick={closeInvite} />
-          <div className="fixed right-0 top-0 bottom-0 w-[480px] max-w-full z-50 flex flex-col bg-card border-l border-border">
+          <div className="fixed inset-0 z-40 bg-black/25 animate-fade-in-gentle" onClick={closeInvite} />
+          <div className="fixed right-0 top-0 bottom-0 w-[480px] max-w-full z-50 flex flex-col animate-slide-in-right bg-card border-l border-border">
             <div className="flex items-center justify-between px-6 py-5 border-b border-border">
               <div>
                 <h2 className="text-[18px] font-semibold text-foreground font-sans">Invite Members</h2>
                 <p className="text-[13px] mt-0.5 text-muted-foreground">Invites will be sent via email</p>
               </div>
-              <button onClick={closeInvite} className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-muted text-muted-foreground"><X className="h-4 w-4" /></button>
+              <button onClick={closeInvite} className="toolbar-btn h-8 w-8 rounded-md flex items-center justify-center text-muted-foreground"><X className="h-4 w-4" /></button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-5">
+            <div className="flex-1 overflow-y-auto p-6 space-y-5 scrollbar-thin">
               <div>
                 <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5 text-muted-foreground">Email addresses</label>
-                <div className="min-h-[44px] flex flex-wrap gap-1.5 p-2 rounded-lg cursor-text border border-input bg-background" onClick={() => emailRef.current?.focus()}>
+                <div className="min-h-[44px] flex flex-wrap gap-1.5 p-2 rounded-lg cursor-text border border-input bg-background transition-shadow duration-200 focus-within:ring-2 focus-within:ring-accent/30" onClick={() => emailRef.current?.focus()}>
                   {emailChips.map((chip, i) => (
-                    <span key={i} className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[12px] font-medium bg-accent/12 text-accent">
+                    <span key={i} className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[12px] font-medium bg-accent/12 text-accent animate-scale-in">
                       {chip}<button onClick={() => setEmailChips(prev => prev.filter((_, idx) => idx !== i))} className="hover:opacity-70"><X className="h-3 w-3" /></button>
                     </span>
                   ))}
@@ -239,24 +239,24 @@ export default function AdminMembersPage() {
               </div>
               <div>
                 <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5 text-muted-foreground">Assign role</label>
-                <select value={invRole} onChange={e => setInvRole(e.target.value as MemberRole)} className="w-full h-9 px-3 rounded-lg text-[14px] bg-background border border-input focus:outline-none">
+                <select value={invRole} onChange={e => setInvRole(e.target.value as MemberRole)} className="w-full h-9 px-3 rounded-lg text-[14px] bg-background border border-input focus:outline-none transition-shadow duration-200">
                   <option value="learner">Learner</option><option value="manager">Manager</option><option value="admin">Admin</option>
                 </select>
               </div>
               <div>
                 <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5 text-muted-foreground">Assign department</label>
-                <select value={invDept} onChange={e => setInvDept(e.target.value)} className="w-full h-9 px-3 rounded-lg text-[14px] bg-background border border-input focus:outline-none">
+                <select value={invDept} onChange={e => setInvDept(e.target.value)} className="w-full h-9 px-3 rounded-lg text-[14px] bg-background border border-input focus:outline-none transition-shadow duration-200">
                   <option value="">No department</option>{departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5 text-muted-foreground">Welcome message (optional)</label>
-                <textarea value={invMessage} onChange={e => setInvMessage(e.target.value)} placeholder="Add a personal message to the invite email..." rows={3} className="w-full px-3 py-2 rounded-lg text-[14px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30 resize-none font-sans" />
+                <textarea value={invMessage} onChange={e => setInvMessage(e.target.value)} placeholder="Add a personal message to the invite email..." rows={3} className="w-full px-3 py-2 rounded-lg text-[14px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30 resize-none font-sans transition-shadow duration-200" />
               </div>
             </div>
             <div className="px-6 py-4 flex gap-3 border-t border-border">
-              <button onClick={closeInvite} className="flex-1 h-10 text-[13px] font-medium transition-colors border border-border rounded-lg text-foreground/65 hover:bg-muted">Cancel</button>
-              <button onClick={handleSendInvites} disabled={emailChips.length === 0} className="flex-1 h-10 text-[13px] font-medium transition-colors hover:opacity-90 disabled:opacity-40 bg-primary text-primary-foreground rounded-lg">Send Invites</button>
+              <button onClick={closeInvite} className="btn-ghost flex-1 h-10 text-[13px] font-medium border border-border rounded-lg text-foreground/65 hover:bg-muted">Cancel</button>
+              <button onClick={handleSendInvites} disabled={emailChips.length === 0} className="btn-apple flex-1 h-10 text-[13px] font-medium disabled:opacity-40 bg-primary text-primary-foreground rounded-lg">Send Invites</button>
             </div>
           </div>
         </>
@@ -265,20 +265,20 @@ export default function AdminMembersPage() {
       {/* Bulk Import Drawer */}
       {bulkOpen && (
         <>
-          <div className="fixed inset-0 z-40 bg-black/25" onClick={closeBulk} />
-          <div className="fixed right-0 top-0 bottom-0 w-[480px] max-w-full z-50 flex flex-col bg-card border-l border-border">
+          <div className="fixed inset-0 z-40 bg-black/25 animate-fade-in-gentle" onClick={closeBulk} />
+          <div className="fixed right-0 top-0 bottom-0 w-[480px] max-w-full z-50 flex flex-col animate-slide-in-right bg-card border-l border-border">
             <div className="flex items-center justify-between px-6 py-5 border-b border-border">
               <h2 className="text-[18px] font-semibold text-foreground font-sans">Bulk Import Members</h2>
-              <button onClick={closeBulk} className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-muted text-muted-foreground"><X className="h-4 w-4" /></button>
+              <button onClick={closeBulk} className="toolbar-btn h-8 w-8 rounded-md flex items-center justify-center text-muted-foreground"><X className="h-4 w-4" /></button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-5">
-              <div className="rounded-xl p-8 text-center cursor-pointer transition-colors border-2 border-dashed border-accent/30 bg-accent/5 hover:border-accent/50" onClick={() => setBulkFile("members_import.csv")}>
+            <div className="flex-1 overflow-y-auto p-6 space-y-5 scrollbar-thin">
+              <div className="rounded-xl p-8 text-center cursor-pointer transition-all duration-250 border-2 border-dashed border-accent/30 bg-accent/5 hover:border-accent/50 active:scale-[0.99]" onClick={() => setBulkFile("members_import.csv")}>
                 <Upload className="h-6 w-6 mx-auto mb-3 text-accent" />
                 <p className="text-[14px] font-medium text-foreground/65">Drop a CSV file here or click to browse</p>
                 <p className="text-[12px] mt-1 text-muted-foreground">Required columns: name, email, role, department</p>
               </div>
               {bulkFile && (
-                <div>
+                <div className="animate-fade-in-fast">
                   <p className="text-[12px] font-medium mb-2 text-foreground/60">Preview — {bulkFile}</p>
                   <div className="overflow-hidden rounded-lg border border-border">
                     <table className="w-full text-[12px]">
@@ -304,8 +304,8 @@ export default function AdminMembersPage() {
               )}
             </div>
             <div className="px-6 py-4 flex gap-3 border-t border-border">
-              <button onClick={closeBulk} className="flex-1 h-10 text-[13px] font-medium transition-colors border border-border rounded-lg text-foreground/65 hover:bg-muted">Cancel</button>
-              <button onClick={handleBulkImport} disabled={!bulkFile} className="flex-1 h-10 text-[13px] font-medium transition-colors hover:opacity-90 disabled:opacity-40 bg-primary text-primary-foreground rounded-lg">Import 12 members</button>
+              <button onClick={closeBulk} className="btn-ghost flex-1 h-10 text-[13px] font-medium border border-border rounded-lg text-foreground/65 hover:bg-muted">Cancel</button>
+              <button onClick={handleBulkImport} disabled={!bulkFile} className="btn-apple flex-1 h-10 text-[13px] font-medium disabled:opacity-40 bg-primary text-primary-foreground rounded-lg">Import 12 members</button>
             </div>
           </div>
         </>
@@ -314,8 +314,8 @@ export default function AdminMembersPage() {
       {/* Member Detail Side Panel */}
       {detailMember && (
         <>
-          <div className="fixed inset-0 z-40 bg-black/25" onClick={() => setDetailMember(null)} />
-          <div className="fixed right-0 top-0 bottom-0 w-[420px] max-w-full z-50 flex flex-col overflow-hidden bg-card border-l border-border">
+          <div className="fixed inset-0 z-40 bg-black/25 animate-fade-in-gentle" onClick={() => setDetailMember(null)} />
+          <div className="fixed right-0 top-0 bottom-0 w-[420px] max-w-full z-50 flex flex-col overflow-hidden animate-slide-in-right bg-card border-l border-border">
             <div className="flex items-center justify-between px-6 py-5 border-b border-border">
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-full flex items-center justify-center text-[14px] font-semibold bg-accent/15 text-accent">{initials(detailMember.name)}</div>
@@ -329,14 +329,14 @@ export default function AdminMembersPage() {
                   <span className={cn("inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium mt-1", statusBadgeCls(detailMember.status))}>{detailMember.status.charAt(0).toUpperCase() + detailMember.status.slice(1)}</span>
                 </div>
               </div>
-              <button onClick={() => setDetailMember(null)} className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-muted shrink-0 text-muted-foreground"><X className="h-4 w-4" /></button>
+              <button onClick={() => setDetailMember(null)} className="toolbar-btn h-8 w-8 rounded-md flex items-center justify-center shrink-0 text-muted-foreground"><X className="h-4 w-4" /></button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.08em] mb-3 text-muted-foreground">Details</p>
                 <div className="space-y-2.5">
                   {[{ label: "EMAIL", value: detailMember.email }, { label: "DEPARTMENT", value: detailMember.department }, { label: "JOINED", value: detailMember.dateJoined }, { label: "LAST ACTIVE", value: detailMember.lastActive }].map((row, i) => (
-                    <div key={i} className="flex items-center justify-between py-1.5">
+                    <div key={i} className="setting-row flex items-center justify-between py-1.5 px-2 -mx-2 rounded-lg">
                       <span className="text-[11px] uppercase tracking-wider text-muted-foreground/60">{row.label}</span>
                       <span className="text-[14px] text-foreground/75 font-sans">{row.value}</span>
                     </div>
@@ -346,15 +346,15 @@ export default function AdminMembersPage() {
               {detailMember.courseProgress && detailMember.courseProgress.length > 0 && (
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.08em] mb-3 text-muted-foreground">Enrolled Courses</p>
-                  <div className="space-y-3">
+                  <div className="space-y-3 stagger-children">
                     {detailMember.courseProgress.slice(0, 4).map((cp, i) => (
-                      <div key={i} className="p-3 rounded-lg bg-muted/30 border border-border/50">
+                      <div key={i} className="p-3 rounded-lg bg-muted/30 border border-border/50 transition-colors duration-200 hover:bg-muted/50">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-[13px] font-medium text-foreground/75">{cp.name}</span>
                           <span className="text-[12px] font-medium text-accent">{cp.progress}%</span>
                         </div>
                         <div className="h-1.5 rounded-full overflow-hidden bg-accent/12">
-                          <div className="h-full rounded-full transition-all" style={{ width: `${cp.progress}%`, backgroundColor: AMBER }} />
+                          <div className="h-full rounded-full transition-all duration-600 ease-smooth" style={{ width: `${cp.progress}%`, backgroundColor: AMBER }} />
                         </div>
                       </div>
                     ))}
@@ -367,7 +367,7 @@ export default function AdminMembersPage() {
                   <p className="text-[11px] font-semibold uppercase tracking-[0.08em] mb-3 text-muted-foreground">Mastery</p>
                   <div className="space-y-2">
                     {detailMember.courseProgress.map((cp, i) => (
-                      <div key={i} className="flex items-center justify-between py-1.5">
+                      <div key={i} className="setting-row flex items-center justify-between py-1.5 px-2 -mx-2 rounded-lg">
                         <span className="text-[13px] text-foreground/65">{cp.name}</span>
                         <span className={cn("inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium", cp.mastery ? "bg-accent/12 text-accent border border-accent/25" : "bg-muted/50 text-muted-foreground/60 border border-border/50")}>
                           {cp.mastery ? "Mastery Achieved" : "Not Yet"}

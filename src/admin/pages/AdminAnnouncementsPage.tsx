@@ -32,26 +32,26 @@ export default function AdminAnnouncementsPage() {
   };
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto">
+    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
       <div className="flex items-start justify-between mb-8">
         <div>
           <h1 className="font-serif text-[2rem] font-normal text-foreground">Announcements</h1>
           <p className="text-sm mt-0.5 text-muted-foreground">Send messages to learners and departments</p>
         </div>
-        <Button onClick={() => setDrawerOpen(true)} className="gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
+        <Button onClick={() => setDrawerOpen(true)} className="btn-apple gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
           <Plus className="h-4 w-4" /> New Announcement
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <div className="p-5 bg-card border border-border rounded-xl shadow-sm">
+      <div className="grid grid-cols-2 gap-4 mb-8 stagger-children">
+        <div className="card-interactive p-5">
           <div className="flex items-center gap-2 mb-1">
             <Megaphone className="h-4 w-4 text-accent" />
             <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Total Sent</span>
           </div>
           <p className="text-2xl font-serif text-foreground">{items.length}</p>
         </div>
-        <div className="p-5 bg-card border border-border rounded-xl shadow-sm">
+        <div className="card-interactive p-5">
           <div className="flex items-center gap-2 mb-1">
             <Calendar className="h-4 w-4 text-accent" />
             <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Latest</span>
@@ -60,9 +60,9 @@ export default function AdminAnnouncementsPage() {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-3 stagger-children">
         {items.map(ann => (
-          <div key={ann.id} className="p-5 bg-card border border-border rounded-xl shadow-sm">
+          <div key={ann.id} className="card-interactive p-5">
             <div className="flex items-start justify-between mb-2">
               <h3 className="font-medium text-sm text-foreground/80">{ann.title}</h3>
               <Badge variant="outline" className="text-[10px] shrink-0 border-accent/30 text-accent">
@@ -105,8 +105,8 @@ export default function AdminAnnouncementsPage() {
               </div>
             </div>
             <DrawerFooter>
-              <Button onClick={handleSend} className="bg-accent text-accent-foreground hover:bg-accent/90">Send Announcement</Button>
-              <DrawerClose asChild><Button variant="outline">Cancel</Button></DrawerClose>
+              <Button onClick={handleSend} className="btn-apple bg-accent text-accent-foreground hover:bg-accent/90">Send Announcement</Button>
+              <DrawerClose asChild><Button variant="outline" className="btn-ghost">Cancel</Button></DrawerClose>
             </DrawerFooter>
           </div>
         </DrawerContent>
