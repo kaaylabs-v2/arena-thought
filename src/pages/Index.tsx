@@ -101,7 +101,7 @@ const Index = () => {
 
       {/* Recent Workspaces */}
       <section className="mb-14 animate-fade-in [animation-delay:300ms] [animation-fill-mode:backwards]">
-        <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground mb-4">Recent workspaces</h2>
+        <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground mb-4">Recent courses</h2>
         <div className="space-y-2">
           {recentCourses.slice(1).map((course, i) => (
             <Link
