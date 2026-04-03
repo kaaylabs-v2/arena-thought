@@ -45,6 +45,11 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { userRole } = useWorkspace();
+
+  const filteredNav = mainNav.filter(
+    (item) => item.url !== "/admin" || userRole === "admin"
+  );
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
