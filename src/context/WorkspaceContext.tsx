@@ -324,6 +324,99 @@ const simulatedResponses: Record<string, { content: string; citations: string[] 
   },
 };
 
+const seedAdminCourses: AdminCourse[] = [
+  {
+    id: "1", title: "Foundations of Machine Learning",
+    description: "Core concepts in supervised and unsupervised learning, optimization, and neural network architectures.",
+    status: "published",
+    modules: [
+      { id: "m1", title: "Neural Network Basics", items: [
+        { id: "s1", title: "Perceptrons & MLPs", type: "lecture" },
+        { id: "s2", title: "Activation Functions", type: "reading" },
+        { id: "s3", title: "Backpropagation", type: "lecture" },
+      ]},
+      { id: "m2", title: "Optimization", items: [
+        { id: "s4", title: "Gradient Descent Variants", type: "lecture" },
+        { id: "s5", title: "Training Deep Networks", type: "reading" },
+      ]},
+    ],
+    assignedUsers: ["user-1", "user-2", "user-3"],
+    createdAt: "2 months ago", updatedAt: "2 hours ago",
+  },
+  {
+    id: "2", title: "Advanced Statistical Methods",
+    description: "Deep dive into Bayesian inference, hypothesis testing, and multivariate analysis techniques.",
+    status: "published",
+    modules: [
+      { id: "m3", title: "Bayesian Inference", items: [
+        { id: "s6", title: "Introduction to Bayesian Methods", type: "reading" },
+        { id: "s7", title: "Prior Selection", type: "lecture" },
+      ]},
+    ],
+    assignedUsers: ["user-1", "user-4"],
+    createdAt: "3 months ago", updatedAt: "Yesterday",
+  },
+  {
+    id: "3", title: "Philosophy of Mind",
+    description: "Exploring consciousness, intentionality, and the relationship between mind and brain.",
+    status: "published",
+    modules: [
+      { id: "m4", title: "Consciousness", items: [
+        { id: "s8", title: "The Conscious Mind, Ch. 1", type: "reading" },
+        { id: "s9", title: "Hard Problem of Consciousness", type: "lecture" },
+      ]},
+    ],
+    assignedUsers: ["user-1", "user-2"],
+    createdAt: "3 months ago", updatedAt: "3 days ago",
+  },
+  {
+    id: "4", title: "Linear Algebra for Data Science",
+    description: "Matrix operations, eigenvalues, SVD, and applications in dimensionality reduction.",
+    status: "published",
+    modules: [
+      { id: "m5", title: "Matrix Fundamentals", items: [
+        { id: "s10", title: "Matrix Operations", type: "lecture" },
+        { id: "s11", title: "Eigenvalues & Eigenvectors", type: "reading" },
+      ]},
+    ],
+    assignedUsers: ["user-2", "user-3", "user-5"],
+    createdAt: "4 months ago", updatedAt: "2 weeks ago",
+  },
+  {
+    id: "5", title: "Cognitive Psychology",
+    description: "Memory, attention, perception, and decision-making from a cognitive science perspective.",
+    status: "published",
+    modules: [
+      { id: "m6", title: "Attention & Memory", items: [
+        { id: "s12", title: "Working Memory Models", type: "lecture" },
+      ]},
+    ],
+    assignedUsers: ["user-1", "user-4", "user-5"],
+    createdAt: "2 months ago", updatedAt: "1 week ago",
+  },
+  {
+    id: "6", title: "Research Methods in Social Science",
+    description: "Qualitative and quantitative methodologies, experimental design, and ethical considerations.",
+    status: "published",
+    modules: [
+      { id: "m7", title: "Research Design", items: [
+        { id: "s13", title: "Experimental Methods", type: "lecture" },
+        { id: "s14", title: "Qualitative Approaches", type: "reading" },
+      ]},
+    ],
+    assignedUsers: ["user-3", "user-4"],
+    createdAt: "5 months ago", updatedAt: "1 month ago",
+  },
+];
+
+export const mockUsers = [
+  { id: "user-1", name: "Alex Rivera", email: "alex@university.edu" },
+  { id: "user-2", name: "Jordan Chen", email: "jordan.chen@university.edu" },
+  { id: "user-3", name: "Priya Sharma", email: "priya.s@university.edu" },
+  { id: "user-4", name: "Marcus Johnson", email: "m.johnson@university.edu" },
+  { id: "user-5", name: "Yuki Tanaka", email: "yuki.t@university.edu" },
+];
+
 let idCounter = 100;
 const genId = () => `gen-${++idCounter}`;
 
