@@ -143,14 +143,25 @@ interface WorkspaceState {
 
 const WorkspaceContext = createContext<WorkspaceState | null>(null);
 
-const defaultProfile: UserProfile = {
-  name: "Alex",
+const learnerProfile: UserProfile = {
+  name: "Alex Chen",
   email: "alex@university.edu",
   bio: "Graduate student exploring the intersection of machine learning and cognitive science.",
   learningGoal: "Build deep understanding of neural network architectures and their theoretical foundations.",
   institution: "Stanford University",
   timezone: "America/Los_Angeles",
 };
+
+const adminProfile: UserProfile = {
+  name: "Dr. Sarah Mitchell",
+  email: "s.mitchell@university.edu",
+  bio: "Associate Professor of Computer Science. Course designer and curriculum lead for the ML department.",
+  learningGoal: "Develop engaging, research-informed course materials for graduate students.",
+  institution: "Stanford University",
+  timezone: "America/Los_Angeles",
+};
+
+const defaultProfile = learnerProfile;
 
 // Seed data
 const seedNotebookEntries: NotebookEntry[] = [
