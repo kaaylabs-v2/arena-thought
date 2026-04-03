@@ -17,7 +17,30 @@ import StudyPlan from "./pages/StudyPlan";
 import AdminStudio from "./pages/AdminStudio";
 import NotFound from "./pages/NotFound";
 
+// Admin Studio
+import { AdminLayout } from "@/admin/components/AdminLayout";
+import AdminDashboard from "@/admin/pages/AdminDashboard";
+import AdminCoursesPage from "@/admin/pages/AdminCourses";
+import AdminAccessDenied from "@/admin/pages/AdminAccessDenied";
+import {
+  AdminContentLibrary,
+  AdminMembers,
+  AdminDepartments,
+  AdminOutcomes,
+  AdminAnalytics,
+  AdminAnnouncements,
+  AdminSettings as AdminSettingsPage,
+  AdminHelp,
+} from "@/admin/pages/AdminStubPages";
+import { useAdminAuth } from "@/admin/hooks/useAdminAuth";
+
 const queryClient = new QueryClient();
+
+function AdminGuard() {
+  const { isAdmin } = useAdminAuth();
+  if (!isAdmin) return <AdminAccessDenied />;
+  return <AdminLayout />;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -27,6 +50,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            {/* Learner Arena */}
             <Route element={<Layout />}>
               <Route path="/" element={<Index />} />
               <Route path="/library" element={<Library />} />
@@ -37,8 +61,22 @@ const App = () => (
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/study-plan" element={<StudyPlan />} />
-              <Route path="/admin" element={<AdminStudio />} />
             </Route>
+
+            {/* Admin Studio — completely separate layout */}
+            <Route element={<AdminGuard />}>
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/courses" element={<AdminCoursesPage />} />
+              <Route path="/admin/library" element={<AdminContentLibrary />} />
+              <Route path="/admin/members" element={<AdminMembers />} />
+              <Route path="/admin/departments" element={<AdminDepartments />} />
+              <Route path="/admin/outcomes" element={<AdminOutcomes />} />
+              <Route path="/admin/analytics" element={<AdminAnalytics />} />
+              <Route path="/admin/announcements" element={<AdminAnnouncements />} />
+              <Route path="/admin/settings" element={<AdminSettingsPage />} />
+              <Route path="/admin/help" element={<AdminHelp />} />
+            </Route>
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
