@@ -21,10 +21,10 @@ import NotFound from "./pages/NotFound";
 import { AdminLayout } from "@/admin/components/AdminLayout";
 import AdminDashboard from "@/admin/pages/AdminDashboard";
 import AdminCoursesPage from "@/admin/pages/AdminCourses";
+import AdminMembersPage from "@/admin/pages/AdminMembers";
+import AdminContentLibraryPage from "@/admin/pages/AdminContentLibrary";
 import AdminAccessDenied from "@/admin/pages/AdminAccessDenied";
 import {
-  AdminContentLibrary,
-  AdminMembers,
   AdminDepartments,
   AdminOutcomes,
   AdminAnalytics,
@@ -67,8 +67,8 @@ const App = () => (
             <Route element={<AdminGuard />}>
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/courses" element={<AdminCoursesPage />} />
-              <Route path="/admin/library" element={<AdminContentLibrary />} />
-              <Route path="/admin/members" element={<AdminMembers />} />
+              <Route path="/admin/library" element={<AdminContentLibraryPage />} />
+              <Route path="/admin/members" element={<AdminMembersPage />} />
               <Route path="/admin/departments" element={<AdminDepartments />} />
               <Route path="/admin/outcomes" element={<AdminOutcomes />} />
               <Route path="/admin/analytics" element={<AdminAnalytics />} />
