@@ -333,6 +333,7 @@ function NexiPanel() {
 /* ─── Account ──────────────────────────────────────────── */
 
 function AccountPanel() {
+  const { userRole, setUserRole } = useWorkspace();
   const handleLogout = () => toast.success("Logged out", { description: "See you next time." });
 
   const handleCopyOrgId = () => {
