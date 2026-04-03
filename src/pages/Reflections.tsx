@@ -223,7 +223,7 @@ const Reflections = () => {
                 </span>
               ) : newReflection.length > 0 ? `${newReflection.length} chars` : "Enter to save · Shift+Enter for newline"}
             </span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={toggleVoice}
                 className={`flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200 active:scale-[0.95] ${
