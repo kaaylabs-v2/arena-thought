@@ -62,6 +62,7 @@ const statusBadgeCls = (s: MemberStatus) => {
 // ─── Component ──────────────────────────────────────────────
 
 export default function AdminMembersPage() {
+  const { studioDepartments: departments } = useWorkspace();
   const [membersList, setMembersList] = useState<Member[]>(seedMembers);
   const [tab, setTab] = useState<TabFilter>("all");
   const [search, setSearch] = useState("");
