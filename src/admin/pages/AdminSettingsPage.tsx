@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Settings, Building2, Palette, Globe, Bell, Shield } from "lucide-react";
+import { useState, useRef } from "react";
+import { Settings, Building2, Palette, Globe, Bell, Shield, Upload, X, Image } from "lucide-react";
 import { organization, currentAdmin } from "@/admin/data/mock-data";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,7 +14,37 @@ export default function AdminSettingsPage() {
   const [notifications, setNotifications] = useState({ email: true, inApp: true, weeklyDigest: false });
   const [twoFactor, setTwoFactor] = useState(false);
   const [sessionTimeout, setSessionTimeout] = useState(60);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoName, setLogoName] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const handleSave = () => toast.success("Settings saved");
+
+  const handleLogoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("File too large", { description: "Maximum size is 2 MB" });
+      return;
+    }
+    if (!["image/png", "image/svg+xml", "image/jpeg", "image/webp"].includes(file.type)) {
+      toast.error("Invalid format", { description: "Use PNG, SVG, JPEG, or WebP" });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setLogoPreview(reader.result as string);
+      setLogoName(file.name);
+      toast.success("Logo uploaded", { description: file.name });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeLogo = () => {
+    setLogoPreview(null);
+    setLogoName(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    toast.success("Logo removed");
+  };
 
   return (
     <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
@@ -55,13 +85,39 @@ export default function AdminSettingsPage() {
             </div>
             <div>
               <Label className="text-xs">Logo</Label>
-              <div
-                onClick={() => toast("Coming in next phase", { description: "Logo upload" })}
-                className="mt-1 border-2 border-dashed rounded-xl p-8 text-center border-border transition-all duration-250 hover:bg-accent/5 hover:border-accent/30 cursor-pointer active:scale-[0.99]"
-              >
-                <p className="text-sm text-muted-foreground">Drag and drop your logo here, or click to browse</p>
-                <p className="text-xs mt-1 text-muted-foreground/60">PNG, SVG — max 2 MB</p>
-              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png,image/svg+xml,image/jpeg,image/webp"
+                onChange={handleLogoSelect}
+                className="hidden"
+              />
+              {logoPreview ? (
+                <div className="mt-1 border rounded-xl p-4 border-border">
+                  <div className="flex items-center gap-4">
+                    <div className="h-16 w-16 rounded-lg border border-border overflow-hidden flex items-center justify-center bg-muted/30">
+                      <img src={logoPreview} alt="Logo preview" className="max-h-full max-w-full object-contain" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[13px] font-medium text-foreground/80 truncate">{logoName}</p>
+                      <p className="text-[11px] text-muted-foreground">Logo uploaded successfully</p>
+                      <div className="flex gap-2 mt-2">
+                        <button onClick={() => fileInputRef.current?.click()} className="text-[12px] font-medium text-accent hover:text-accent/80 transition-colors duration-150">Replace</button>
+                        <button onClick={removeLogo} className="text-[12px] font-medium text-destructive hover:text-destructive/80 transition-colors duration-150">Remove</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="mt-1 border-2 border-dashed rounded-xl p-8 text-center border-border transition-all duration-250 hover:bg-accent/5 hover:border-accent/30 cursor-pointer active:scale-[0.99]"
+                >
+                  <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground/40" strokeWidth={1.5} />
+                  <p className="text-sm text-muted-foreground">Click to upload your logo</p>
+                  <p className="text-xs mt-1 text-muted-foreground/60">PNG, SVG, JPEG, WebP — max 2 MB</p>
+                </div>
+              )}
             </div>
             <Button onClick={handleSave} className="btn-apple bg-accent text-accent-foreground hover:bg-accent/90">Save Changes</Button>
           </div>

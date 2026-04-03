@@ -202,7 +202,17 @@ export default function AdminContentLibraryPage() {
               </div>
             </div>
             <div className="px-6 py-4 border-t border-border">
-              <button onClick={() => toast("Coming in next phase", { description: "View in Course" })} className="flex items-center gap-2 text-[13px] font-medium text-accent transition-colors duration-200 hover:text-accent/80">View in Course <ExternalLink className="h-3.5 w-3.5" /></button>
+              <button
+                onClick={() => {
+                  setPreviewFile(null);
+                  const coursePath = `/admin/courses`;
+                  window.location.hash = "";
+                  toast.success(`Navigating to ${previewFile.linkedCourse}`, { description: "Opening course view" });
+                }}
+                className="flex items-center gap-2 text-[13px] font-medium text-accent transition-colors duration-200 hover:text-accent/80"
+              >
+                View in Course <ExternalLink className="h-3.5 w-3.5" />
+              </button>
             </div>
           </div>
         </>
