@@ -373,22 +373,11 @@ const Workspace = () => {
           style={{ transition: "flex 280ms cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           {!notebookCollapsed && (
-            <div className="h-full relative">
-              {notebookAtMin && (
-                <button
-                  onClick={collapseNotebook}
-                  className="absolute top-2 left-2 z-10 h-6 w-6 flex items-center justify-center rounded-md bg-secondary/80 hover:bg-secondary text-muted-foreground hover:text-foreground transition-all duration-150"
-                  title="Collapse notebook"
-                >
-                  <ChevronRight className="h-3 w-3" strokeWidth={2} />
-                </button>
-              )}
               <NotebookPane
                 state={notebookState}
                 onToggle={() => setNotebookState((s) => (s === "expanded" ? "mini" : "expanded"))}
                 courseTitle={course.title}
               />
-            </div>
           )}
         </ResizablePanel>
       </ResizablePanelGroup>
