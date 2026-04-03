@@ -373,7 +373,7 @@ function AccountPanel() {
             </div>
           }
         />
-        <SettingRow label="Organization name" description="Managed by your school, company, or institution" action={<span className="text-[13px] font-sans text-foreground">Personal</span>} />
+        <SettingRow label="Organization name" description="Managed by your school, company, or institution" action={<span className="text-[13px] font-sans text-foreground">{studioOrganization.name}</span>} />
       </div>
 
       {/* Role (demo) */}
