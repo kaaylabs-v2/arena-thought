@@ -38,7 +38,6 @@ const mainNav = [
   { title: "Notebook", url: "/notebook", icon: BookOpen },
   { title: "Progress", url: "/progress", icon: BarChart3 },
   { title: "Reflections", url: "/reflections", icon: Sparkles },
-  { title: "Admin Studio", url: "/admin", icon: Shield },
 ];
 
 export function AppSidebar() {
