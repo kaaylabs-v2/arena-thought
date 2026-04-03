@@ -161,7 +161,7 @@ const Reflections = () => {
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl mx-auto">
       {/* Header */}
-      <div ref={headerReveal.ref} className={headerReveal.isVisible ? "mb-10 animate-fade-in" : "mb-10 opacity-0"}>
+      <div ref={headerReveal.ref} className={headerReveal.isVisible ? "mb-8 animate-fade-in" : "mb-8 opacity-0"}>
         <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1]">Reflections</h1>
         <div className="flex items-center gap-2 mt-2">
           <Lock className="h-3 w-3 text-muted-foreground/50" strokeWidth={1.5} />
@@ -221,9 +221,9 @@ const Reflections = () => {
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                   Listening...
                 </span>
-              ) : newReflection.length > 0 ? `${newReflection.length} chars` : "Enter to save · Shift+Enter for newline"}
+              ) : newReflection.length > 0 ? `${newReflection.length} chars` : <span className="hidden sm:inline">Enter to save · Shift+Enter for newline</span>}
             </span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={toggleVoice}
                 className={`flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200 active:scale-[0.95] ${

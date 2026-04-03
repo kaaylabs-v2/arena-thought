@@ -39,7 +39,7 @@ const Progress = () => {
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-4xl mx-auto">
       {/* Header */}
-      <div ref={headerReveal.ref} className={headerReveal.isVisible ? "mb-10 animate-fade-in" : "mb-10 opacity-0"}>
+      <div ref={headerReveal.ref} className={headerReveal.isVisible ? "mb-8 animate-fade-in" : "mb-8 opacity-0"}>
         <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.15] font-medium">Progress</h1>
         <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Your learning journey at a glance.</p>
       </div>

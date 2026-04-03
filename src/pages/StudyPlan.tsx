@@ -82,7 +82,7 @@ const StudyPlan = () => {
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl mx-auto">
       {/* Header */}
-      <div className="flex items-start justify-between mb-10 animate-fade-in">
+      <div className="flex items-start justify-between mb-8 animate-fade-in">
         <div>
           <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1] font-medium">Study Plan</h1>
           <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">
@@ -277,7 +277,7 @@ function TaskRow({ task, onToggle, onDelete, delay }: { task: StudyTask; onToggl
 
   return (
     <div
-      className={`group flex items-start gap-3 card-interactive px-4 py-3.5 animate-fade-in [animation-fill-mode:backwards] ${
+      className={`group flex items-start gap-3 card-interactive pl-5 pr-4 py-3.5 animate-fade-in [animation-fill-mode:backwards] ${
         task.completed ? "!border-border/50 opacity-60 hover:!shadow-none hover:!translate-y-0" : ""
       }`}
       style={{ animationDelay: `${delay}ms` }}
