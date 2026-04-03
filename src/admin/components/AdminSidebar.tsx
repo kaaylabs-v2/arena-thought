@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   GraduationCap,
@@ -9,11 +8,6 @@ import {
   ChevronsRight,
   Moon,
   Sun,
-  ChevronsLeft,
-  ChevronsRight,
-  Moon,
-  Sun,
-  ArrowLeft,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/components/ThemeProvider";
