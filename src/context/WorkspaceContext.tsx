@@ -557,6 +557,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   return (
     <WorkspaceContext.Provider
       value={{
+        userRole,
+        setUserRole,
         notebookEntries,
         addNotebookEntry,
         updateNotebookEntry,
