@@ -274,7 +274,7 @@ const Workspace = () => {
           collapsedSize={0}
           order={1}
           onResize={handleSourcesResize}
-          className="border-r border-border/[0.06] dark:border-white/[0.06] bg-card"
+          className="border-r border-border bg-card"
           style={{ transition: "flex 280ms cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           {!sourcesCollapsed && (
