@@ -369,7 +369,7 @@ const Workspace = () => {
           collapsedSize={0}
           order={3}
           onResize={handleNotebookResize}
-          className="border-l border-border/[0.06] dark:border-white/[0.06] bg-card"
+          className="border-l border-border bg-card"
           style={{ transition: "flex 280ms cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           {!notebookCollapsed && (
