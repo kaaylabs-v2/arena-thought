@@ -79,6 +79,12 @@ export default function AdminMembersPage() {
   const [bulkFile, setBulkFile] = useState<string | null>(null);
   const emailRef = useRef<HTMLInputElement>(null);
 
+  // Listen for keyboard shortcut
+  useEffect(() => {
+    const handler = () => setInviteOpen(true);
+    window.addEventListener("admin-shortcut:invite", handler);
+    return () => window.removeEventListener("admin-shortcut:invite", handler);
+  }, []);
   const tabs: { value: TabFilter; label: string; count: number }[] = [
     { value: "all", label: "All", count: membersList.length },
     { value: "learners", label: "Learners", count: membersList.filter(m => m.role === "learner").length },
