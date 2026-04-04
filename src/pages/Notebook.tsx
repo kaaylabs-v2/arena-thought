@@ -550,9 +550,17 @@ const Notebook = () => {
                 <h3 className="text-[13px] font-sans font-medium text-foreground">{newVocab ? "New Term" : "Edit Term"}</h3>
                 <div className="flex items-center gap-2">
                   {editingVocab && (
-                    <button onClick={() => handleDeleteVocab(editingVocab.id)} className="h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/70 hover:text-destructive hover:bg-destructive/5 transition-all duration-200">
-                      <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
-                    </button>
+                    vocabDeleteConfirm === editingVocab.id ? (
+                      <div className="flex items-center gap-1.5 animate-fade-in">
+                        <span className="text-[11px] font-sans text-destructive">Delete?</span>
+                        <button onClick={() => handleDeleteVocab(editingVocab.id)} className="px-2 py-0.5 rounded-md bg-destructive text-destructive-foreground text-[10px] font-sans font-medium hover:bg-destructive/90 transition-colors active:scale-[0.97]">Yes</button>
+                        <button onClick={() => setVocabDeleteConfirm(null)} className="px-2 py-0.5 rounded-md border border-border text-[10px] font-sans text-muted-foreground hover:text-foreground transition-colors active:scale-[0.97]">No</button>
+                      </div>
+                    ) : (
+                      <button onClick={() => setVocabDeleteConfirm(editingVocab.id)} className="h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/70 hover:text-destructive hover:bg-destructive/5 transition-all duration-200">
+                        <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+                      </button>
+                    )
                   )}
                   <button onClick={() => { setNewVocab(false); setEditingVocab(null); }} className="text-[11px] font-sans text-muted-foreground hover:text-foreground transition-colors">Cancel</button>
                   <button onClick={handleSaveVocab} className="px-3 py-1 rounded-md bg-primary text-primary-foreground text-[11px] font-sans font-medium hover:bg-primary/90 transition-colors active:scale-[0.97]">Save</button>
