@@ -453,7 +453,7 @@ const Notebook = () => {
                     {note.tags.length > 0 && (
                       <div className="flex gap-1.5 ml-auto">
                         {note.tags.map((tag) => (
-                          <span key={tag} className="text-[10px] font-sans text-accent/70 bg-accent/8 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                          <span key={tag} className="text-[10px] font-sans text-accent/85 bg-accent/8 px-2 py-0.5 rounded-full flex items-center gap-0.5">
                             <Tag className="h-2.5 w-2.5" strokeWidth={1.5} />
                             {tag}
                           </span>
@@ -498,7 +498,7 @@ const Notebook = () => {
                     <p className="text-[12px] text-muted-foreground/75 font-sans leading-[1.7] mb-3 tracking-[-0.01em]">{note.snippet}</p>
                     <div className="flex items-center gap-2 flex-wrap">
                       {note.tags.map((tag) => (
-                        <span key={tag} className="text-[10px] font-sans text-accent/70 bg-accent/8 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                        <span key={tag} className="text-[10px] font-sans text-accent/85 bg-accent/8 px-2 py-0.5 rounded-full flex items-center gap-0.5">
                           <Tag className="h-2.5 w-2.5" strokeWidth={1.5} />
                           {tag}
                         </span>
@@ -608,7 +608,7 @@ const Notebook = () => {
                     </div>
                     <p className="text-[13px] font-sans text-muted-foreground/80 leading-relaxed mb-2">{v.definition}</p>
                     {v.example && (
-                      <p className="text-[12px] font-sans text-accent/70 bg-accent/5 rounded-lg px-3 py-2 leading-relaxed italic mb-2">
+                      <p className="text-[12px] font-sans text-accent/85 bg-accent/5 rounded-lg px-3 py-2 leading-relaxed italic mb-2">
                         "{v.example}"
                       </p>
                     )}
@@ -620,7 +620,7 @@ const Notebook = () => {
                       {v.tags.length > 0 && (
                         <div className="flex gap-1.5 ml-auto">
                           {v.tags.map((tag) => (
-                            <span key={tag} className="text-[10px] font-sans text-accent/70 bg-accent/8 px-2 py-0.5 rounded-full">
+                            <span key={tag} className="text-[10px] font-sans text-accent/85 bg-accent/8 px-2 py-0.5 rounded-full">
                               {tag}
                             </span>
                           ))}

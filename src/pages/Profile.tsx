@@ -96,7 +96,7 @@ const Profile = () => {
                   <Target className="h-3 w-3 text-muted-foreground/70" strokeWidth={1.5} />
                   <p className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest">Learning goal</p>
                 </div>
-                <p className="text-[13px] font-sans text-foreground/85 leading-relaxed">{userProfile.learningGoal}</p>
+                <p className="text-[13px] font-sans text-foreground leading-relaxed">{userProfile.learningGoal}</p>
               </div>
             </div>
           </section>
