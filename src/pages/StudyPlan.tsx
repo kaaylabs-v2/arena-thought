@@ -273,10 +273,20 @@ const StudyPlan = () => {
         ) : (
           <div className="space-y-2">
             {sortedActive.map((task, i) => (
-              <TaskRow
+                <TaskRow
                 key={task.id}
                 task={task}
-                onToggle={toggleTask}
+                onToggle={(id) => {
+                  const t = tasks.find((t) => t.id === id);
+                  if (t && !t.completed) {
+                    toggleTask(id);
+                    toast("Task completed", {
+                      action: { label: "Undo", onClick: () => toggleTask(id) },
+                    });
+                  } else {
+                    toggleTask(id);
+                  }
+                }}
                 onDelete={deleteTask}
                 delay={100 + i * 50}
                 isDragOver={dragOverId === task.id}

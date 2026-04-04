@@ -120,6 +120,11 @@ export function AppSidebar() {
                           {unreadCount}
                         </span>
                       )}
+                      {item.title === "Notebook" && notebookCount > 0 && (
+                        <span className="ml-auto flex h-4 min-w-[16px] items-center justify-center rounded-full bg-muted-foreground/20 text-[10px] font-sans font-medium text-muted-foreground px-1">
+                          {notebookCount}
+                        </span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
