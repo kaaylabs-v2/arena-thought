@@ -224,7 +224,7 @@ export default function AdminAnalyticsPage() {
         </div>
 
         <div className="card-interactive p-5">
-          <h3 className="font-serif text-base mb-4 text-foreground/75">Course Completions</h3>
+          <h3 className="font-serif text-base mb-4 text-foreground/80">Course Completions</h3>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={completionDataByRange[timeRange]}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
