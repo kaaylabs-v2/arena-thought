@@ -1,13 +1,21 @@
 import { ArrowRight, BookOpen, Clock, Library, TrendingUp, Target, AlertCircle, Flame, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
+import { useWorkspace } from "@/context/WorkspaceContext";
 
-const courseProgress = [
-  { id: "1", title: "Foundations of Machine Learning", progress: 68, lastStudied: "2 hours ago", timeSpent: "24h 15m", timeMinutes: 1455, modules: 12, completed: 8, nextTopic: "Backpropagation practice", needsAttention: false },
-  { id: "2", title: "Advanced Statistical Methods", progress: 42, lastStudied: "Yesterday", timeSpent: "16h 30m", timeMinutes: 990, modules: 10, completed: 4, nextTopic: "Prior selection strategies", needsAttention: true },
-  { id: "3", title: "Philosophy of Mind", progress: 85, lastStudied: "3 days ago", timeSpent: "18h 45m", timeMinutes: 1125, modules: 14, completed: 12, nextTopic: "Qualia and zombie arguments", needsAttention: false },
-  { id: "5", title: "Cognitive Psychology", progress: 23, lastStudied: "1 week ago", timeSpent: "8h 20m", timeMinutes: 500, modules: 16, completed: 4, nextTopic: "Working memory models", needsAttention: true },
+// Simple deterministic hash
+function seedHash(str: string, salt: number = 0): number {
+  let h = salt;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+  return (((h >>> 0) % 1000) / 1000);
+}
+
+const lastStudiedOptions = ["2 hours ago", "Yesterday", "3 days ago", "5 days ago", "1 week ago"];
+const nextTopics = [
+  "Backpropagation practice", "Prior selection strategies", "Qualia and zombie arguments",
+  "Eigenvalue decomposition", "Working memory models", "Experimental design critique",
+  "Gradient checking", "Data normalization",
 ];
 
 // Simulated weekly activity (last 7 days, hours studied)
@@ -25,6 +33,32 @@ const streakDays = 5;
 const maxHours = Math.max(...weeklyActivity.map((d) => d.hours));
 
 const Progress = () => {
+  const { adminCourses } = useWorkspace();
+
+  const courseProgress = useMemo(() => {
+    return adminCourses
+      .filter((c) => c.status === "published")
+      .map((c) => {
+        const progress = Math.floor(seedHash(c.id, 2) * 70 + 15);
+        const timeMinutes = Math.floor(seedHash(c.id, 10) * 1400 + 200);
+        const totalModules = Math.floor(seedHash(c.id, 11) * 12 + 4);
+        const completedModules = Math.floor(totalModules * (progress / 100));
+        const needsAttention = seedHash(c.id, 12) > 0.6;
+        return {
+          id: c.id,
+          title: c.title,
+          progress,
+          lastStudied: lastStudiedOptions[Math.floor(seedHash(c.id, 1) * lastStudiedOptions.length)],
+          timeSpent: `${Math.floor(timeMinutes / 60)}h ${timeMinutes % 60}m`,
+          timeMinutes,
+          modules: totalModules,
+          completed: completedModules,
+          nextTopic: nextTopics[Math.floor(seedHash(c.id, 13) * nextTopics.length)],
+          needsAttention,
+        };
+      });
+  }, [adminCourses]);
+
   const activeCourses = courseProgress.filter((c) => c.progress < 100).length;
   const totalMinutes = courseProgress.reduce((s, c) => s + c.timeMinutes, 0);
   const totalHours = Math.floor(totalMinutes / 60);
@@ -163,7 +197,7 @@ function EmptyState() {
   );
 }
 
-function CourseCard({ course, index }: { course: typeof courseProgress[number]; index: number }) {
+function CourseCard({ course, index }: { course: { id: string; title: string; progress: number; lastStudied: string; timeSpent: string; modules: number; completed: number; nextTopic: string; needsAttention: boolean }; index: number }) {
   const reveal = useScrollReveal<HTMLAnchorElement>();
   const props = revealProps(reveal.isVisible, 60 + index * 70);
 

@@ -1,12 +1,30 @@
 import { User, BookOpen, StickyNote, Clock, Shield, Mail, MapPin, GraduationCap, Target, Pen } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
+// Same deterministic hash used in Progress/Index
+function seedHash(str: string, salt: number = 0): number {
+  let h = salt;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+  return (((h >>> 0) % 1000) / 1000);
+}
+
 const Profile = () => {
-  const { userProfile, updateUserProfile, notebookEntries, reflections } = useWorkspace();
+  const { userProfile, updateUserProfile, notebookEntries, reflections, adminCourses } = useWorkspace();
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState(userProfile);
+
+  const publishedCourses = useMemo(() => adminCourses.filter((c) => c.status === "published"), [adminCourses]);
+
+  const totalStudyTime = useMemo(() => {
+    const totalMinutes = publishedCourses.reduce((s, c) => {
+      return s + Math.floor(seedHash(c.id, 10) * 1400 + 200);
+    }, 0);
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    return `${h}h ${m}m`;
+  }, [publishedCourses]);
 
   const handleSave = () => {
     updateUserProfile(editForm);
@@ -107,8 +125,8 @@ const Profile = () => {
       <section className="mb-10 animate-fade-in [animation-delay:200ms] [animation-fill-mode:backwards]">
         <h2 className="text-[11px] font-sans uppercase tracking-widest text-muted-foreground mb-4">Learning summary</h2>
         <div className="grid grid-cols-2 gap-3">
-          <StatCard icon={BookOpen} label="Active courses" value="3" />
-          <StatCard icon={Clock} label="Total study time" value="67h 50m" />
+          <StatCard icon={BookOpen} label="Active courses" value={String(publishedCourses.length)} />
+          <StatCard icon={Clock} label="Total study time" value={totalStudyTime} />
           <StatCard icon={StickyNote} label="Notes captured" value={String(notebookEntries.length)} />
           <StatCard icon={Shield} label="Reflections" value={String(reflections.length)} />
         </div>

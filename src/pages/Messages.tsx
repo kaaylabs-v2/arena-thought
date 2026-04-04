@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MessageSquare, Send, ArrowLeft, Circle } from "lucide-react";
+import { MessageSquare, Send, ArrowLeft, Circle, Mail } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
@@ -62,9 +62,16 @@ const Messages = () => {
       </div>
 
       {threadKeys.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-          <MessageSquare className="h-12 w-12 mb-4 opacity-30" />
-          <p className="text-sm">No messages yet</p>
+        <div className="flex flex-col items-center justify-center py-24">
+          <div className="rounded-2xl border-2 border-dashed border-border p-8 flex flex-col items-center max-w-sm">
+            <div className="h-14 w-14 rounded-xl bg-muted/50 flex items-center justify-center mb-4">
+              <Mail className="h-7 w-7 text-muted-foreground/40" strokeWidth={1.5} />
+            </div>
+            <h3 className="font-serif text-lg text-foreground font-medium mb-1.5">No conversations yet</h3>
+            <p className="text-[13px] font-sans text-muted-foreground/70 text-center leading-relaxed">
+              When your instructor sends you a message, it will appear here. You'll also be able to reply directly.
+            </p>
+          </div>
         </div>
       ) : (
         <div
