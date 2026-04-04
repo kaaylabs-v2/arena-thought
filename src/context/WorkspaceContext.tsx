@@ -131,6 +131,7 @@ interface WorkspaceState {
   updateTask: (id: string, updates: Partial<StudyTask>) => void;
   deleteTask: (id: string) => void;
   toggleTask: (id: string) => void;
+  reorderTasks: (orderedIds: string[]) => void;
   // Learner-side course data (with modules)
   adminCourses: AdminCourse[];
   addAdminCourse: (course: Omit<AdminCourse, "id" | "createdAt" | "updatedAt">) => void;
