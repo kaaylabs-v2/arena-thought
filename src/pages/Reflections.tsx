@@ -152,8 +152,14 @@ const Reflections = () => {
 
   const handleDelete = (id: string) => {
     deleteReflection(id);
-    toast.success("Reflection removed");
   };
+
+  // Listen for keyboard shortcut
+  useEffect(() => {
+    const handler = () => textareaRef.current?.focus();
+    window.addEventListener("shortcut:start-reflection", handler);
+    return () => window.removeEventListener("shortcut:start-reflection", handler);
+  }, []);
 
   const groups = groupByDate(reflections);
   let globalDelay = 0;
