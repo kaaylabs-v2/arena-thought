@@ -158,7 +158,7 @@ export default function AdminHelpPage() {
         <div className="h-12 w-12 rounded-xl flex items-center justify-center mx-auto mb-3 bg-accent/10">
           <HelpCircle className="h-5 w-5 text-accent" />
         </div>
-        <h3 className="font-serif text-base mb-1 text-foreground/75">Still need help?</h3>
+        <h3 className="font-serif text-base mb-1 text-foreground">Still need help?</h3>
         <p className="text-sm mb-4 text-muted-foreground">Our support team typically responds within 24 hours</p>
         <a href="mailto:support@nexus-squared.com" className="btn-apple inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-accent text-accent-foreground hover:bg-accent/90">
           <Mail className="h-4 w-4" /> Contact Support

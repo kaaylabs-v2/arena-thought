@@ -110,7 +110,7 @@ export default function AdminDashboard() {
                 >
                   <action.icon className="h-4 w-4 text-muted-foreground group-hover:text-accent transition-colors duration-200" strokeWidth={1.5} />
                   <span className="flex-1">{action.label}</span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:translate-x-0.5 transition-transform duration-200" />
+                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:translate-x-0.5 transition-transform duration-200" />
                 </Link>
               ))}
             </div>

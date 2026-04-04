@@ -90,7 +90,7 @@ export default function AdminContentLibraryPage() {
       {filtered.length === 0 ? (
         <div className="text-center py-20 card-interactive">
           <div className="h-12 w-12 rounded-xl flex items-center justify-center mx-auto mb-3 bg-accent/10"><FileText className="h-5 w-5 text-accent" /></div>
-          <p className="text-sm font-medium mb-1 text-foreground/60">No files found</p>
+          <p className="text-sm font-medium mb-1 text-foreground/75">No files found</p>
           <p className="text-xs mb-4 text-muted-foreground">Try adjusting your filters or search</p>
           <button onClick={() => { setSearch(""); setTypeFilter("all"); setCourseFilter("all"); }} className="btn-apple px-4 py-2 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">Clear Filters</button>
         </div>

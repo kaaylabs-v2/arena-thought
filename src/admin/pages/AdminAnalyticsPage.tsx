@@ -285,7 +285,7 @@ export default function AdminAnalyticsPage() {
       {/* Course Performance Table */}
       <div className="card-interactive p-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-serif text-base text-foreground/75">Course Performance</h3>
+          <h3 className="font-serif text-base text-foreground/80">Course Performance</h3>
           <span className="text-[11px] text-muted-foreground">
             {filteredCourses.length} course{filteredCourses.length !== 1 && "s"}
             {deptFilter !== "all" && ` in ${deptFilter}`}

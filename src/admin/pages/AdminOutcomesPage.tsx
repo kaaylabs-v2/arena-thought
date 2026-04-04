@@ -53,7 +53,7 @@ export default function AdminOutcomesPage() {
         ))}
       </div>
 
-      <h2 className="font-serif text-lg mb-4 text-foreground/75">Identified Knowledge Gaps</h2>
+      <h2 className="font-serif text-base mb-4 text-foreground/80">Identified Knowledge Gaps</h2>
       <div className="card-interactive p-5">
         <div className="space-y-3">
           {knowledgeGaps.map((gap, i) => (

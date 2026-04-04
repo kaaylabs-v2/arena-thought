@@ -215,10 +215,10 @@ export default function AdminCoursesPage() {
                     </span>
                   </td>
                   <td className="px-5 py-3.5 hidden lg:table-cell">
-                    <span className="text-[13px] text-foreground/60">{course.enrolledCount}</span>
+                    <span className="text-[13px] text-foreground">{course.enrolledCount}</span>
                   </td>
                   <td className="px-5 py-3.5 hidden lg:table-cell">
-                    <span className="text-[13px] text-foreground/60">{course.masteryRate}%</span>
+                    <span className="text-[13px] text-foreground">{course.masteryRate}%</span>
                   </td>
                   <td className="px-5 py-3.5 hidden xl:table-cell">
                     <span className="text-[12px] text-muted-foreground/60">{course.dateDeployed}</span>
