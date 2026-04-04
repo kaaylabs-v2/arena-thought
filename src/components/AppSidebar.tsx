@@ -102,7 +102,7 @@ export function AppSidebar() {
                       activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                     >
                       <item.icon strokeWidth={1.5} />
-                      <span className="text-[13px] font-sans">{item.title}</span>
+                      <span className="text-sm font-sans">{item.title}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
