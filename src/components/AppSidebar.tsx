@@ -102,7 +102,7 @@ export function AppSidebar() {
                       activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                     >
                       <item.icon strokeWidth={1.5} />
-                      <span className="text-[13px] font-sans">{item.title}</span>
+                      <span className="text-sm font-sans">{item.title}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -127,7 +127,7 @@ export function AppSidebar() {
               ) : (
                 <Sun strokeWidth={1.5} />
               )}
-              <span className="text-[13px] font-sans">{theme === "light" ? "Dark mode" : "Light mode"}</span>
+              <span className="text-sm font-sans">{theme === "light" ? "Dark mode" : "Light mode"}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -135,7 +135,7 @@ export function AppSidebar() {
           <button
             onClick={() => navigate("/admin")}
             className={cn(
-              "flex items-center gap-2 w-full text-[12px] font-sans transition-colors duration-150",
+              "flex items-center gap-2 w-full text-[13px] font-sans transition-colors duration-150",
               collapsed ? "justify-center py-1.5" : "px-3 py-1.5"
             )}
             style={{ color: "rgba(255,255,255,0.35)" }}
