@@ -14,12 +14,7 @@ const priorityConfig: Record<TaskPriority, { label: string; color: string; dot: 
   low: { label: "Low", color: "text-muted-foreground", dot: "bg-muted-foreground/40" },
 };
 
-const courseOptions = [
-  "",
-  "Foundations of Machine Learning",
-  "Advanced Statistical Methods",
-  "Philosophy of Mind",
-];
+// courseOptions derived from context below
 
 const syncPlatforms = [
   { id: "google-cal", name: "Google Calendar", logo: <GoogleCalendarLogo className="h-4 w-4" />, connected: false },
@@ -27,7 +22,11 @@ const syncPlatforms = [
 ];
 
 const StudyPlan = () => {
-  const { tasks, addTask, toggleTask, deleteTask, reorderTasks } = useWorkspace();
+  const { tasks, addTask, toggleTask, deleteTask, reorderTasks, adminCourses } = useWorkspace();
+
+  const courseOptions = useMemo(() => {
+    return ["", ...adminCourses.filter((c) => c.status === "published").map((c) => c.title)];
+  }, [adminCourses]);
 
   const [showAdd, setShowAdd] = useState(false);
   const [newTitle, setNewTitle] = useState("");
@@ -274,10 +273,20 @@ const StudyPlan = () => {
         ) : (
           <div className="space-y-2">
             {sortedActive.map((task, i) => (
-              <TaskRow
+                <TaskRow
                 key={task.id}
                 task={task}
-                onToggle={toggleTask}
+                onToggle={(id) => {
+                  const t = tasks.find((t) => t.id === id);
+                  if (t && !t.completed) {
+                    toggleTask(id);
+                    toast("Task completed", {
+                      action: { label: "Undo", onClick: () => toggleTask(id) },
+                    });
+                  } else {
+                    toggleTask(id);
+                  }
+                }}
                 onDelete={deleteTask}
                 delay={100 + i * 50}
                 isDragOver={dragOverId === task.id}

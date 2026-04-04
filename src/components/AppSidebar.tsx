@@ -49,7 +49,7 @@ export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const { userRole, directMessages } = useWorkspace();
+  const { userRole, directMessages, notebookEntries, vocabulary } = useWorkspace();
 
   // Compute unread messages for learner (admin messages to user-1 that are unread)
   const unreadCount = useMemo(() => {
@@ -57,6 +57,8 @@ export function AppSidebar() {
       (m) => m.fromRole === "admin" && m.toUserId === "user-1" && !m.read
     ).length;
   }, [directMessages]);
+
+  const notebookCount = useMemo(() => notebookEntries.length + vocabulary.length, [notebookEntries, vocabulary]);
 
   const filteredNav = mainNav;
 
@@ -116,6 +118,11 @@ export function AppSidebar() {
                       {item.title === "Messages" && unreadCount > 0 && (
                         <span className="ml-auto flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent text-[10px] font-sans font-medium text-accent-foreground px-1">
                           {unreadCount}
+                        </span>
+                      )}
+                      {item.title === "Notebook" && notebookCount > 0 && (
+                        <span className="ml-auto flex h-4 min-w-[16px] items-center justify-center rounded-full bg-muted-foreground/20 text-[10px] font-sans font-medium text-muted-foreground px-1">
+                          {notebookCount}
                         </span>
                       )}
                     </NavLink>

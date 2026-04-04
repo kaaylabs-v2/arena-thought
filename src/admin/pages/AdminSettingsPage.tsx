@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Settings, Building2, Palette, Globe, Bell, Shield, Upload, X, Image } from "lucide-react";
+import { Settings, Building2, Palette, Globe, Bell, Shield, Upload, X, Image, User } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,9 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { roleBadgeLabel } from "@/admin/data/mock-data";
 
 export default function AdminSettingsPage() {
-  const { studioOrganization: organization, studioCurrentAdmin: currentAdmin } = useWorkspace();
+  const { studioOrganization: organization, studioCurrentAdmin: currentAdmin, setStudioOrganization } = useWorkspace();
   const [org, setOrg] = useState(organization);
   const [notifications, setNotifications] = useState({ email: true, inApp: true, weeklyDigest: false });
   const [twoFactor, setTwoFactor] = useState(false);
@@ -18,7 +19,15 @@ export default function AdminSettingsPage() {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [logoName, setLogoName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const handleSave = () => toast.success("Settings saved");
+
+  // Admin profile edit state
+  const [adminName, setAdminName] = useState(currentAdmin.name);
+  const [adminEmail, setAdminEmail] = useState(currentAdmin.email);
+
+  const handleSave = () => {
+    setStudioOrganization(org);
+    toast.success("Settings saved");
+  };
 
   const handleLogoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -58,6 +67,7 @@ export default function AdminSettingsPage() {
           <TabsTrigger value="branding" className="gap-1.5 text-xs"><Palette className="h-3.5 w-3.5" />Branding</TabsTrigger>
           <TabsTrigger value="notifications" className="gap-1.5 text-xs"><Bell className="h-3.5 w-3.5" />Notifications</TabsTrigger>
           <TabsTrigger value="security" className="gap-1.5 text-xs"><Shield className="h-3.5 w-3.5" />Security</TabsTrigger>
+          <TabsTrigger value="profile" className="gap-1.5 text-xs"><User className="h-3.5 w-3.5" />Profile</TabsTrigger>
         </TabsList>
 
         <TabsContent value="organization">
@@ -133,7 +143,7 @@ export default function AdminSettingsPage() {
             ].map(n => (
               <div key={n.key} className="setting-row flex items-center justify-between py-3 px-3 -mx-3 rounded-lg">
                 <div>
-                  <p className="text-sm font-medium text-foreground/75">{n.label}</p>
+                  <p className="text-sm font-medium text-foreground">{n.label}</p>
                   <p className="text-xs text-muted-foreground">{n.desc}</p>
                 </div>
                 <Switch checked={notifications[n.key]} onCheckedChange={v => setNotifications(prev => ({ ...prev, [n.key]: v }))} />
@@ -147,14 +157,14 @@ export default function AdminSettingsPage() {
           <div className="card-interactive p-6 space-y-5">
             <div className="setting-row flex items-center justify-between py-3 px-3 -mx-3 rounded-lg">
               <div>
-                <p className="text-sm font-medium text-foreground/75">Two-Factor Authentication</p>
+                <p className="text-sm font-medium text-foreground">Two-Factor Authentication</p>
                 <p className="text-xs text-muted-foreground">Require 2FA for all admin accounts</p>
               </div>
               <Switch checked={twoFactor} onCheckedChange={(v) => { setTwoFactor(v); toast.success(v ? "2FA enabled" : "2FA disabled"); }} />
             </div>
             <div className="setting-row flex items-center justify-between py-3 px-3 -mx-3 rounded-lg">
               <div>
-                <p className="text-sm font-medium text-foreground/75">SSO / SAML</p>
+                <p className="text-sm font-medium text-foreground">SSO / SAML</p>
                 <p className="text-xs text-muted-foreground">Enable single sign-on for your organization</p>
               </div>
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-accent/10 text-accent">Coming Soon</span>
@@ -164,6 +174,32 @@ export default function AdminSettingsPage() {
               <Input type="number" value={sessionTimeout} onChange={e => setSessionTimeout(Number(e.target.value))} className="max-w-[200px]" />
             </div>
             <Button onClick={handleSave} className="btn-apple bg-accent text-accent-foreground hover:bg-accent/90">Save Changes</Button>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="profile">
+          <div className="card-interactive p-6 space-y-5">
+            <div className="flex items-center gap-4 mb-2">
+              <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                <span className="text-xl font-serif font-medium text-primary/70">
+                  {currentAdmin.name.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-foreground">{currentAdmin.name}</p>
+                <p className="text-xs text-muted-foreground">{roleBadgeLabel(currentAdmin.role)}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div><Label className="text-xs">Name</Label><Input value={adminName} onChange={e => setAdminName(e.target.value)} /></div>
+              <div><Label className="text-xs">Email</Label><Input value={adminEmail} onChange={e => setAdminEmail(e.target.value)} /></div>
+            </div>
+            <div>
+              <Label className="text-xs">Role</Label>
+              <Input value={roleBadgeLabel(currentAdmin.role)} disabled className="max-w-[200px] opacity-60" />
+              <p className="text-[11px] text-muted-foreground mt-1">Roles are managed by super admins</p>
+            </div>
+            <Button onClick={() => toast.success("Profile updated")} className="btn-apple bg-accent text-accent-foreground hover:bg-accent/90">Save Profile</Button>
           </div>
         </TabsContent>
       </Tabs>

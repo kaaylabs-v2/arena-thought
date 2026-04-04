@@ -1,11 +1,19 @@
 import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 
-const recentCourses = [
-  { id: "1", title: "Foundations of Machine Learning", lastActive: "2 hours ago", progress: 68, module: "Week 4: Neural Networks" },
-  { id: "2", title: "Advanced Statistical Methods", lastActive: "Yesterday", progress: 42, module: "Chapter 7: Bayesian Inference" },
-  { id: "3", title: "Philosophy of Mind", lastActive: "3 days ago", progress: 85, module: "Section 12: Consciousness" },
+// Simple deterministic hash from string to number 0-1
+function seedHash(str: string, salt: number = 0): number {
+  let h = salt;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+  return (((h >>> 0) % 1000) / 1000);
+}
+
+const lastActiveOptions = ["2 hours ago", "Yesterday", "3 days ago", "5 days ago", "1 week ago"];
+const moduleLabels = [
+  "Neural Networks", "Bayesian Inference", "Consciousness", "Matrix Fundamentals",
+  "Attention & Memory", "Research Design", "Optimization", "Data Modeling",
 ];
 
 function getGreeting(): string {
@@ -22,9 +30,41 @@ const priorityDot: Record<string, string> = {
 };
 
 const Index = () => {
-  const { userProfile, tasks, toggleTask } = useWorkspace();
+  const { userProfile, tasks, toggleTask, adminCourses } = useWorkspace();
+
+  const recentCourses = useMemo(() => {
+    return adminCourses
+      .filter((c) => c.status === "published")
+      .map((c, i) => ({
+        id: c.id,
+        title: c.title,
+        lastActive: lastActiveOptions[Math.floor(seedHash(c.id, 1) * lastActiveOptions.length)],
+        progress: Math.floor(seedHash(c.id, 2) * 70 + 15), // 15-85%
+        module: `${moduleLabels[Math.floor(seedHash(c.id, 3) * moduleLabels.length)]}`,
+      }));
+  }, [adminCourses]);
+
   const activeCourse = recentCourses[0];
   const upcomingTasks = tasks.filter((t) => !t.completed).slice(0, 4);
+
+  if (recentCourses.length === 0) {
+    return (
+      <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl mx-auto flex flex-col items-center justify-center">
+        <BookOpen className="h-12 w-12 text-muted-foreground/40 mb-4" strokeWidth={1} />
+        <h2 className="font-serif text-xl text-foreground mb-2 font-medium">No courses yet</h2>
+        <p className="text-muted-foreground font-sans text-sm mb-6 text-center max-w-md">
+          Published courses will appear here. Browse the library to get started.
+        </p>
+        <Link
+          to="/library"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-[13px] font-sans font-medium btn-apple"
+        >
+          <Library className="h-4 w-4" strokeWidth={1.5} />
+          Open Library
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl mx-auto">
@@ -105,28 +145,30 @@ const Index = () => {
       )}
 
       {/* Recent Workspaces */}
-      <section className="mb-14 animate-fade-in [animation-delay:300ms] [animation-fill-mode:backwards]">
-        <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground mb-4">Recent courses</h2>
-        <div className="space-y-2">
-          {recentCourses.slice(1).map((course, i) => (
-            <Link
-              key={course.id}
-              to={`/workspace/${course.id}`}
-              className="group flex items-center justify-between card-interactive px-5 py-4"
-              style={{ animationDelay: `${300 + i * 80}ms` }}
-            >
-              <div className="flex-1 min-w-0">
-                <h3 className="font-serif text-base text-foreground truncate leading-snug font-medium">{course.title}</h3>
-                <p className="text-[12px] text-muted-foreground font-sans mt-0.5 tracking-[-0.01em]">{course.module}</p>
-              </div>
-              <div className="flex items-center gap-4 ml-4 shrink-0">
-                <span className="text-[11px] font-sans text-muted-foreground tabular-nums">{course.progress}%</span>
-                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/70 opacity-0 group-hover:opacity-100 icon-hover-rotate" strokeWidth={1.5} />
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {recentCourses.length > 1 && (
+        <section className="mb-14 animate-fade-in [animation-delay:300ms] [animation-fill-mode:backwards]">
+          <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground mb-4">Recent courses</h2>
+          <div className="space-y-2">
+            {recentCourses.slice(1).map((course, i) => (
+              <Link
+                key={course.id}
+                to={`/workspace/${course.id}`}
+                className="group flex items-center justify-between card-interactive px-5 py-4"
+                style={{ animationDelay: `${300 + i * 80}ms` }}
+              >
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-serif text-base text-foreground truncate leading-snug font-medium">{course.title}</h3>
+                  <p className="text-[12px] text-muted-foreground font-sans mt-0.5 tracking-[-0.01em]">{course.module}</p>
+                </div>
+                <div className="flex items-center gap-4 ml-4 shrink-0">
+                  <span className="text-[11px] font-sans text-muted-foreground tabular-nums">{course.progress}%</span>
+                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/70 opacity-0 group-hover:opacity-100 icon-hover-rotate" strokeWidth={1.5} />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Quick Actions */}
       <section className="animate-fade-in [animation-delay:400ms] [animation-fill-mode:backwards]">

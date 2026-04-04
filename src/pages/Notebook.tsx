@@ -17,15 +17,13 @@ const courseColors: Record<string, string> = {
   "Philosophy of Mind": "bg-muted border-border",
 };
 
-const courseOptions = [
-  "Foundations of Machine Learning",
-  "Advanced Statistical Methods",
-  "Philosophy of Mind",
-  "General",
-];
-
 const Notebook = () => {
-  const { notebookEntries, addNotebookEntry, updateNotebookEntry, deleteNotebookEntry, vocabulary, addVocabulary, updateVocabulary, deleteVocabulary } = useWorkspace();
+  const { notebookEntries, addNotebookEntry, updateNotebookEntry, deleteNotebookEntry, vocabulary, addVocabulary, updateVocabulary, deleteVocabulary, adminCourses } = useWorkspace();
+
+  const courseOptions = useMemo(() => {
+    const published = adminCourses.filter((c) => c.status === "published").map((c) => c.title);
+    return published.length > 0 ? [...published, "General"] : ["General"];
+  }, [adminCourses]);
   const [pageTab, setPageTab] = useState<PageTab>("notes");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortKey>("recent");

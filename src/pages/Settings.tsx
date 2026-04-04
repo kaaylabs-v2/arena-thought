@@ -480,12 +480,31 @@ function PrivacyPanel() {
   const [analyticsOptOut, setAnalyticsOptOut] = useState(true);
   const [localOnly, setLocalOnly] = useState(true);
   const [notifications, setNotifications] = useState(false);
+  const { notebookEntries, vocabulary, reflections, tasks } = useWorkspace();
 
   const handleClearData = () => {
     localStorage.clear();
     toast.success("Local data cleared", { description: "Your preferences have been reset." });
   };
-  const handleExport = () => toast.success("Export started", { description: "Your notes and reflections are being prepared." });
+  const handleExport = () => {
+    const data = {
+      notes: notebookEntries,
+      vocabulary,
+      reflections,
+      tasks,
+      exportedAt: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `nexus-learn-export-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success("Export complete", { description: "Your data has been downloaded." });
+  };
 
   return (
     <div className="space-y-8">
