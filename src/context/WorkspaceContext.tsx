@@ -376,7 +376,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         reflections, addReflection, deleteReflection,
         userProfile, updateUserProfile,
         appSettings, updateAppSettings,
-        tasks, addTask, updateTask, deleteTask, toggleTask,
+        tasks, addTask, updateTask, deleteTask, toggleTask, reorderTasks,
         adminCourses, addAdminCourse, updateAdminCourse, deleteAdminCourse, publishCourse, unpublishCourse,
         // Admin Studio
         studioMembers, setStudioMembers,
