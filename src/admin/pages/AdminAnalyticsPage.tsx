@@ -211,7 +211,7 @@ export default function AdminAnalyticsPage() {
       {/* Charts row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div className="card-interactive p-5">
-          <h3 className="font-serif text-base mb-4 text-foreground/75">Weekly Active Learners</h3>
+          <h3 className="font-serif text-base mb-4 text-foreground/80">Weekly Active Learners</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={weeklyDataByRange[timeRange]}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
