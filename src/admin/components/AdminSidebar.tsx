@@ -122,7 +122,7 @@ export function AdminSidebar() {
               ) : (
                 <Sun strokeWidth={1.5} />
               )}
-              <span className="text-[13px] font-sans">
+              <span className="text-sm font-sans">
                 {theme === "light" ? "Dark mode" : "Light mode"}
               </span>
             </SidebarMenuButton>
