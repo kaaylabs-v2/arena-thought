@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { MessageSquare, Send, ArrowLeft, Circle } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +16,6 @@ const Messages = () => {
 
   // Group by admin sender to create threads
   const threads = myMessages.reduce<Record<string, typeof myMessages>>((acc, msg) => {
-    const threadKey = msg.fromRole === "admin" ? msg.fromName : (directMessages.find(d => d.id === msg.id)?.toUserId === "user-1" ? "admin" : msg.toUserId);
     const key = msg.fromRole === "admin" ? msg.fromName : "Dr. Sarah Mitchell";
     if (!acc[key]) acc[key] = [];
     acc[key].push(msg);
@@ -39,7 +36,6 @@ const Messages = () => {
 
   const handleSelectThread = (key: string) => {
     setSelectedThread(key);
-    // Mark all admin messages in this thread as read
     threads[key]?.forEach(m => {
       if (!m.read && m.fromRole === "admin") markMessageRead(m.id);
     });
@@ -57,7 +53,7 @@ const Messages = () => {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-10 px-4 animate-fade-in">
+    <div className="w-full max-w-5xl mx-auto py-10 px-6 lg:px-12 xl:px-16 animate-fade-in">
       <div className="mb-8">
         <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1] font-medium">Messages</h1>
         <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">
@@ -71,13 +67,16 @@ const Messages = () => {
           <p className="text-sm">No messages yet</p>
         </div>
       ) : (
-        <div className="grid grid-cols-[280px_1fr] gap-0 border border-border rounded-xl overflow-hidden bg-card min-h-[500px]">
+        <div
+          className="flex border border-border rounded-xl overflow-hidden bg-card animate-fade-in"
+          style={{ animationDelay: "80ms", animationFillMode: "backwards", minHeight: "calc(100vh - 260px)" }}
+        >
           {/* Thread list */}
-          <div className="border-r border-border bg-muted/30">
+          <div className="w-[280px] shrink-0 border-r border-border bg-muted/30 flex flex-col">
             <div className="p-3 border-b border-border">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Conversations</p>
+              <p className="text-[11px] font-sans uppercase tracking-widest text-muted-foreground">Conversations</p>
             </div>
-            <ScrollArea className="h-[450px]">
+            <ScrollArea className="flex-1">
               {threadKeys.map((key) => {
                 const msgs = threads[key];
                 const lastMsg = msgs[msgs.length - 1];
@@ -100,7 +99,7 @@ const Messages = () => {
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground truncate">{lastMsg.content.slice(0, 60)}...</p>
-                    <p className="text-[10px] text-muted-foreground mt-1">{lastMsg.timestamp}</p>
+                    <p className="text-[10px] text-muted-foreground/80 mt-1">{lastMsg.timestamp}</p>
                   </button>
                 );
               })}
@@ -108,14 +107,14 @@ const Messages = () => {
           </div>
 
           {/* Conversation view */}
-          <div className="flex flex-col">
+          <div className="flex-1 flex flex-col min-w-0">
             {activeThread ? (
               <>
-                <div className="p-4 border-b border-border">
-                  <h3 className="text-sm font-medium text-foreground">{activeThread}</h3>
-                  <p className="text-xs text-muted-foreground">Instructor</p>
+                <div className="px-5 py-4 border-b border-border">
+                  <h3 className="font-serif text-lg text-foreground leading-snug">{activeThread}</h3>
+                  <p className="text-[11px] font-sans text-muted-foreground/80 uppercase tracking-widest mt-0.5">Instructor</p>
                 </div>
-                <ScrollArea className="flex-1 p-4 h-[340px]">
+                <ScrollArea className="flex-1 p-5">
                   <div className="space-y-4">
                     {activeMessages.map((msg) => (
                       <div
@@ -124,7 +123,7 @@ const Messages = () => {
                           "max-w-[80%] rounded-xl px-4 py-3",
                           msg.fromRole === "admin"
                             ? "bg-secondary border border-border mr-auto"
-                            : "bg-accent/15 border border-accent/20 ml-auto"
+                            : "bg-accent/15 border border-accent/25 ml-auto"
                         )}
                       >
                         <div className="flex items-center gap-2 mb-1">
@@ -137,18 +136,19 @@ const Messages = () => {
                           <p className="text-xs font-medium text-foreground mb-1">{msg.subject}</p>
                         )}
                         <p className="text-sm text-foreground leading-relaxed">{msg.content}</p>
-                        <p className="text-[10px] text-muted-foreground mt-2">{msg.timestamp}</p>
+                        <p className="text-[10px] text-muted-foreground/80 mt-2">{msg.timestamp}</p>
                       </div>
                     ))}
                   </div>
                 </ScrollArea>
-                <div className="p-4 border-t border-border">
-                  <div className="flex gap-2">
-                    <Textarea
+                <div className="px-5 py-4 border-t border-border">
+                  <div className="flex gap-2 items-end">
+                    <textarea
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
                       placeholder="Type your reply..."
-                      className="min-h-[44px] max-h-[120px] resize-none text-sm"
+                      rows={1}
+                      className="flex-1 bg-transparent border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring resize-none min-h-[44px] max-h-[120px]"
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                           e.preventDefault();
@@ -156,14 +156,13 @@ const Messages = () => {
                         }
                       }}
                     />
-                    <Button
-                      size="icon"
+                    <button
                       onClick={handleSendReply}
                       disabled={!replyText.trim()}
-                      className="shrink-0 self-end"
+                      className="h-10 w-10 shrink-0 flex items-center justify-center rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                     >
                       <Send className="h-4 w-4" />
-                    </Button>
+                    </button>
                   </div>
                 </div>
               </>

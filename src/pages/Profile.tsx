@@ -89,14 +89,14 @@ const Profile = () => {
               <ProfileDetail icon={MapPin} label="Timezone" value={userProfile.timezone.replace("_", " ").replace("America/", "")} />
               <div className="px-5 py-4">
                 <p className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest mb-1.5">Bio</p>
-                <p className="text-[13px] font-sans text-foreground/85 leading-relaxed">{userProfile.bio}</p>
+                <p className="text-[13px] font-sans text-foreground leading-relaxed">{userProfile.bio}</p>
               </div>
               <div className="px-5 py-4">
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <Target className="h-3 w-3 text-muted-foreground/70" strokeWidth={1.5} />
                   <p className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest">Learning goal</p>
                 </div>
-                <p className="text-[13px] font-sans text-foreground/85 leading-relaxed">{userProfile.learningGoal}</p>
+                <p className="text-[13px] font-sans text-foreground leading-relaxed">{userProfile.learningGoal}</p>
               </div>
             </div>
           </section>

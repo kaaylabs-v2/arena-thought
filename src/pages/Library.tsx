@@ -100,7 +100,7 @@ const Library = () => {
                   </span>
                 </div>
                 {course.status === "completed" && (
-                  <span className="text-[10px] font-sans font-medium uppercase tracking-wider text-accent/80 bg-accent/8 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-sans font-medium uppercase tracking-wider text-accent/80 bg-accent/15 px-2 py-0.5 rounded-full">
                     Complete
                   </span>
                 )}

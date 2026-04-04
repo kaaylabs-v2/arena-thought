@@ -137,12 +137,9 @@ export function AppSidebar() {
           <button
             onClick={() => navigate("/admin")}
             className={cn(
-              "flex items-center gap-2 w-full text-[13px] font-sans transition-colors duration-150",
+              "flex items-center gap-2 w-full text-[13px] font-sans transition-colors duration-150 text-sidebar-foreground/40 hover:text-sidebar-foreground/70",
               collapsed ? "justify-center py-1.5" : "px-3 py-1.5"
             )}
-            style={{ color: "rgba(255,255,255,0.35)" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.65)")}
-            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
             title={collapsed ? "Admin Studio" : undefined}
           >
             <Shield className="h-3.5 w-3.5" strokeWidth={1.5} />
