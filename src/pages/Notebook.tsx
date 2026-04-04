@@ -210,7 +210,7 @@ const Notebook = () => {
             {openNote && !showDeleteConfirm && (
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="h-8 w-8 flex items-center justify-center rounded-lg text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5 transition-all duration-200"
+                className="h-8 w-8 flex items-center justify-center rounded-lg text-muted-foreground/80 hover:text-destructive hover:bg-destructive/5 transition-all duration-200"
               >
                 <Trash2 className="h-4 w-4" strokeWidth={1.5} />
               </button>
@@ -243,20 +243,20 @@ const Notebook = () => {
 
         {/* Formatting toolbar */}
         <div className="flex items-center gap-1 px-6 lg:px-10 py-2 border-b border-border/50 shrink-0">
-          <button onClick={() => insertFormatting("**", "**")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60">
+          <button onClick={() => insertFormatting("**", "**")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/80">
             <Bold className="h-3.5 w-3.5" strokeWidth={2} />
           </button>
-          <button onClick={() => insertFormatting("*", "*")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60">
+          <button onClick={() => insertFormatting("*", "*")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/80">
             <Italic className="h-3.5 w-3.5" strokeWidth={2} />
           </button>
-          <button onClick={() => insertFormatting("__", "__")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60">
+          <button onClick={() => insertFormatting("__", "__")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/80">
             <Underline className="h-3.5 w-3.5" strokeWidth={2} />
           </button>
           <div className="h-4 w-px bg-border mx-1" />
-          <button onClick={() => insertFormatting("\n- ", "")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60">
+          <button onClick={() => insertFormatting("\n- ", "")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/80">
             <ListChecks className="h-3.5 w-3.5" strokeWidth={1.5} />
           </button>
-          <button onClick={() => insertFormatting("\n1. ", "")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/60">
+          <button onClick={() => insertFormatting("\n1. ", "")} className="toolbar-btn h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/80">
             <ListOrdered className="h-3.5 w-3.5" strokeWidth={1.5} />
           </button>
           <div className="h-4 w-px bg-border mx-1" />
@@ -282,11 +282,11 @@ const Notebook = () => {
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
               placeholder="Note title"
-              className="w-full font-serif text-2xl lg:text-3xl text-foreground placeholder:text-muted-foreground/30 bg-transparent border-none outline-none mb-4 leading-snug font-medium"
+              className="w-full font-serif text-2xl lg:text-3xl text-foreground placeholder:text-muted-foreground/70 bg-transparent border-none outline-none mb-4 leading-snug font-medium"
             />
 
             {/* Meta line */}
-            <div className="flex items-center gap-3 text-[11px] font-sans text-muted-foreground/50 mb-6 pb-4 border-b border-border/40">
+            <div className="flex items-center gap-3 text-[11px] font-sans text-muted-foreground/70 mb-6 pb-4 border-b border-border/40">
               <span>{openNote?.date || "New note"}</span>
               <span className="text-border">·</span>
               <span>{editCourse}</span>
@@ -304,18 +304,18 @@ const Notebook = () => {
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
               placeholder="Start writing..."
-              className="w-full text-[14px] font-sans text-foreground/90 leading-[1.8] bg-transparent border-none outline-none resize-none min-h-[300px] placeholder:text-muted-foreground/25 tracking-[-0.01em]"
+              className="w-full text-[14px] font-sans text-foreground/90 leading-[1.8] bg-transparent border-none outline-none resize-none min-h-[300px] placeholder:text-muted-foreground/70 tracking-[-0.01em]"
             />
 
             {/* Tags input */}
             <div className="mt-8 pt-4 border-t border-border/40">
-              <label className="text-[10px] font-sans text-muted-foreground/50 uppercase tracking-widest mb-2 block">Tags (comma-separated)</label>
+              <label className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest mb-2 block">Tags (comma-separated)</label>
               <input
                 type="text"
                 value={editTags}
                 onChange={(e) => setEditTags(e.target.value)}
                 placeholder="neural-networks, optimization"
-                className="w-full bg-muted/30 rounded-lg px-3 py-2 text-[13px] font-sans text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-1 focus:ring-ring/20"
+                className="w-full bg-muted/30 rounded-lg px-3 py-2 text-[13px] font-sans text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-1 focus:ring-ring/20"
               />
             </div>
           </div>
@@ -373,13 +373,13 @@ const Notebook = () => {
           {/* Search + Sort + View toggle */}
           <div className="flex flex-col sm:flex-row gap-3 mb-8 animate-fade-in [animation-delay:80ms] [animation-fill-mode:backwards]">
             <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" strokeWidth={1.5} />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/80" strokeWidth={1.5} />
               <input
                 type="text"
                 placeholder="Search notes..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-[13px] font-sans placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring/40 transition-all duration-200"
+                className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-[13px] font-sans placeholder:text-muted-foreground/80 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring/40 transition-all duration-200"
               />
             </div>
             <div className="flex gap-2">
@@ -420,7 +420,7 @@ const Notebook = () => {
           {/* Notes */}
           {filteredNotes.length === 0 ? (
             <div className="text-center py-24 animate-fade-in">
-              <StickyNote className="h-10 w-10 text-muted-foreground/25 mx-auto mb-3" strokeWidth={1} />
+              <StickyNote className="h-10 w-10 text-muted-foreground/70 mx-auto mb-3" strokeWidth={1} />
               <p className="text-muted-foreground/70 font-sans text-sm mb-4">Your insights will appear here as you learn.</p>
               <button onClick={openNewNote} className="text-[13px] font-sans text-accent hover:text-accent/80 transition-colors duration-200">
                 Create your first note →
@@ -437,19 +437,19 @@ const Notebook = () => {
                 >
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-serif text-base text-foreground flex-1 leading-snug">{note.title}</h3>
-                    <span className="text-[10px] font-sans text-muted-foreground/60 ml-3 shrink-0 flex items-center gap-1">
+                    <span className="text-[10px] font-sans text-muted-foreground/80 ml-3 shrink-0 flex items-center gap-1">
                       <Calendar className="h-3 w-3" strokeWidth={1.5} />
                       {note.date}
                     </span>
                   </div>
                   <p className="text-[12px] text-muted-foreground/70 font-sans leading-relaxed mb-3 line-clamp-2 tracking-[-0.01em]">{note.snippet}</p>
                   <div className="flex items-center gap-3 flex-wrap">
-                    <span className="text-[10px] font-sans text-muted-foreground/60 flex items-center gap-1">
+                    <span className="text-[10px] font-sans text-muted-foreground/80 flex items-center gap-1">
                       <BookOpen className="h-3 w-3" strokeWidth={1.5} />
                       {note.course}
                     </span>
                     <span className="text-border">·</span>
-                    <span className="text-[10px] font-sans text-muted-foreground/50">{note.source}</span>
+                    <span className="text-[10px] font-sans text-muted-foreground/70">{note.source}</span>
                     {note.tags.length > 0 && (
                       <div className="flex gap-1.5 ml-auto">
                         {note.tags.map((tag) => (
@@ -505,11 +505,11 @@ const Notebook = () => {
                       ))}
                     </div>
                     <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-border/40">
-                      <span className="text-[10px] font-sans text-muted-foreground/50 flex items-center gap-1 truncate">
+                      <span className="text-[10px] font-sans text-muted-foreground/70 flex items-center gap-1 truncate">
                         <BookOpen className="h-3 w-3 shrink-0" strokeWidth={1.5} />
                         <span className="truncate">{note.course}</span>
                       </span>
-                      <span className="text-[10px] font-sans text-muted-foreground/40 ml-auto shrink-0">{note.date}</span>
+                      <span className="text-[10px] font-sans text-muted-foreground/80 ml-auto shrink-0">{note.date}</span>
                     </div>
                   </div>
                 );
@@ -522,13 +522,13 @@ const Notebook = () => {
           {/* Vocab search */}
           <div className="flex flex-col sm:flex-row gap-3 mb-8 animate-fade-in [animation-delay:80ms] [animation-fill-mode:backwards]">
             <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" strokeWidth={1.5} />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/80" strokeWidth={1.5} />
               <input
                 type="text"
                 placeholder="Search vocabulary..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-[13px] font-sans placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring/40 transition-all duration-200"
+                className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-[13px] font-sans placeholder:text-muted-foreground/80 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring/40 transition-all duration-200"
               />
             </div>
           </div>
@@ -540,7 +540,7 @@ const Notebook = () => {
                 <h3 className="text-[13px] font-sans font-medium text-foreground">{newVocab ? "New Term" : "Edit Term"}</h3>
                 <div className="flex items-center gap-2">
                   {editingVocab && (
-                    <button onClick={() => handleDeleteVocab(editingVocab.id)} className="h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/50 hover:text-destructive hover:bg-destructive/5 transition-all duration-200">
+                    <button onClick={() => handleDeleteVocab(editingVocab.id)} className="h-7 w-7 flex items-center justify-center rounded-md text-muted-foreground/70 hover:text-destructive hover:bg-destructive/5 transition-all duration-200">
                       <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
                     </button>
                   )}
@@ -555,21 +555,21 @@ const Notebook = () => {
                   onChange={(e) => setVTerm(e.target.value)}
                   placeholder="Term"
                   autoFocus
-                  className="w-full bg-background rounded-lg border border-input px-3 py-2 text-[14px] font-serif font-medium text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring/20"
+                  className="w-full bg-background rounded-lg border border-input px-3 py-2 text-[14px] font-serif font-medium text-foreground placeholder:text-muted-foreground/80 focus:outline-none focus:ring-2 focus:ring-ring/20"
                 />
                 <textarea
                   value={vDef}
                   onChange={(e) => setVDef(e.target.value)}
                   placeholder="Definition"
                   rows={2}
-                  className="w-full bg-background rounded-lg border border-input px-3 py-2 text-[13px] font-sans text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring/20 resize-none"
+                  className="w-full bg-background rounded-lg border border-input px-3 py-2 text-[13px] font-sans text-foreground placeholder:text-muted-foreground/80 focus:outline-none focus:ring-2 focus:ring-ring/20 resize-none"
                 />
                 <input
                   type="text"
                   value={vExample}
                   onChange={(e) => setVExample(e.target.value)}
                   placeholder="Example usage (optional)"
-                  className="w-full bg-background rounded-lg border border-input px-3 py-2 text-[13px] font-sans text-foreground/80 italic placeholder:text-muted-foreground/40 placeholder:not-italic focus:outline-none focus:ring-2 focus:ring-ring/20"
+                  className="w-full bg-background rounded-lg border border-input px-3 py-2 text-[13px] font-sans text-foreground/80 italic placeholder:text-muted-foreground/80 placeholder:not-italic focus:outline-none focus:ring-2 focus:ring-ring/20"
                 />
                 <select
                   value={vCourse}
@@ -585,7 +585,7 @@ const Notebook = () => {
           {/* Vocab list */}
           {filteredVocab.length === 0 ? (
             <div className="text-center py-24 animate-fade-in">
-              <BookA className="h-10 w-10 text-muted-foreground/25 mx-auto mb-3" strokeWidth={1} />
+              <BookA className="h-10 w-10 text-muted-foreground/70 mx-auto mb-3" strokeWidth={1} />
               <p className="text-muted-foreground/70 font-sans text-sm mb-4">Your vocabulary terms will appear here.</p>
               <button onClick={openNewVocab} className="text-[13px] font-sans text-accent hover:text-accent/80 transition-colors duration-200">
                 Add your first term →
@@ -604,7 +604,7 @@ const Notebook = () => {
                   >
                     <div className="flex items-start justify-between gap-3 mb-2">
                       <h3 className="font-serif text-lg text-foreground leading-snug">{v.term}</h3>
-                      <span className="text-[10px] font-sans text-muted-foreground/50 shrink-0">{v.date}</span>
+                      <span className="text-[10px] font-sans text-muted-foreground/70 shrink-0">{v.date}</span>
                     </div>
                     <p className="text-[13px] font-sans text-muted-foreground/80 leading-relaxed mb-2">{v.definition}</p>
                     {v.example && (
@@ -613,7 +613,7 @@ const Notebook = () => {
                       </p>
                     )}
                     <div className="flex items-center gap-3 mt-2 pt-2 border-t border-border/40">
-                      <span className="text-[10px] font-sans text-muted-foreground/60 flex items-center gap-1">
+                      <span className="text-[10px] font-sans text-muted-foreground/80 flex items-center gap-1">
                         <BookOpen className="h-3 w-3" strokeWidth={1.5} />
                         {v.course}
                       </span>
