@@ -136,7 +136,7 @@ export default function AdminHelpPage() {
       </div>
 
       {/* Community Forum Section */}
-      <h2 id="community-section" className="font-serif text-lg mb-4 text-foreground/75">Community Forum</h2>
+      <h2 id="community-section" className="font-serif text-lg mb-4 text-foreground">Community Forum</h2>
       <div className="card-interactive p-2 mb-8">
         <div className="space-y-0.5">
           {forumThreads.map((thread, i) => (
