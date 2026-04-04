@@ -29,8 +29,8 @@ const Index = () => {
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl mx-auto">
       {/* Greeting */}
-      <div className="mb-14 animate-fade-in">
-        <h1 className="font-serif text-4xl lg:text-[2.75rem] text-foreground mb-2 leading-[1.1] font-medium">
+      <div className="mb-8 animate-fade-in">
+        <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1] font-medium">
           {getGreeting()}, {userProfile.name}
         </h1>
         <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Continue where you left off.</p>

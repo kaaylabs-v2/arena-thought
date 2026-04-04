@@ -162,7 +162,7 @@ const Reflections = () => {
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl mx-auto">
       {/* Header */}
       <div ref={headerReveal.ref} className={headerReveal.isVisible ? "mb-8 animate-fade-in" : "mb-8 opacity-0"}>
-        <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1]">Reflections</h1>
+        <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1] font-medium">Reflections</h1>
         <div className="flex items-center gap-2 mt-2">
           <Lock className="h-3 w-3 text-muted-foreground/50" strokeWidth={1.5} />
           <p className="text-muted-foreground/60 font-sans text-[11px] tracking-[-0.01em]">Private · Only you</p>
