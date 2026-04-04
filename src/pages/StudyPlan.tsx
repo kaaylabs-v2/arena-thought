@@ -22,7 +22,11 @@ const syncPlatforms = [
 ];
 
 const StudyPlan = () => {
-  const { tasks, addTask, toggleTask, deleteTask, reorderTasks } = useWorkspace();
+  const { tasks, addTask, toggleTask, deleteTask, reorderTasks, adminCourses } = useWorkspace();
+
+  const courseOptions = useMemo(() => {
+    return ["", ...adminCourses.filter((c) => c.status === "published").map((c) => c.title)];
+  }, [adminCourses]);
 
   const [showAdd, setShowAdd] = useState(false);
   const [newTitle, setNewTitle] = useState("");
