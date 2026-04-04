@@ -40,6 +40,7 @@ export default function AdminCoursesPage() {
   const [commObjective, setCommObjective] = useState("");
   const [commTimeline, setCommTimeline] = useState("4 weeks");
   const [commHasMaterials, setCommHasMaterials] = useState(false);
+  const [archivingId, setArchivingId] = useState<string | null>(null);
 
   const tabs: { value: TabFilter; label: string }[] = [
     { value: "all", label: "All" },
