@@ -58,6 +58,7 @@ const App = () => (
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/study-plan" element={<StudyPlan />} />
+                <Route path="/messages" element={<Messages />} />
               </Route>
 
               {/* Admin Studio — completely separate layout */}
