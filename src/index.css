@@ -72,7 +72,7 @@
     --secondary-foreground: 38 12% 82%;
 
     --muted: 228 10% 14%;
-    --muted-foreground: 222 8% 52%;
+    --muted-foreground: 220 8% 64%;
 
     --accent: 34 48% 54%;
     --accent-foreground: 228 18% 9%;
@@ -97,7 +97,7 @@
     --surface-elevated: 228 16% 13%;
     --accent-amber: 34 48% 54%;
     --accent-amber-subtle: 34 24% 16%;
-    --text-tertiary: 222 6% 46%;
+    --text-tertiary: 220 6% 56%;
   }
 }
 
