@@ -253,7 +253,7 @@ export default function AdminAnalyticsPage() {
         </div>
 
         <div className="card-interactive p-5">
-          <h3 className="font-serif text-base mb-4 text-foreground/75">Members by Dept</h3>
+          <h3 className="font-serif text-base mb-4 text-foreground/80">Members by Dept</h3>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie
