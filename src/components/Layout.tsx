@@ -7,8 +7,8 @@ export function Layout() {
   const { appSettings } = useWorkspace();
 
   const fontScale =
-    appSettings.fontSize === "small" ? "0.9" :
-    appSettings.fontSize === "large" ? "1.12" : "1";
+    appSettings.fontSize === "small" ? "0.92" :
+    appSettings.fontSize === "large" ? "1.15" : "1";
 
   const fontFamilyClass =
     appSettings.fontFamily === "sans" ? "font-family-sans" :
