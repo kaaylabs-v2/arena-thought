@@ -4,6 +4,7 @@ import {
   Users,
   BarChart3,
   Megaphone,
+  MessageSquare,
   ChevronsLeft,
   ChevronsRight,
   Moon,
