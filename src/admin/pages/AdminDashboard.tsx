@@ -78,7 +78,7 @@ export default function AdminDashboard() {
                 }} />
                 <div className="flex-1 min-w-0">
                   <p className="text-[13px] leading-snug text-foreground/70">{event.text}</p>
-                  <p className="text-[11px] mt-0.5 text-muted-foreground/60">{event.time}</p>
+                  <p className="text-[11px] mt-0.5 text-muted-foreground/70">{event.time}</p>
                 </div>
               </div>
             ))}
