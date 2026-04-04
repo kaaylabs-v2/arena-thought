@@ -15,6 +15,7 @@ import Progress from "./pages/Progress";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import StudyPlan from "./pages/StudyPlan";
+import Messages from "./pages/Messages";
 import AdminStudio from "./pages/AdminStudio";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ import AdminInsightsPage from "@/admin/pages/AdminInsightsPage";
 import AdminAnnouncementsPage from "@/admin/pages/AdminAnnouncementsPage";
 import AdminSettingsPage from "@/admin/pages/AdminSettingsPage";
 import AdminHelpPage from "@/admin/pages/AdminHelpPage";
+import AdminMessagesPage from "@/admin/pages/AdminMessagesPage";
 import AdminAccessDenied from "@/admin/pages/AdminAccessDenied";
 import { useAdminAuth } from "@/admin/hooks/useAdminAuth";
 
