@@ -79,6 +79,18 @@ export interface StudyTask {
 
 export type UserRole = "learner" | "admin";
 
+// ─── Direct Messages ───
+export interface DirectMessage {
+  id: string;
+  fromRole: "admin" | "learner";
+  fromName: string;
+  toUserId: string;
+  subject?: string;
+  content: string;
+  timestamp: string;
+  read: boolean;
+}
+
 // ─── Organization & Admin User ───
 export interface Organization {
   name: string; industry: string; contactEmail: string; timezone: string;
