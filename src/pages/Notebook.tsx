@@ -194,6 +194,13 @@ const Notebook = () => {
     }, 0);
   };
 
+  // Listen for keyboard shortcut
+  useEffect(() => {
+    const handler = () => { if (pageTab === "notes") openNewNote(); else openNewVocab(); };
+    window.addEventListener("shortcut:new-note", handler);
+    return () => window.removeEventListener("shortcut:new-note", handler);
+  }, [pageTab, openNewNote, openNewVocab]);
+
   const isEditorOpen = isCreating || openNote !== null;
 
   // ─── Note Editor Overlay (Apple Notes style) ───
