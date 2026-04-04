@@ -43,7 +43,7 @@ export function AdminSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       {/* Header — logo + collapse toggle */}
-      <SidebarHeader className="px-2 py-3">
+      <SidebarHeader className="px-3 py-4">
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
             <span className="font-serif text-base tracking-tight text-sidebar-foreground leading-none">
@@ -51,33 +51,33 @@ export function AdminSidebar() {
             </span>
             <button
               onClick={toggleSidebar}
-              className="h-8 w-8 flex items-center justify-center rounded-lg text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors duration-200"
+              className="h-7 w-7 flex items-center justify-center rounded-lg text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors duration-200"
             >
-              <ChevronsRight className="h-4 w-4" strokeWidth={1.5} />
+              <ChevronsRight className="h-3.5 w-3.5" strokeWidth={1.5} />
             </button>
           </div>
         ) : (
-          <div className="flex flex-col gap-1 px-1">
-            <div className="flex flex-col">
+          <div className="flex flex-col gap-0.5 px-1">
+            <div className="flex items-center justify-between">
               <span className="font-serif text-lg tracking-tight text-sidebar-foreground leading-none">
                 Nexus²
               </span>
-              <span className="text-[10px] tracking-[0.15em] uppercase mt-1 text-sidebar-foreground/35">
-                Admin Studio
-              </span>
+              <button
+                onClick={toggleSidebar}
+                className="h-7 w-7 flex items-center justify-center rounded-lg text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors duration-200"
+              >
+                <ChevronsLeft className="h-3.5 w-3.5" strokeWidth={1.5} />
+              </button>
             </div>
-            <button
-              onClick={toggleSidebar}
-              className="h-7 w-7 flex items-center justify-center rounded-lg text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors duration-200"
-            >
-              <ChevronsLeft className="h-4 w-4" strokeWidth={1.5} />
-            </button>
+            <span className="text-[10px] tracking-[0.15em] uppercase text-sidebar-foreground/35">
+              Admin Studio
+            </span>
           </div>
         )}
       </SidebarHeader>
 
       {/* Main nav */}
-      <SidebarContent className="px-2 mt-1">
+      <SidebarContent className="px-2 mt-2">
         <SidebarGroup className="p-0">
           <SidebarGroupContent>
             <SidebarMenu>
