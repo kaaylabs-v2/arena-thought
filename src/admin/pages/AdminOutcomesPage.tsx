@@ -32,7 +32,7 @@ export default function AdminOutcomesPage() {
         ))}
       </div>
 
-      <h2 className="font-serif text-lg mb-4 text-foreground/75">Course Mastery Breakdown</h2>
+      <h2 className="font-serif text-base mb-4 text-foreground/80">Course Mastery Breakdown</h2>
       <div className="grid gap-3 mb-8 stagger-children">
         {activeCourses.map(course => (
           <div key={course.id} className="card-interactive p-5">
