@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Plus, Archive, Copy, Users, Pencil, X, Upload, ChevronRight, Check, Send, RotateCcw } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import AdminContentLibraryPage from "./AdminContentLibrary";
