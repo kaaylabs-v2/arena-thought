@@ -14,12 +14,7 @@ const priorityConfig: Record<TaskPriority, { label: string; color: string; dot: 
   low: { label: "Low", color: "text-muted-foreground", dot: "bg-muted-foreground/40" },
 };
 
-const courseOptions = [
-  "",
-  "Foundations of Machine Learning",
-  "Advanced Statistical Methods",
-  "Philosophy of Mind",
-];
+// courseOptions derived from context below
 
 const syncPlatforms = [
   { id: "google-cal", name: "Google Calendar", logo: <GoogleCalendarLogo className="h-4 w-4" />, connected: false },
