@@ -318,6 +318,7 @@ function ReflectionCard({
   const { isVisible } = reveal;
   const props = revealProps(isVisible, delay);
   const [expanded, setExpanded] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
     <div ref={reveal.ref} className={`group ${props.className}`} style={props.style}>
@@ -346,14 +347,32 @@ function ReflectionCard({
           </button>
         )}
 
-        {/* Delete button */}
-        <button
-          onClick={() => onDelete(reflection.id)}
-          className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-muted-foreground/80 hover:text-destructive hover:bg-destructive/10 transition-all duration-200 active:scale-[0.95]"
-          title="Delete reflection"
-        >
-          <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
-        </button>
+        {/* Delete with confirmation */}
+        {confirmDelete ? (
+          <div className="absolute top-4 right-4 flex items-center gap-1.5 animate-fade-in">
+            <span className="text-[11px] font-sans text-destructive">Delete?</span>
+            <button
+              onClick={() => { onDelete(reflection.id); toast.success("Reflection removed"); }}
+              className="px-2 py-0.5 rounded-md bg-destructive text-destructive-foreground text-[10px] font-sans font-medium hover:bg-destructive/90 transition-colors active:scale-[0.97]"
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => setConfirmDelete(false)}
+              className="px-2 py-0.5 rounded-md border border-border text-[10px] font-sans text-muted-foreground hover:text-foreground transition-colors active:scale-[0.97]"
+            >
+              No
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-muted-foreground/80 hover:text-destructive hover:bg-destructive/10 transition-all duration-200 active:scale-[0.95]"
+            title="Delete reflection"
+          >
+            <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+          </button>
+        )}
 
         {reflection.linkedCourse && (
           <div className="mt-4 pt-3 border-t border-border/60">
