@@ -80,7 +80,7 @@ export default function AdminHelpPage() {
       </div>
 
       {/* Documentation Section */}
-      <h2 className="font-serif text-lg mb-4 text-foreground/75">Documentation</h2>
+      <h2 className="font-serif text-lg mb-4 text-foreground">Documentation</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8 stagger-children">
         {docPages.map((doc, i) => (
           <button
