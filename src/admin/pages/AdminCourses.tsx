@@ -76,6 +76,13 @@ export default function AdminCoursesPage() {
     setUploadedFiles([]); setCommObjective(""); setCommHasMaterials(false);
   };
 
+  // Listen for keyboard shortcut
+  useEffect(() => {
+    const handler = () => openDeploy();
+    window.addEventListener("admin-shortcut:deploy", handler);
+    return () => window.removeEventListener("admin-shortcut:deploy", handler);
+  }, []);
+
   const handleFakeUpload = () => {
     setUploadedFiles(prev => [...prev,
       { name: "Module_1_Intro.pdf", size: "2.1 MB", type: "pdf" },
