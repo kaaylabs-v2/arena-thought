@@ -1,87 +1,97 @@
 
 
-## Nexus Learn Studio -- Feature & QoL Implementation Plan
+## Admin Studio -- Feature Suggestions & Quality-of-Life Improvements
 
-Implementing items **1, 3, 4, 5, 6, 7, 8, 12** from the audit suggestions.
+Based on a thorough audit of all Admin Studio pages, sidebar, top bar, and layout components.
 
 ---
 
-### Features to Build
+### Features
 
-#### 1. Global Command Palette (Cmd+K)
-Create `src/components/CommandPalette.tsx` using the existing `cmdk` library (already available via `src/components/ui/command.tsx`). Mount it in `src/components/Layout.tsx`.
+#### 1. Admin Command Palette (Cmd+K)
+The Learner Studio has a global command palette but the Admin Studio does not. Add an admin-specific command palette for quick navigation to pages, searching members by name/email, jumping to specific courses, and triggering common actions (invite member, deploy course, new announcement).
 
-- Groups: **Pages** (Home, Library, Study Plan, Notebook, Progress, Reflections, Messages, Settings, Profile), **Recent Courses** (from workspace context), **Notebook entries**, **Vocab terms**
-- Keyboard shortcut: Cmd+K / Ctrl+K
-- Uses `CommandDialog`, `CommandInput`, `CommandList`, `CommandGroup`, `CommandItem` from existing UI primitives
-- Navigation via `useNavigate()` on item select
-- Subtle, minimal styling consistent with the Studio aesthetic
+- **New file**: `src/admin/components/AdminCommandPalette.tsx`
+- **Edit**: `src/admin/components/AdminLayout.tsx` -- mount it globally
+- Groups: Pages (Dashboard, Courses, People, etc.), Members (search by name), Courses (search by name), Quick Actions (Invite, Deploy, Announce)
+- Reuses existing `cmdk` / `CommandDialog` primitives
 
-#### 3. Sidebar Notification Badge on Messages
-In `src/components/AppSidebar.tsx`, read `directMessages` from `useWorkspace()` and compute unread count for the current learner. Render a small dot/count badge next to the "Messages" nav item when unread > 0.
+#### 2. Clickable Dashboard Stat Cards
+Dashboard stat cards (Total Members, Active This Week, Courses Deployed, Mastery Achieved) are currently static. Make them clickable links that navigate to their relevant pages (People, Analytics, Courses).
 
-- Small `h-4 w-4` accent-colored circle with count, or a dot if just 1
-- Only shows when there are unread admin messages for the learner
+- **Edit**: `src/admin/pages/AdminDashboard.tsx` -- wrap stat cards in `<Link>` with hover indication
 
-#### 4. Keyboard Shortcuts
-Create `src/components/KeyboardShortcuts.tsx` -- a global listener + help overlay triggered by `?` key.
+#### 3. Sidebar Unread Message Badge
+The Learner sidebar has an unread badge on Messages but the Admin sidebar does not. Add one by reading `directMessages` from workspace context and counting unread learner messages.
 
-- Shortcuts: `N` (new note on Notebook page), `T` (add task on Study Plan page), `R` (start reflection on Reflections page), `Esc` (close modals), `Cmd+K` (command palette)
-- The overlay is a simple modal listing all shortcuts in a clean grid
-- Mount in `Layout.tsx` alongside the command palette
-- Page-specific shortcuts only fire when on the relevant page (check `location.pathname`)
+- **Edit**: `src/admin/components/AdminSidebar.tsx` -- add badge dot/count next to Messages nav item
 
-#### 5. Course Progress Sparklines in Library Cards
-In `src/pages/Library.tsx`, add a tiny inline SVG sparkline (7 data points representing last 7 days of activity) to each course card. Keep it minimal -- a thin polyline path, no axes, no labels, just a subtle visual trend indicator.
+#### 4. Smooth Page Transitions
+The Learner Studio has route-level `animate-fade-in` on transitions via `useLocation().pathname` as a key. The Admin Layout has a bare `<Outlet />` with no transition.
 
-- Generate mock sparkline data per course (seeded from course ID for consistency)
-- Place below the progress bar, ~20px tall, muted accent color
-- Thin stroke, no fill -- understated, not flashy
+- **Edit**: `src/admin/components/AdminLayout.tsx` -- add `useLocation().pathname` key wrapper with `animate-fade-in`
 
-#### 6. Smooth Page Transitions
-Add a CSS-only route-level fade transition. Each page already has `animate-fade-in` on mount. Add a subtle exit animation by wrapping the `<Outlet>` in `Layout.tsx` with a key-based re-mount that triggers the entrance animation on route change.
+#### 5. Scroll-to-Top Button
+Long admin pages (Members table, Analytics charts, Help docs) have no back-to-top affordance. Mount the existing `ScrollToTop` component in the Admin Layout.
 
-- Use `useLocation().pathname` as a key on a wrapper div around `<Outlet />`
-- Add a subtle `animate-fade-in` class to the wrapper so every route transition gets a consistent entrance
-- No external library needed -- keeps it lightweight
+- **Edit**: `src/admin/components/AdminLayout.tsx` -- import and mount `ScrollToTop`
 
-#### 7. "Back to Top" Button
-Create `src/components/ScrollToTop.tsx` -- a floating button that appears after scrolling 400px down. Place it in `Layout.tsx` inside the main content area.
+#### 6. Confirmation Dialogs for Destructive Actions
+Currently, archiving courses, deactivating members, and deleting announcements happen instantly with only a toast. Add inline "Are you sure?" confirmation patterns matching the Learner Studio pattern.
 
-- Small, rounded, semi-transparent button with an up-arrow icon
-- Fades in/out with `opacity` + `translate-y` transition
-- Scrolls smoothly to top on click
-- Positioned bottom-right of the content area
+- **Edit**: `src/admin/pages/AdminCourses.tsx` -- confirmation before archive
+- **Edit**: `src/admin/pages/AdminMembers.tsx` -- already has deactivation confirmation (good), but no confirmation for role changes that downgrade from admin
+- **Edit**: `src/admin/pages/AdminAnnouncementsPage.tsx` -- add delete capability with confirmation (currently announcements can't be deleted at all)
 
-#### 8. Confirmation Dialogs for Destructive Actions
-Add inline "Are you sure?" confirmation steps before deleting notes, vocab terms, tasks, and reflections. Follow the pattern already used in the Notebook editor (the `showDeleteConfirm` state with Yes/No buttons).
+#### 7. Announcement Delete/Edit
+Announcements can only be created, never edited or deleted. Add edit and delete actions to each announcement card with inline confirmation for delete.
 
-- **StudyPlan.tsx**: Add confirmation state per task before `deleteTask` fires
-- **Reflections.tsx**: Add confirmation before `deleteReflection`
-- **Notebook.tsx vocab**: The delete already works inline; add confirmation for vocab delete too
-- Pattern: Replace the delete button with a small "Delete? Yes / No" inline prompt (same as existing note editor pattern)
+- **Edit**: `src/admin/pages/AdminAnnouncementsPage.tsx` -- add edit drawer + delete with confirmation
 
-#### 12. Drag-and-Drop Task Reordering in Study Plan
-Add HTML5 native drag-and-drop to task rows in `src/pages/StudyPlan.tsx`. No external library needed.
+#### 8. Top Bar Breadcrumbs
+Nested pages (Courses > Content Library, People > Departments, Insights > Outcomes) have no breadcrumb trail. Replace the static org name in the top bar with a breadcrumb showing the current page path.
 
-- Add `draggable`, `onDragStart`, `onDragOver`, `onDrop` handlers to `TaskRow`
-- Visual feedback: subtle border highlight on the drop target
-- Reorder within the sorted list; store order in workspace context
-- Add `reorderTasks` method to `WorkspaceContext.tsx` that accepts a reordered array of task IDs
+- **Edit**: `src/admin/components/AdminTopBar.tsx` -- derive breadcrumbs from `useLocation().pathname` and active tab state
+
+---
+
+### Quality-of-Life Improvements
+
+#### 9. Empty State for Dashboard (First-Run Experience)
+If there are 0 members or 0 courses, the dashboard still shows stat cards with zeros and empty charts. Add a first-run onboarding card ("Welcome! Start by inviting members and deploying a course") when the organization has no data.
+
+- **Edit**: `src/admin/pages/AdminDashboard.tsx` -- conditional empty/welcome state
+
+#### 10. Keyboard Shortcut Support
+Add admin-specific keyboard shortcuts: `I` to open invite drawer (People page), `D` to open deploy drawer (Courses page), `A` to create announcement (Announcements page), `?` for help overlay.
+
+- **New file**: `src/admin/components/AdminKeyboardShortcuts.tsx`
+- **Edit**: `src/admin/components/AdminLayout.tsx` -- mount it
+
+#### 11. Consistent Drawer Pattern (Announcements + Departments)
+Announcements and Departments use bottom-sheet `<Drawer>` while Courses/Members/Content Library use right-slide drawers. Convert Announcements and Departments to right-slide drawers for desktop consistency.
+
+- **Edit**: `src/admin/pages/AdminAnnouncementsPage.tsx` -- replace `<Drawer>` with custom right-slide drawer
+- **Edit**: `src/admin/pages/AdminDepartmentsPage.tsx` -- same
+
+#### 12. Messages -- Responsive Layout
+The messages page uses a fixed `grid-cols-[260px_1fr]` that breaks on narrow viewports. On mobile, show only the learner list, then full-screen conversation on select with a back button.
+
+- **Edit**: `src/admin/pages/AdminMessagesPage.tsx` -- responsive mobile layout with back navigation
 
 ---
 
 ### Files to Create
-- `src/components/CommandPalette.tsx`
-- `src/components/KeyboardShortcuts.tsx`
-- `src/components/ScrollToTop.tsx`
+- `src/admin/components/AdminCommandPalette.tsx`
+- `src/admin/components/AdminKeyboardShortcuts.tsx`
 
 ### Files to Edit
-- `src/components/Layout.tsx` -- mount CommandPalette, KeyboardShortcuts, ScrollToTop
-- `src/components/AppSidebar.tsx` -- add unread message badge
-- `src/pages/Library.tsx` -- add sparkline SVG to course cards
-- `src/pages/StudyPlan.tsx` -- add drag-and-drop + delete confirmation
-- `src/pages/Reflections.tsx` -- add delete confirmation
-- `src/pages/Notebook.tsx` -- add vocab delete confirmation
-- `src/context/WorkspaceContext.tsx` -- add `reorderTasks` method
+- `src/admin/components/AdminLayout.tsx` -- mount command palette, keyboard shortcuts, scroll-to-top, page transitions
+- `src/admin/components/AdminSidebar.tsx` -- unread message badge
+- `src/admin/components/AdminTopBar.tsx` -- breadcrumb navigation
+- `src/admin/pages/AdminDashboard.tsx` -- clickable stat cards, first-run empty state
+- `src/admin/pages/AdminCourses.tsx` -- archive confirmation
+- `src/admin/pages/AdminAnnouncementsPage.tsx` -- edit/delete + right-slide drawer
+- `src/admin/pages/AdminDepartmentsPage.tsx` -- right-slide drawer
+- `src/admin/pages/AdminMessagesPage.tsx` -- responsive mobile layout
 
