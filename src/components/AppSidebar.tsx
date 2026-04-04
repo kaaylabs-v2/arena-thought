@@ -31,6 +31,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { SidebarUserMenu } from "@/components/SidebarUserMenu";
+import { useMemo } from "react";
 
 const mainNav = [
   { title: "Home", url: "/", icon: Home },
@@ -48,7 +49,14 @@ export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const { userRole } = useWorkspace();
+  const { userRole, directMessages } = useWorkspace();
+
+  // Compute unread messages for learner (admin messages to user-1 that are unread)
+  const unreadCount = useMemo(() => {
+    return directMessages.filter(
+      (m) => m.fromRole === "admin" && m.toUserId === "user-1" && !m.read
+    ).length;
+  }, [directMessages]);
 
   const filteredNav = mainNav;
 
@@ -104,7 +112,12 @@ export function AppSidebar() {
                       activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                     >
                       <item.icon strokeWidth={1.5} />
-                      <span className="text-sm font-sans">{item.title}</span>
+                      <span className="text-sm font-sans flex-1">{item.title}</span>
+                      {item.title === "Messages" && unreadCount > 0 && (
+                        <span className="ml-auto flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent text-[10px] font-sans font-medium text-accent-foreground px-1">
+                          {unreadCount}
+                        </span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
