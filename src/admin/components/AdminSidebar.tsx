@@ -57,7 +57,7 @@ export function AdminSidebar() {
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-between px-1">
+          <div className="flex flex-col gap-1 px-1">
             <div className="flex flex-col">
               <span className="font-serif text-lg tracking-tight text-sidebar-foreground leading-none">
                 Nexus²
@@ -68,7 +68,7 @@ export function AdminSidebar() {
             </div>
             <button
               onClick={toggleSidebar}
-              className="h-7 w-7 flex items-center justify-center rounded-lg text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors duration-200 shrink-0"
+              className="h-7 w-7 flex items-center justify-center rounded-lg text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors duration-200"
             >
               <ChevronsLeft className="h-4 w-4" strokeWidth={1.5} />
             </button>
