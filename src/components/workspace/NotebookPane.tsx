@@ -116,7 +116,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
         <Tooltip>
           <TooltipTrigger asChild>
             <div className="h-7 w-7 flex items-center justify-center rounded-lg bg-muted/50 relative">
-              <BookOpen className="h-3.5 w-3.5 text-muted-foreground/60" strokeWidth={1.5} />
+              <BookOpen className="h-3.5 w-3.5 text-muted-foreground/80" strokeWidth={1.5} />
               <span className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-accent/80 text-[8px] text-accent-foreground flex items-center justify-center font-sans font-bold">
                 {notebookEntries.length}
               </span>
@@ -127,7 +127,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
         <Tooltip>
           <TooltipTrigger asChild>
             <div className="h-7 w-7 flex items-center justify-center rounded-lg bg-muted/50">
-              <BookA className="h-3.5 w-3.5 text-muted-foreground/60" strokeWidth={1.5} />
+              <BookA className="h-3.5 w-3.5 text-muted-foreground/80" strokeWidth={1.5} />
             </div>
           </TooltipTrigger>
           <TooltipContent side="left" className="font-sans text-xs">{courseVocab.length} terms</TooltipContent>
@@ -149,7 +149,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
           </button>
           <div>
             <h2 className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest">Notebook</h2>
-            <p className="text-[10px] font-sans text-muted-foreground/50">
+            <p className="text-[10px] font-sans text-muted-foreground/70">
               {activeTab === "notes" ? `${notebookEntries.length} notes` : `${courseVocab.length} terms`}
             </p>
           </div>
@@ -163,7 +163,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
           className={`px-3 py-2 text-[11px] font-sans font-medium transition-all duration-200 border-b-2 -mb-px ${
             activeTab === "notes"
               ? "text-foreground border-accent"
-              : "text-muted-foreground/60 border-transparent hover:text-foreground"
+              : "text-muted-foreground/80 border-transparent hover:text-foreground"
           }`}
         >
           Notes
@@ -173,7 +173,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
           className={`px-3 py-2 text-[11px] font-sans font-medium transition-all duration-200 border-b-2 -mb-px flex items-center gap-1.5 ${
             activeTab === "vocab"
               ? "text-foreground border-accent"
-              : "text-muted-foreground/60 border-transparent hover:text-foreground"
+              : "text-muted-foreground/80 border-transparent hover:text-foreground"
           }`}
         >
           <BookA className="h-3 w-3" strokeWidth={1.5} />
@@ -189,14 +189,14 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
           {/* Quick capture */}
           <div className="p-3 border-b border-border">
             <div className="flex items-center gap-2 bg-muted/40 rounded-lg px-3 py-2 transition-colors focus-within:bg-muted/60">
-              <Plus className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" strokeWidth={1.5} />
+              <Plus className="h-3.5 w-3.5 text-muted-foreground/70 shrink-0" strokeWidth={1.5} />
               <input
                 type="text"
                 value={quickNote}
                 onChange={(e) => setQuickNote(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleQuickCapture()}
                 placeholder="Quick capture..."
-                className="flex-1 bg-transparent text-[12px] font-sans text-foreground placeholder:text-muted-foreground/50 focus:outline-none"
+                className="flex-1 bg-transparent text-[12px] font-sans text-foreground placeholder:text-muted-foreground/70 focus:outline-none"
               />
             </div>
           </div>
@@ -206,7 +206,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
             {notebookEntries.length === 0 ? (
               <div className="text-center py-14 px-4">
                 <BookOpen className="h-8 w-8 text-muted-foreground/20 mx-auto mb-2.5" strokeWidth={1} />
-                <p className="text-[11px] font-sans text-muted-foreground/50 leading-relaxed">Save insights from Nexi or capture your own notes.</p>
+                <p className="text-[11px] font-sans text-muted-foreground/70 leading-relaxed">Save insights from Nexi or capture your own notes.</p>
               </div>
             ) : (
               notebookEntries.map((note) => (
@@ -225,7 +225,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                         </span>
                       ))}
                     </div>
-                    <span className="text-[9px] font-sans text-muted-foreground/50">{note.date}</span>
+                    <span className="text-[9px] font-sans text-muted-foreground/70">{note.date}</span>
                   </div>
                 </div>
               ))
@@ -239,7 +239,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
             {!showVocabForm ? (
               <button
                 onClick={() => setShowVocabForm(true)}
-                className="flex items-center gap-2 w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-muted-foreground/50 hover:bg-muted/60 transition-colors"
+                className="flex items-center gap-2 w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-muted-foreground/70 hover:bg-muted/60 transition-colors"
               >
                 <Plus className="h-3.5 w-3.5 shrink-0" strokeWidth={1.5} />
                 Add a term...
@@ -252,7 +252,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                   onChange={(e) => setVocabTerm(e.target.value)}
                   placeholder="Term"
                   autoFocus
-                  className="w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-muted/60 transition-colors"
+                  className="w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:bg-muted/60 transition-colors"
                 />
                 {/* Definition with generate */}
                 <div>
@@ -279,14 +279,14 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                     onChange={(e) => setVocabDef(e.target.value)}
                     placeholder={genDef ? "" : "Definition"}
                     rows={2}
-                    className={`w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-muted/60 transition-colors resize-none ${genDef ? "animate-pulse opacity-60" : ""}`}
+                    className={`w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:bg-muted/60 transition-colors resize-none ${genDef ? "animate-pulse opacity-60" : ""}`}
                   />
                 </div>
                 {/* Example with generate */}
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-wider">
-                      Example <span className="normal-case text-muted-foreground/50">(optional)</span>
+                      Example <span className="normal-case text-muted-foreground/70">(optional)</span>
                     </label>
                     {!genEx && !vocabExample && vocabTerm.trim() && (
                       <button
@@ -310,7 +310,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                     onChange={(e) => setVocabExample(e.target.value)}
                     placeholder={genEx ? "" : "Example (optional)"}
                     onKeyDown={(e) => e.key === "Enter" && handleAddVocab()}
-                    className={`w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:bg-muted/60 transition-colors ${genEx ? "animate-pulse opacity-60" : ""}`}
+                    className={`w-full bg-muted/40 rounded-lg px-3 py-2 text-[12px] font-sans text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:bg-muted/60 transition-colors ${genEx ? "animate-pulse opacity-60" : ""}`}
                   />
                 </div>
                 <div className="flex items-center gap-2 justify-end">
@@ -337,7 +337,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
             {courseVocab.length === 0 ? (
               <div className="text-center py-14 px-4">
                 <BookA className="h-8 w-8 text-muted-foreground/20 mx-auto mb-2.5" strokeWidth={1} />
-                <p className="text-[11px] font-sans text-muted-foreground/50 leading-relaxed">Save key terms and definitions as you learn.</p>
+                <p className="text-[11px] font-sans text-muted-foreground/70 leading-relaxed">Save key terms and definitions as you learn.</p>
               </div>
             ) : (
               courseVocab.map((v) => (
@@ -349,7 +349,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                     <h4 className="text-[12px] font-serif font-medium text-foreground leading-snug">{v.term}</h4>
                     <button
                       onClick={() => handleDeleteVocab(v.id)}
-                      className="h-5 w-5 flex items-center justify-center rounded text-muted-foreground/0 group-hover:text-muted-foreground/40 hover:!text-destructive transition-all duration-200 shrink-0"
+                      className="h-5 w-5 flex items-center justify-center rounded text-muted-foreground/0 group-hover:text-muted-foreground/80 hover:!text-destructive transition-all duration-200 shrink-0"
                     >
                       <Trash2 className="h-3 w-3" strokeWidth={1.5} />
                     </button>
@@ -368,7 +368,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                         </span>
                       ))}
                     </div>
-                    <span className="text-[9px] font-sans text-muted-foreground/50">{v.date}</span>
+                    <span className="text-[9px] font-sans text-muted-foreground/70">{v.date}</span>
                   </div>
                 </div>
               ))
