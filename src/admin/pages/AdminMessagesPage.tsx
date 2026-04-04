@@ -49,10 +49,12 @@ const AdminMessagesPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="font-serif text-2xl font-semibold text-foreground">Messages</h1>
-        <p className="text-sm text-muted-foreground mt-1">Send direct messages to learners</p>
+    <div>
+      <div className="flex items-start justify-between mb-8">
+        <div>
+          <h1 className="font-serif text-[2rem] font-normal text-foreground">Messages</h1>
+          <p className="text-sm mt-0.5 text-muted-foreground">Send direct messages to learners</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-[260px_1fr] gap-0 border border-border rounded-xl overflow-hidden bg-card min-h-[520px]">
