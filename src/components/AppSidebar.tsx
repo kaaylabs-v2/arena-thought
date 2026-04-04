@@ -58,6 +58,8 @@ export function AppSidebar() {
     ).length;
   }, [directMessages]);
 
+  const notebookCount = useMemo(() => notebookEntries.length + vocabulary.length, [notebookEntries, vocabulary]);
+
   const filteredNav = mainNav;
 
   const isActive = (path: string) => {
