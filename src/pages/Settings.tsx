@@ -26,8 +26,8 @@ const Settings = () => {
 
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-5xl mx-auto">
-      <div className="mb-10 animate-fade-in">
-        <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.15] font-medium">Settings</h1>
+      <div className="mb-8 animate-fade-in">
+        <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1] font-medium">Settings</h1>
         <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Manage your account, preferences, and integrations.</p>
       </div>
 
