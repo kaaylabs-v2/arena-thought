@@ -114,10 +114,10 @@ const StudyPlan = () => {
       {showSync && (
         <div className="mb-8 rounded-xl border border-border bg-card p-5 animate-slide-up">
           <div className="flex items-center gap-2 mb-3">
-            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground/60" strokeWidth={1.5} />
+            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground/80" strokeWidth={1.5} />
             <h3 className="text-[12px] font-sans font-medium text-foreground">Sync tasks to external platforms</h3>
           </div>
-          <p className="text-[11px] font-sans text-muted-foreground/60 mb-4">
+          <p className="text-[11px] font-sans text-muted-foreground/80 mb-4">
             Connect a platform to automatically sync tasks with due dates. You'll receive reminders on your mobile device.
           </p>
           <div className="space-y-1.5">
@@ -154,7 +154,7 @@ const StudyPlan = () => {
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             placeholder="What do you need to do?"
             autoFocus
-            className="w-full text-[14px] font-sans text-foreground bg-transparent border-none outline-none mb-4 placeholder:text-muted-foreground/30"
+            className="w-full text-[14px] font-sans text-foreground bg-transparent border-none outline-none mb-4 placeholder:text-muted-foreground/70"
           />
           <div className="flex items-center gap-3 flex-wrap">
             <select
@@ -254,7 +254,7 @@ const StudyPlan = () => {
         <section className="animate-fade-in [animation-delay:200ms] [animation-fill-mode:backwards]">
           <button
             onClick={() => setShowCompleted(!showCompleted)}
-            className="flex items-center gap-2 text-[11px] font-sans uppercase tracking-widest text-muted-foreground/60 hover:text-muted-foreground mb-3 btn-ghost rounded-lg px-2 py-1 -ml-2"
+            className="flex items-center gap-2 text-[11px] font-sans uppercase tracking-widest text-muted-foreground/80 hover:text-muted-foreground mb-3 btn-ghost rounded-lg px-2 py-1 -ml-2"
           >
             <ChevronRight className={`h-3 w-3 transition-transform duration-300 ease-spring ${showCompleted ? "rotate-90" : ""}`} strokeWidth={1.5} />
             Completed ({completedTasks.length})
@@ -305,13 +305,13 @@ function TaskRow({ task, onToggle, onDelete, delay }: { task: StudyTask; onToggl
             {prio.label}
           </span>
           {task.course && (
-            <span className="text-[10px] font-sans text-muted-foreground/50 flex items-center gap-1">
+            <span className="text-[10px] font-sans text-muted-foreground/70 flex items-center gap-1">
               <BookOpen className="h-2.5 w-2.5" strokeWidth={1.5} />
               <span className="truncate max-w-[160px]">{task.course}</span>
             </span>
           )}
           {task.dueDate && (
-            <span className="text-[10px] font-sans text-muted-foreground/50 flex items-center gap-1">
+            <span className="text-[10px] font-sans text-muted-foreground/70 flex items-center gap-1">
               <CalendarIcon className="h-2.5 w-2.5" strokeWidth={1.5} />
               {task.dueDate}
             </span>
@@ -325,7 +325,7 @@ function TaskRow({ task, onToggle, onDelete, delay }: { task: StudyTask; onToggl
           onDelete(task.id);
           toast.success("Task removed");
         }}
-        className="mt-0.5 h-7 w-7 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 text-muted-foreground/40 hover:text-destructive hover:bg-destructive/5 transition-all duration-250 ease-spring shrink-0"
+        className="mt-0.5 h-7 w-7 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 text-muted-foreground/80 hover:text-destructive hover:bg-destructive/5 transition-all duration-250 ease-spring shrink-0"
       >
         <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
       </button>

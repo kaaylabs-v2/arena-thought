@@ -50,13 +50,13 @@ const Library = () => {
       {/* Search + Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-8 animate-fade-in [animation-delay:80ms] [animation-fill-mode:backwards]">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" strokeWidth={1.5} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/80" strokeWidth={1.5} />
           <input
             type="text"
             placeholder="Search courses..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-[13px] font-sans placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring/40 transition-all duration-200"
+            className="w-full h-10 pl-10 pr-4 rounded-lg border border-input bg-background text-[13px] font-sans placeholder:text-muted-foreground/80 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-ring/40 transition-all duration-200"
           />
         </div>
         <div className="flex gap-0.5 bg-muted/60 p-1 rounded-lg">
@@ -79,7 +79,7 @@ const Library = () => {
       {/* Course Grid */}
       {filteredCourses.length === 0 ? (
         <div className="text-center py-24 animate-fade-in">
-          <BookOpen className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" strokeWidth={1} />
+          <BookOpen className="h-10 w-10 text-muted-foreground/70 mx-auto mb-3" strokeWidth={1} />
           <p className="text-muted-foreground font-sans text-sm">No courses found.</p>
         </div>
       ) : (

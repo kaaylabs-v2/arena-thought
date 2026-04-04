@@ -408,10 +408,10 @@ function AccountPanel() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left px-5 py-3 text-[10px] font-sans uppercase tracking-widest text-muted-foreground/60 font-medium">Device</th>
-                <th className="text-left px-4 py-3 text-[10px] font-sans uppercase tracking-widest text-muted-foreground/60 font-medium">Location</th>
-                <th className="text-left px-4 py-3 text-[10px] font-sans uppercase tracking-widest text-muted-foreground/60 font-medium hidden sm:table-cell">Created</th>
-                <th className="text-left px-4 py-3 text-[10px] font-sans uppercase tracking-widest text-muted-foreground/60 font-medium">Last active</th>
+                <th className="text-left px-5 py-3 text-[10px] font-sans uppercase tracking-widest text-muted-foreground/80 font-medium">Device</th>
+                <th className="text-left px-4 py-3 text-[10px] font-sans uppercase tracking-widest text-muted-foreground/80 font-medium">Location</th>
+                <th className="text-left px-4 py-3 text-[10px] font-sans uppercase tracking-widest text-muted-foreground/80 font-medium hidden sm:table-cell">Created</th>
+                <th className="text-left px-4 py-3 text-[10px] font-sans uppercase tracking-widest text-muted-foreground/80 font-medium">Last active</th>
                 <th className="w-10 px-3 py-3" />
               </tr>
             </thead>
@@ -420,7 +420,7 @@ function AccountPanel() {
                 <tr key={i} className="group">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
-                      {s.device.includes("iPhone") ? <Smartphone className="h-3.5 w-3.5 text-muted-foreground/50" strokeWidth={1.5} /> : <Monitor className="h-3.5 w-3.5 text-muted-foreground/50" strokeWidth={1.5} />}
+                      {s.device.includes("iPhone") ? <Smartphone className="h-3.5 w-3.5 text-muted-foreground/70" strokeWidth={1.5} /> : <Monitor className="h-3.5 w-3.5 text-muted-foreground/70" strokeWidth={1.5} />}
                       <span className="text-[13px] font-sans text-foreground">{s.device}</span>
                       {i === 0 && <span className="text-[10px] font-sans text-accent font-medium ml-1">Current</span>}
                     </div>

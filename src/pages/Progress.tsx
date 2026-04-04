@@ -54,28 +54,28 @@ const Progress = () => {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Flame className="h-3.5 w-3.5 text-accent/70" strokeWidth={1.5} />
-              <span className="text-[10px] font-sans text-muted-foreground/60 uppercase tracking-widest">Streak</span>
+              <span className="text-[10px] font-sans text-muted-foreground/80 uppercase tracking-widest">Streak</span>
             </div>
             <span className="text-3xl font-serif text-foreground font-medium tabular-nums">{streakDays}</span>
-            <p className="text-[11px] font-sans text-muted-foreground/60 mt-0.5">days in a row</p>
+            <p className="text-[11px] font-sans text-muted-foreground/80 mt-0.5">days in a row</p>
           </div>
           <div className="w-px h-14 bg-border self-center hidden sm:block" />
           <div>
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="h-3.5 w-3.5 text-accent/70" strokeWidth={1.5} />
-              <span className="text-[10px] font-sans text-muted-foreground/60 uppercase tracking-widest">Active</span>
+              <span className="text-[10px] font-sans text-muted-foreground/80 uppercase tracking-widest">Active</span>
             </div>
             <span className="text-3xl font-serif text-foreground font-medium">{activeCourses}</span>
-            <p className="text-[11px] font-sans text-muted-foreground/60 mt-0.5">courses</p>
+            <p className="text-[11px] font-sans text-muted-foreground/80 mt-0.5">courses</p>
           </div>
           <div className="w-px h-14 bg-border self-center hidden sm:block" />
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <Clock className="h-3.5 w-3.5 text-muted-foreground/40" strokeWidth={1.5} />
-              <span className="text-[10px] font-sans text-muted-foreground/60 uppercase tracking-widest">Total time</span>
+              <Clock className="h-3.5 w-3.5 text-muted-foreground/80" strokeWidth={1.5} />
+              <span className="text-[10px] font-sans text-muted-foreground/80 uppercase tracking-widest">Total time</span>
             </div>
             <span className="text-3xl font-serif text-foreground font-medium tabular-nums">{totalTime}</span>
-            <p className="text-[11px] font-sans text-muted-foreground/60 mt-0.5">studied</p>
+            <p className="text-[11px] font-sans text-muted-foreground/80 mt-0.5">studied</p>
           </div>
           {needsAttention.length > 0 && (
             <>
@@ -83,10 +83,10 @@ const Progress = () => {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Target className="h-3.5 w-3.5 text-accent/70" strokeWidth={1.5} />
-                  <span className="text-[10px] font-sans text-muted-foreground/60 uppercase tracking-widest">Needs attention</span>
+                  <span className="text-[10px] font-sans text-muted-foreground/80 uppercase tracking-widest">Needs attention</span>
                 </div>
                 <span className="text-3xl font-serif text-foreground font-medium">{needsAttention.length}</span>
-                <p className="text-[11px] font-sans text-muted-foreground/60 mt-0.5">courses behind</p>
+                <p className="text-[11px] font-sans text-muted-foreground/80 mt-0.5">courses behind</p>
               </div>
             </>
           )}
@@ -99,8 +99,8 @@ const Progress = () => {
         className={`rounded-xl border border-border bg-card p-5 lg:p-6 mb-8 ${activityReveal.isVisible ? "animate-fade-in [animation-delay:120ms] [animation-fill-mode:backwards]" : "opacity-0"}`}
       >
         <div className="flex items-center gap-2 mb-4">
-          <Calendar className="h-3.5 w-3.5 text-muted-foreground/40" strokeWidth={1.5} />
-          <span className="text-[10px] font-sans text-muted-foreground/60 uppercase tracking-widest">This week</span>
+          <Calendar className="h-3.5 w-3.5 text-muted-foreground/80" strokeWidth={1.5} />
+          <span className="text-[10px] font-sans text-muted-foreground/80 uppercase tracking-widest">This week</span>
         </div>
         <div className="flex items-end gap-2 h-20">
           {weeklyActivity.map((day, i) => (
@@ -118,15 +118,15 @@ const Progress = () => {
                   }}
                 />
               </div>
-              <span className="text-[9px] font-sans text-muted-foreground/50 tabular-nums">{day.day}</span>
+              <span className="text-[9px] font-sans text-muted-foreground/70 tabular-nums">{day.day}</span>
             </div>
           ))}
         </div>
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/60">
-          <span className="text-[10px] font-sans text-muted-foreground/50">
+          <span className="text-[10px] font-sans text-muted-foreground/70">
             {weeklyActivity.filter((d) => d.active).length} of 7 days active
           </span>
-          <span className="text-[10px] font-sans text-muted-foreground/50 tabular-nums">
+          <span className="text-[10px] font-sans text-muted-foreground/70 tabular-nums">
             {weeklyActivity.reduce((s, d) => s + d.hours, 0).toFixed(1)}h this week
           </span>
         </div>
@@ -153,7 +153,7 @@ function EmptyState() {
       ref={reveal.ref}
       className={`text-center py-24 ${reveal.isVisible ? "animate-fade-in" : "opacity-0"}`}
     >
-      <BookOpen className="h-10 w-10 text-muted-foreground/25 mx-auto mb-3" strokeWidth={1} />
+      <BookOpen className="h-10 w-10 text-muted-foreground/70 mx-auto mb-3" strokeWidth={1} />
       <p className="text-muted-foreground/70 font-sans text-sm mb-4">No courses started yet.</p>
       <Link to="/library" className="inline-flex items-center gap-2 text-sm font-sans text-accent hover:text-accent/80 transition-colors">
         <Library className="h-4 w-4" strokeWidth={1.5} />
@@ -181,7 +181,7 @@ function CourseCard({ course, index }: { course: typeof courseProgress[number]; 
             <AlertCircle className="h-3.5 w-3.5 text-accent/70 shrink-0" strokeWidth={1.5} />
           )}
         </div>
-        <div className="flex items-center gap-3 text-[11px] font-sans text-muted-foreground/60">
+        <div className="flex items-center gap-3 text-[11px] font-sans text-muted-foreground/80">
           <span className="flex items-center gap-1">
             <Clock className="h-3 w-3" strokeWidth={1.5} />
             {course.lastStudied}
@@ -203,11 +203,11 @@ function CourseCard({ course, index }: { course: typeof courseProgress[number]; 
               delay={200 + index * 70}
             />
           </div>
-          <span className="text-[11px] font-sans text-muted-foreground/60 w-8 text-right tabular-nums">{course.progress}%</span>
+          <span className="text-[11px] font-sans text-muted-foreground/80 w-8 text-right tabular-nums">{course.progress}%</span>
         </div>
       </div>
       <div className="shrink-0">
-        <span className="flex items-center gap-1 text-[12px] font-sans text-muted-foreground/50 group-hover:text-accent transition-colors duration-200">
+        <span className="flex items-center gap-1 text-[12px] font-sans text-muted-foreground/70 group-hover:text-accent transition-colors duration-200">
           Continue
           <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.5} />
         </span>

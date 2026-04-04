@@ -37,8 +37,8 @@ const Profile = () => {
           <div>
             <h2 className="font-serif text-xl text-foreground font-medium leading-snug">{userProfile.name}</h2>
             <div className="flex items-center gap-1.5 mt-1">
-              <Shield className="h-3 w-3 text-muted-foreground/50" strokeWidth={1.5} />
-              <span className="text-[11px] font-sans text-muted-foreground/60">Private · Local only</span>
+              <Shield className="h-3 w-3 text-muted-foreground/70" strokeWidth={1.5} />
+              <span className="text-[11px] font-sans text-muted-foreground/80">Private · Local only</span>
             </div>
           </div>
         </div>
@@ -88,13 +88,13 @@ const Profile = () => {
               <ProfileDetail icon={GraduationCap} label="Institution" value={userProfile.institution} />
               <ProfileDetail icon={MapPin} label="Timezone" value={userProfile.timezone.replace("_", " ").replace("America/", "")} />
               <div className="px-5 py-4">
-                <p className="text-[10px] font-sans text-muted-foreground/50 uppercase tracking-widest mb-1.5">Bio</p>
+                <p className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest mb-1.5">Bio</p>
                 <p className="text-[13px] font-sans text-foreground/85 leading-relaxed">{userProfile.bio}</p>
               </div>
               <div className="px-5 py-4">
                 <div className="flex items-center gap-1.5 mb-1.5">
-                  <Target className="h-3 w-3 text-muted-foreground/50" strokeWidth={1.5} />
-                  <p className="text-[10px] font-sans text-muted-foreground/50 uppercase tracking-widest">Learning goal</p>
+                  <Target className="h-3 w-3 text-muted-foreground/70" strokeWidth={1.5} />
+                  <p className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest">Learning goal</p>
                 </div>
                 <p className="text-[13px] font-sans text-foreground/85 leading-relaxed">{userProfile.learningGoal}</p>
               </div>
@@ -117,7 +117,7 @@ const Profile = () => {
       {/* Privacy notice */}
       <div className="rounded-xl border border-border bg-card p-5 animate-fade-in [animation-delay:280ms] [animation-fill-mode:backwards]">
         <div className="flex items-start gap-3">
-          <Shield className="h-4 w-4 text-muted-foreground/50 mt-0.5 shrink-0" strokeWidth={1.5} />
+          <Shield className="h-4 w-4 text-muted-foreground/70 mt-0.5 shrink-0" strokeWidth={1.5} />
           <div>
             <p className="text-[13px] font-sans font-medium text-foreground mb-1">Your data stays with you</p>
             <p className="text-[12px] font-sans text-muted-foreground/70 leading-relaxed">
@@ -135,7 +135,7 @@ const Profile = () => {
 function ProfileField({ label, value, onChange, multiline }: { label: string; value: string; onChange: (v: string) => void; multiline?: boolean }) {
   return (
     <div className="px-5 py-4">
-      <label className="text-[10px] font-sans text-muted-foreground/50 uppercase tracking-widest mb-1.5 block">{label}</label>
+      <label className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest mb-1.5 block">{label}</label>
       {multiline ? (
         <textarea
           value={value}
@@ -159,7 +159,7 @@ function ProfileDetail({ icon: Icon, label, value }: { icon: React.ElementType; 
   return (
     <div className="flex items-center justify-between px-5 py-4">
       <div className="flex items-center gap-2">
-        <Icon className="h-3.5 w-3.5 text-muted-foreground/50" strokeWidth={1.5} />
+        <Icon className="h-3.5 w-3.5 text-muted-foreground/70" strokeWidth={1.5} />
         <span className="text-[12px] font-sans text-muted-foreground">{label}</span>
       </div>
       <span className="text-[13px] font-sans text-foreground">{value}</span>
@@ -171,8 +171,8 @@ function StatCard({ icon: Icon, label, value }: { icon: React.ElementType; label
   return (
     <div className="rounded-xl border border-border bg-card p-4">
       <div className="flex items-center gap-2 mb-2">
-        <Icon className="h-3.5 w-3.5 text-muted-foreground/50" strokeWidth={1.5} />
-        <span className="text-[10px] font-sans text-muted-foreground/60 uppercase tracking-widest">{label}</span>
+        <Icon className="h-3.5 w-3.5 text-muted-foreground/70" strokeWidth={1.5} />
+        <span className="text-[10px] font-sans text-muted-foreground/80 uppercase tracking-widest">{label}</span>
       </div>
       <span className="text-xl font-serif text-foreground font-medium tabular-nums">{value}</span>
     </div>

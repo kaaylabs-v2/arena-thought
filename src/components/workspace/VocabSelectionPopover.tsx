@@ -208,7 +208,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
                 <input
                   value={term}
                   onChange={(e) => setTerm(e.target.value)}
-                  className="w-full bg-background border border-border rounded-lg px-3 py-1.5 text-[12.5px] font-sans text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-ring/40 transition-colors"
+                  className="w-full bg-background border border-border rounded-lg px-3 py-1.5 text-[12.5px] font-sans text-foreground placeholder:text-muted-foreground/80 focus:outline-none focus:border-ring/40 transition-colors"
                   autoFocus
                 />
               </div>
@@ -230,7 +230,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
                     onChange={(e) => setDefinition(e.target.value)}
                     placeholder={genDef ? "" : "What does it mean?"}
                     rows={2}
-                    className={`w-full bg-background border border-border rounded-lg px-3 py-1.5 text-[12.5px] font-sans text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-ring/40 transition-colors resize-none ${genDef ? "animate-pulse opacity-60" : ""}`}
+                    className={`w-full bg-background border border-border rounded-lg px-3 py-1.5 text-[12.5px] font-sans text-foreground placeholder:text-muted-foreground/80 focus:outline-none focus:border-ring/40 transition-colors resize-none ${genDef ? "animate-pulse opacity-60" : ""}`}
                   />
                 </div>
               </div>
@@ -239,7 +239,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-wider">
-                    Example <span className="normal-case text-muted-foreground/50">(optional)</span>
+                    Example <span className="normal-case text-muted-foreground/70">(optional)</span>
                   </label>
                   {!genEx && !example && (
                     <button
@@ -261,7 +261,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
                   value={example}
                   onChange={(e) => setExample(e.target.value)}
                   placeholder={genEx ? "" : "Use it in context…"}
-                  className={`w-full bg-background border border-border rounded-lg px-3 py-1.5 text-[12.5px] font-sans text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-ring/40 transition-colors ${genEx ? "animate-pulse opacity-60" : ""}`}
+                  className={`w-full bg-background border border-border rounded-lg px-3 py-1.5 text-[12.5px] font-sans text-foreground placeholder:text-muted-foreground/80 focus:outline-none focus:border-ring/40 transition-colors ${genEx ? "animate-pulse opacity-60" : ""}`}
                 />
               </div>
             </div>

@@ -47,7 +47,7 @@ const Index = () => {
               <Clock className="h-3 w-3" strokeWidth={1.5} />
               {activeCourse.lastActive}
             </div>
-            <ArrowRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-foreground icon-hover-rotate" strokeWidth={1.5} />
+            <ArrowRight className="h-4 w-4 text-muted-foreground/80 group-hover:text-foreground icon-hover-rotate" strokeWidth={1.5} />
           </div>
           <h2 className="font-serif text-2xl lg:text-[1.75rem] text-foreground mb-1.5 leading-snug font-medium">{activeCourse.title}</h2>
           <p className="text-muted-foreground font-sans text-sm mb-6 tracking-[-0.01em]">{activeCourse.module}</p>
@@ -88,12 +88,12 @@ const Index = () => {
                 <span className="flex-1 text-[13px] font-sans text-foreground truncate">{task.title}</span>
                 <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${priorityDot[task.priority]} transition-transform duration-300 ease-spring group-hover:scale-125`} />
                 <span className={`text-[11px] font-sans shrink-0 ${
-                  task.priority === "high" ? "text-destructive/70" : task.priority === "medium" ? "text-accent/70" : "text-muted-foreground/40"
+                  task.priority === "high" ? "text-destructive/70" : task.priority === "medium" ? "text-accent/70" : "text-muted-foreground/80"
                 }`}>
                   {task.priority === "high" ? "High" : task.priority === "medium" ? "Medium" : "Low"}
                 </span>
                 {task.dueDate && (
-                  <span className="text-[10px] font-sans text-muted-foreground/50 shrink-0 flex items-center gap-1">
+                  <span className="text-[10px] font-sans text-muted-foreground/70 shrink-0 flex items-center gap-1">
                     <Calendar className="h-2.5 w-2.5" strokeWidth={1.5} />
                     {task.dueDate}
                   </span>
@@ -121,7 +121,7 @@ const Index = () => {
               </div>
               <div className="flex items-center gap-4 ml-4 shrink-0">
                 <span className="text-[11px] font-sans text-muted-foreground tabular-nums">{course.progress}%</span>
-                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/30 opacity-0 group-hover:opacity-100 icon-hover-rotate" strokeWidth={1.5} />
+                <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/70 opacity-0 group-hover:opacity-100 icon-hover-rotate" strokeWidth={1.5} />
               </div>
             </Link>
           ))}

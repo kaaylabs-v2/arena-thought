@@ -164,15 +164,15 @@ const Reflections = () => {
       <div ref={headerReveal.ref} className={headerReveal.isVisible ? "mb-8 animate-fade-in" : "mb-8 opacity-0"}>
         <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1] font-medium">Reflections</h1>
         <div className="flex items-center gap-2 mt-2">
-          <Lock className="h-3 w-3 text-muted-foreground/50" strokeWidth={1.5} />
-          <p className="text-muted-foreground/60 font-sans text-[11px] tracking-[-0.01em]">Private · Only you</p>
+          <Lock className="h-3 w-3 text-muted-foreground/70" strokeWidth={1.5} />
+          <p className="text-muted-foreground/80 font-sans text-[11px] tracking-[-0.01em]">Private · Only you</p>
         </div>
       </div>
 
       {/* Prompt chips */}
       <div ref={composerReveal.ref} className={composerReveal.isVisible ? "animate-fade-in [animation-delay:40ms] [animation-fill-mode:backwards]" : "opacity-0"}>
         <div className="flex items-center gap-1.5 mb-3 flex-wrap">
-          <Sparkles className="h-3 w-3 text-muted-foreground/40" strokeWidth={1.5} />
+          <Sparkles className="h-3 w-3 text-muted-foreground/80" strokeWidth={1.5} />
           {promptChips.map((chip) => (
             <button
               key={chip}
@@ -193,12 +193,12 @@ const Reflections = () => {
             onChange={(e) => setNewReflection(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={4}
-            className="w-full bg-transparent text-[13.5px] font-sans text-foreground placeholder:text-muted-foreground/45 resize-none focus:outline-none leading-[1.7]"
+            className="w-full bg-transparent text-[13.5px] font-sans text-foreground placeholder:text-muted-foreground/80 resize-none focus:outline-none leading-[1.7]"
           />
 
           {/* Mood selector */}
           <div className="flex items-center gap-1.5 mt-2 mb-3 flex-wrap">
-            <span className="text-[10px] font-sans text-muted-foreground/50 uppercase tracking-widest mr-1">Mood</span>
+            <span className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest mr-1">Mood</span>
             {moodOptions.map((m) => (
               <button
                 key={m.value}
@@ -206,7 +206,7 @@ const Reflections = () => {
                 className={`px-2 py-0.5 rounded-full text-[11px] font-sans transition-all duration-200 active:scale-[0.95] ${
                   selectedMood === m.value
                     ? "bg-accent/15 text-accent border border-accent/30"
-                    : "border border-border text-muted-foreground/60 hover:border-accent/20 hover:text-foreground"
+                    : "border border-border text-muted-foreground/80 hover:border-accent/20 hover:text-foreground"
                 }`}
               >
                 {m.emoji} {m.label}
@@ -215,7 +215,7 @@ const Reflections = () => {
           </div>
 
           <div className="flex items-center justify-between pt-3 border-t border-border/60">
-            <span className="text-[10px] font-sans text-muted-foreground/40">
+            <span className="text-[10px] font-sans text-muted-foreground/80">
               {isListening ? (
                 <span className="text-accent flex items-center gap-1">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
@@ -229,7 +229,7 @@ const Reflections = () => {
                 className={`flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200 active:scale-[0.95] ${
                   isListening
                     ? "bg-accent/15 text-accent border border-accent/30 shadow-[0_0_12px_hsl(var(--accent)/0.15)]"
-                    : "border border-border text-muted-foreground/50 hover:border-accent/20 hover:text-foreground"
+                    : "border border-border text-muted-foreground/70 hover:border-accent/20 hover:text-foreground"
                 }`}
                 title={isListening ? "Stop listening" : "Voice input"}
               >
@@ -284,7 +284,7 @@ function EmptyState() {
       className={`text-center py-24 ${reveal.isVisible ? "animate-fade-in" : "opacity-0"}`}
     >
       <Shield className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" strokeWidth={1} />
-      <p className="text-muted-foreground/60 font-sans text-sm">A quiet space for your thinking.</p>
+      <p className="text-muted-foreground/80 font-sans text-sm">A quiet space for your thinking.</p>
     </div>
   );
 }
@@ -297,7 +297,7 @@ function DateGroup({ label, children }: { label: string; children: React.ReactNo
         ref={reveal.ref}
         className={`flex items-center gap-3 mb-4 ${reveal.isVisible ? "animate-fade-in" : "opacity-0"}`}
       >
-        <span className="text-[10px] font-sans text-muted-foreground/50 uppercase tracking-[0.12em] font-medium">{label}</span>
+        <span className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-[0.12em] font-medium">{label}</span>
         <div className="flex-1 h-px bg-border/60" />
       </div>
       <div className="space-y-5">{children}</div>
@@ -322,10 +322,10 @@ function ReflectionCard({
   return (
     <div ref={reveal.ref} className={`group ${props.className}`} style={props.style}>
       <div className="flex items-center gap-2 mb-2">
-        <Calendar className="h-3 w-3 text-muted-foreground/40" strokeWidth={1.5} />
-        <span className="text-[10px] font-sans text-muted-foreground/50 uppercase tracking-widest">{reflection.date}</span>
+        <Calendar className="h-3 w-3 text-muted-foreground/80" strokeWidth={1.5} />
+        <span className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest">{reflection.date}</span>
         {reflection.mood && (
-          <span className="text-[10px] font-sans text-muted-foreground/60 ml-1">
+          <span className="text-[10px] font-sans text-muted-foreground/80 ml-1">
             {moodDisplay[reflection.mood].emoji} {moodDisplay[reflection.mood].label}
           </span>
         )}
@@ -349,7 +349,7 @@ function ReflectionCard({
         {/* Delete button */}
         <button
           onClick={() => onDelete(reflection.id)}
-          className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-muted-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-all duration-200 active:scale-[0.95]"
+          className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-muted-foreground/80 hover:text-destructive hover:bg-destructive/10 transition-all duration-200 active:scale-[0.95]"
           title="Delete reflection"
         >
           <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
@@ -357,7 +357,7 @@ function ReflectionCard({
 
         {reflection.linkedCourse && (
           <div className="mt-4 pt-3 border-t border-border/60">
-            <span className="text-[10px] font-sans text-muted-foreground/50 tracking-[-0.01em]">
+            <span className="text-[10px] font-sans text-muted-foreground/70 tracking-[-0.01em]">
               Linked to {reflection.linkedCourse}
             </span>
           </div>

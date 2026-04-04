@@ -243,7 +243,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
                     className={`h-8 w-8 flex items-center justify-center rounded-lg transition-colors duration-200 ${
                       selectedSource === item.id
                         ? "bg-secondary text-foreground"
-                        : "hover:bg-secondary/80 text-muted-foreground/60"
+                        : "hover:bg-secondary/80 text-muted-foreground/80"
                     }`}
                   >
                     <Icon className="h-3.5 w-3.5" strokeWidth={1.5} />
@@ -320,7 +320,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
               <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
                 <Play className="h-5 w-5 text-primary/70 ml-0.5" strokeWidth={1.5} />
               </div>
-              <span className="text-[11px] font-sans text-muted-foreground/60">{typeReadTime[sourceItem!.type]}</span>
+              <span className="text-[11px] font-sans text-muted-foreground/80">{typeReadTime[sourceItem!.type]}</span>
             </div>
           </div>
         )}
@@ -346,11 +346,11 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
             <div className="grid grid-cols-3 gap-2">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="aspect-[16/10] rounded-lg bg-muted/40 border border-border/60 flex items-center justify-center">
-                  <Presentation className="h-4 w-4 text-muted-foreground/30" strokeWidth={1.5} />
+                  <Presentation className="h-4 w-4 text-muted-foreground/70" strokeWidth={1.5} />
                 </div>
               ))}
             </div>
-            <p className="text-[10px] font-sans text-muted-foreground/50 mt-2 text-center">{typeReadTime[sourceItem!.type]}</p>
+            <p className="text-[10px] font-sans text-muted-foreground/70 mt-2 text-center">{typeReadTime[sourceItem!.type]}</p>
           </div>
         )}
 
@@ -396,7 +396,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
               </div>
             ) : (
               <div className="rounded-xl border border-border/60 bg-muted/20 p-6 text-center">
-                <Icon className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" strokeWidth={1} />
+                <Icon className="h-10 w-10 text-muted-foreground/70 mx-auto mb-3" strokeWidth={1} />
                 <p className="text-[13px] font-sans text-foreground/70 leading-relaxed max-w-[320px] mx-auto">
                   This {typeLabel[sourceItem?.type || "reading"]?.toLowerCase()} is part of the {sourceItem?.moduleName} module.
                   Use Nexi to ask questions about its content.
@@ -429,7 +429,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
         {modules.map((module) => (
           <div key={module.id} className="mb-1">
             <div className="px-4 py-2">
-              <h3 className="text-[10px] font-sans font-medium text-muted-foreground/60 uppercase tracking-widest">
+              <h3 className="text-[10px] font-sans font-medium text-muted-foreground/80 uppercase tracking-widest">
                 {module.title}
               </h3>
             </div>
@@ -447,7 +447,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
                         : "text-foreground/75 hover:bg-secondary/80 hover:text-foreground"
                     }`}
                   >
-                    <ItemIcon className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" strokeWidth={1.5} />
+                    <ItemIcon className="h-3.5 w-3.5 text-muted-foreground/70 shrink-0" strokeWidth={1.5} />
                     <span className="text-[12px] font-sans flex-1 truncate">{item.title}</span>
                     {item.completed && (
                       <Check className="h-3 w-3 text-accent shrink-0" strokeWidth={2} />
