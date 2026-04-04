@@ -49,7 +49,7 @@ export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const { userRole, directMessages } = useWorkspace();
+  const { userRole, directMessages, notebookEntries, vocabulary } = useWorkspace();
 
   // Compute unread messages for learner (admin messages to user-1 that are unread)
   const unreadCount = useMemo(() => {
