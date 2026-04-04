@@ -316,6 +316,14 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const toggleTask = useCallback((id: string) => {
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
   }, []);
+  const reorderTasks = useCallback((orderedIds: string[]) => {
+    setTasks((prev) => {
+      const map = new Map(prev.map((t) => [t.id, t]));
+      const reordered = orderedIds.map((id) => map.get(id)).filter(Boolean) as StudyTask[];
+      const remaining = prev.filter((t) => !orderedIds.includes(t.id));
+      return [...reordered, ...remaining];
+    });
+  }, []);
 
   // Learner-side admin courses (with modules)
   const [adminCourses, setAdminCourses] = useState<AdminCourse[]>(seedAdminCourses);
