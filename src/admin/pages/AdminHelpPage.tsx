@@ -51,7 +51,7 @@ export default function AdminHelpPage() {
             </div>
             <ExternalLink className="h-3 w-3 ml-auto opacity-0 group-hover:opacity-50 transition-opacity duration-200 text-muted-foreground" />
           </div>
-          <h3 className="font-medium text-sm text-foreground">Documentation</h3>
+          <h3 className="font-medium text-sm text-foreground/80">Documentation</h3>
           <p className="text-xs mt-0.5 text-muted-foreground">Comprehensive guides and tutorials</p>
         </button>
         <button onClick={() => {
@@ -64,7 +64,7 @@ export default function AdminHelpPage() {
             </div>
             <ExternalLink className="h-3 w-3 ml-auto opacity-0 group-hover:opacity-50 transition-opacity duration-200 text-muted-foreground" />
           </div>
-          <h3 className="font-medium text-sm text-foreground">Community Forum</h3>
+          <h3 className="font-medium text-sm text-foreground/80">Community Forum</h3>
           <p className="text-xs mt-0.5 text-muted-foreground">Connect with other administrators</p>
         </button>
         <a href="mailto:support@nexus-squared.com" className="card-interactive p-5 block group">
@@ -74,13 +74,13 @@ export default function AdminHelpPage() {
             </div>
             <ExternalLink className="h-3 w-3 ml-auto opacity-0 group-hover:opacity-50 transition-opacity duration-200 text-muted-foreground" />
           </div>
-          <h3 className="font-medium text-sm text-foreground">Email Support</h3>
+          <h3 className="font-medium text-sm text-foreground/80">Email Support</h3>
           <p className="text-xs mt-0.5 text-muted-foreground">support@nexus-squared.com</p>
         </a>
       </div>
 
       {/* Documentation Section */}
-      <h2 className="font-serif text-lg mb-4 text-foreground/85">Documentation</h2>
+      <h2 className="font-serif text-lg mb-4 text-foreground">Documentation</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-8 stagger-children">
         {docPages.map((doc, i) => (
           <button
@@ -97,7 +97,7 @@ export default function AdminHelpPage() {
       {activeDoc !== null && (
         <div className="card-interactive p-5 mb-8 animate-fade-in">
           <div className="flex items-start justify-between mb-3">
-            <h3 className="font-serif text-base text-foreground">{docPages[activeDoc].title}</h3>
+            <h3 className="font-serif text-base text-foreground/80">{docPages[activeDoc].title}</h3>
             <button onClick={() => setActiveDoc(null)} className="toolbar-btn p-1 rounded-md text-muted-foreground hover:text-foreground">
               <span className="text-[12px]">✕</span>
             </button>
@@ -107,7 +107,7 @@ export default function AdminHelpPage() {
       )}
 
       {/* FAQ Section */}
-      <h2 className="font-serif text-lg mb-4 text-foreground/85">Frequently Asked Questions</h2>
+      <h2 className="font-serif text-lg mb-4 text-foreground">Frequently Asked Questions</h2>
       <div className="relative mb-4">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <input
@@ -121,7 +121,7 @@ export default function AdminHelpPage() {
         <Accordion type="single" collapsible>
           {filteredFaqs.map((faq, i) => (
             <AccordionItem key={i} value={`faq-${i}`} className="border-b-0">
-              <AccordionTrigger className="text-sm px-3 py-3 hover:no-underline text-foreground/85">
+              <AccordionTrigger className="text-sm px-3 py-3 hover:no-underline text-foreground/75">
                 {faq.q}
               </AccordionTrigger>
               <AccordionContent className="text-sm px-3 pb-3 leading-relaxed text-muted-foreground">
@@ -136,13 +136,13 @@ export default function AdminHelpPage() {
       </div>
 
       {/* Community Forum Section */}
-      <h2 id="community-section" className="font-serif text-lg mb-4 text-foreground/85">Community Forum</h2>
+      <h2 id="community-section" className="font-serif text-lg mb-4 text-foreground">Community Forum</h2>
       <div className="card-interactive p-2 mb-8">
         <div className="space-y-0.5">
           {forumThreads.map((thread, i) => (
             <div key={i} className="setting-row flex items-center justify-between px-3 py-3 -mx-0 rounded-lg">
               <div>
-                <p className="text-[13px] font-medium text-foreground">{thread.title}</p>
+                <p className="text-[13px] font-medium text-foreground/80">{thread.title}</p>
                 <p className="text-[11px] mt-0.5 text-muted-foreground">{thread.author} · {thread.time}</p>
               </div>
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-accent/10 text-accent shrink-0">
@@ -158,7 +158,7 @@ export default function AdminHelpPage() {
         <div className="h-12 w-12 rounded-xl flex items-center justify-center mx-auto mb-3 bg-accent/10">
           <HelpCircle className="h-5 w-5 text-accent" />
         </div>
-        <h3 className="font-serif text-base mb-1 text-foreground/85">Still need help?</h3>
+        <h3 className="font-serif text-base mb-1 text-foreground">Still need help?</h3>
         <p className="text-sm mb-4 text-muted-foreground">Our support team typically responds within 24 hours</p>
         <a href="mailto:support@nexus-squared.com" className="btn-apple inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-accent text-accent-foreground hover:bg-accent/90">
           <Mail className="h-4 w-4" /> Contact Support

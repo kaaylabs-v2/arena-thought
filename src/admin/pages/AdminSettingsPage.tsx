@@ -53,7 +53,7 @@ export default function AdminSettingsPage() {
       <p className="text-sm mt-0.5 mb-8 text-muted-foreground">Organization profile, branding, and configuration</p>
 
       <Tabs defaultValue="organization">
-        <TabsList className="mb-6">
+        <TabsList className="mb-6 bg-muted/50">
           <TabsTrigger value="organization" className="gap-1.5 text-xs"><Building2 className="h-3.5 w-3.5" />Organization</TabsTrigger>
           <TabsTrigger value="branding" className="gap-1.5 text-xs"><Palette className="h-3.5 w-3.5" />Branding</TabsTrigger>
           <TabsTrigger value="notifications" className="gap-1.5 text-xs"><Bell className="h-3.5 w-3.5" />Notifications</TabsTrigger>
@@ -116,7 +116,7 @@ export default function AdminSettingsPage() {
                 >
                   <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground/40" strokeWidth={1.5} />
                   <p className="text-sm text-muted-foreground">Click to upload your logo</p>
-                  <p className="text-xs mt-1 text-muted-foreground/70">PNG, SVG, JPEG, WebP — max 2 MB</p>
+                  <p className="text-xs mt-1 text-muted-foreground/60">PNG, SVG, JPEG, WebP — max 2 MB</p>
                 </div>
               )}
             </div>
@@ -133,7 +133,7 @@ export default function AdminSettingsPage() {
             ].map(n => (
               <div key={n.key} className="setting-row flex items-center justify-between py-3 px-3 -mx-3 rounded-lg">
                 <div>
-                  <p className="text-sm font-medium text-foreground/85">{n.label}</p>
+                  <p className="text-sm font-medium text-foreground/75">{n.label}</p>
                   <p className="text-xs text-muted-foreground">{n.desc}</p>
                 </div>
                 <Switch checked={notifications[n.key]} onCheckedChange={v => setNotifications(prev => ({ ...prev, [n.key]: v }))} />
@@ -147,14 +147,14 @@ export default function AdminSettingsPage() {
           <div className="card-interactive p-6 space-y-5">
             <div className="setting-row flex items-center justify-between py-3 px-3 -mx-3 rounded-lg">
               <div>
-                <p className="text-sm font-medium text-foreground/85">Two-Factor Authentication</p>
+                <p className="text-sm font-medium text-foreground/75">Two-Factor Authentication</p>
                 <p className="text-xs text-muted-foreground">Require 2FA for all admin accounts</p>
               </div>
               <Switch checked={twoFactor} onCheckedChange={(v) => { setTwoFactor(v); toast.success(v ? "2FA enabled" : "2FA disabled"); }} />
             </div>
             <div className="setting-row flex items-center justify-between py-3 px-3 -mx-3 rounded-lg">
               <div>
-                <p className="text-sm font-medium text-foreground/85">SSO / SAML</p>
+                <p className="text-sm font-medium text-foreground/75">SSO / SAML</p>
                 <p className="text-xs text-muted-foreground">Enable single sign-on for your organization</p>
               </div>
               <span className="text-[11px] px-2 py-0.5 rounded-full bg-accent/10 text-accent">Coming Soon</span>

@@ -69,7 +69,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Activity Feed */}
         <div className="lg:col-span-2 card-interactive p-5">
-          <h2 className="text-sm font-semibold mb-4 font-serif text-base text-foreground/80">Recent Activity</h2>
+          <h2 className="text-sm font-semibold mb-4 text-foreground/75">Recent Activity</h2>
           <div className="space-y-3 scrollbar-thin max-h-[320px] overflow-y-auto pr-1">
             {recentActivity.slice(0, 6).map((event) => (
               <div key={event.id} className="flex items-start gap-3 setting-row rounded-lg px-2 py-1.5 -mx-2">
@@ -77,8 +77,8 @@ export default function AdminDashboard() {
                   backgroundColor: (event.type === "mastery" || event.type === "completion") ? AMBER : "hsl(var(--muted-foreground) / 0.3)"
                 }} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] leading-snug text-foreground/80">{event.text}</p>
-                  <p className="text-[11px] mt-0.5 text-muted-foreground/60">{event.time}</p>
+                  <p className="text-[13px] leading-snug text-foreground/70">{event.text}</p>
+                  <p className="text-[11px] mt-0.5 text-muted-foreground/70">{event.time}</p>
                 </div>
               </div>
             ))}
@@ -88,29 +88,29 @@ export default function AdminDashboard() {
         {/* Pending + Quick Actions */}
         <div className="space-y-5 stagger-children">
           <div className="card-interactive p-5">
-            <h2 className="text-sm font-semibold mb-3 font-serif text-base text-foreground/80">Pending Actions</h2>
+            <h2 className="text-sm font-semibold mb-3 text-foreground/75">Pending Actions</h2>
             <div className="space-y-2.5">
               {pendingActions.map((action, i) => (
                 <div key={i} className="flex items-start gap-2.5 text-[13px]">
                   <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-accent" strokeWidth={1.5} />
-                  <span className="text-foreground/60 leading-snug">{action.text}</span>
+                  <span className="text-foreground/80 leading-snug">{action.text}</span>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="card-interactive p-5">
-            <h2 className="text-sm font-semibold mb-3 font-serif text-base text-foreground/80">Quick Actions</h2>
+            <h2 className="text-sm font-semibold mb-3 text-foreground/75">Quick Actions</h2>
             <div className="space-y-1.5">
               {quickActions.map((action) => (
                 <Link
                   key={action.label}
                   to={action.href}
-                  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-all duration-200 group text-foreground/75 hover:bg-accent/8 active:scale-[0.98]"
+                  className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium transition-all duration-200 group text-foreground/65 hover:bg-accent/8 active:scale-[0.98]"
                 >
                   <action.icon className="h-4 w-4 text-muted-foreground group-hover:text-accent transition-colors duration-200" strokeWidth={1.5} />
                   <span className="flex-1">{action.label}</span>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:translate-x-0.5 transition-transform duration-200" />
+                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:translate-x-0.5 transition-transform duration-200" />
                 </Link>
               ))}
             </div>
@@ -120,7 +120,7 @@ export default function AdminDashboard() {
 
       {/* Mastery Overview Chart */}
       <div className="card-interactive p-5">
-        <h2 className="text-sm font-semibold mb-4 font-serif text-base text-foreground/80">Mastery Overview by Course</h2>
+        <h2 className="text-sm font-semibold mb-4 text-foreground/75">Mastery Overview by Course</h2>
         <div className="h-[220px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={masteryChartData} layout="vertical" margin={{ left: 20, right: 20 }}>

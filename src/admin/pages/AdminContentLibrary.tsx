@@ -90,7 +90,7 @@ export default function AdminContentLibraryPage() {
       {filtered.length === 0 ? (
         <div className="text-center py-20 card-interactive">
           <div className="h-12 w-12 rounded-xl flex items-center justify-center mx-auto mb-3 bg-accent/10"><FileText className="h-5 w-5 text-accent" /></div>
-          <p className="text-sm font-medium mb-1 text-foreground/60">No files found</p>
+          <p className="text-sm font-medium mb-1 text-foreground/75">No files found</p>
           <p className="text-xs mb-4 text-muted-foreground">Try adjusting your filters or search</p>
           <button onClick={() => { setSearch(""); setTypeFilter("all"); setCourseFilter("all"); }} className="btn-apple px-4 py-2 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">Clear Filters</button>
         </div>
@@ -104,9 +104,9 @@ export default function AdminContentLibraryPage() {
               <p className="text-[12px] text-muted-foreground font-sans">{file.module}</p>
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/50">
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] text-muted-foreground/70">{file.uploadDate}</span>
-                  <span className="text-[11px] text-muted-foreground/60">·</span>
-                  <span className="text-[11px] text-muted-foreground/70">{file.fileSize}</span>
+                  <span className="text-[11px] text-muted-foreground/60">{file.uploadDate}</span>
+                  <span className="text-[11px] text-muted-foreground/40">·</span>
+                  <span className="text-[11px] text-muted-foreground/60">{file.fileSize}</span>
                 </div>
                 <div className="h-5 w-5 rounded-full flex items-center justify-center text-[8px] font-medium bg-accent/15 text-accent">{initials(file.uploaderName)}</div>
               </div>
@@ -129,14 +129,14 @@ export default function AdminContentLibraryPage() {
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0 bg-accent/10 text-accent">{typeIcon(file.fileType)}</div>
-                      <span className="text-[13px] font-medium truncate text-foreground">{file.fileName}</span>
+                      <span className="text-[13px] font-medium truncate text-foreground/80">{file.fileName}</span>
                     </div>
                   </td>
                   <td className="px-5 py-3.5"><span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium uppercase bg-accent/10 text-accent">{typeLabel(file.fileType)}</span></td>
                   <td className="px-5 py-3.5"><span className="text-[12px] text-muted-foreground">{file.linkedCourse}</span></td>
                   <td className="px-5 py-3.5 hidden md:table-cell"><span className="text-[12px] text-muted-foreground">{file.module}</span></td>
-                  <td className="px-5 py-3.5 hidden lg:table-cell"><span className="text-[12px] text-muted-foreground/70">{file.uploadDate}</span></td>
-                  <td className="px-5 py-3.5 hidden lg:table-cell"><span className="text-[12px] text-muted-foreground/70">{file.fileSize}</span></td>
+                  <td className="px-5 py-3.5 hidden lg:table-cell"><span className="text-[12px] text-muted-foreground/60">{file.uploadDate}</span></td>
+                  <td className="px-5 py-3.5 hidden lg:table-cell"><span className="text-[12px] text-muted-foreground/60">{file.fileSize}</span></td>
                   <td className="px-5 py-3.5 hidden xl:table-cell"><span className="text-[12px] text-muted-foreground">{file.uploaderName}</span></td>
                 </tr>
               ))}
@@ -145,7 +145,7 @@ export default function AdminContentLibraryPage() {
         </div>
       )}
 
-      <div className="flex items-center gap-4 mt-4 text-[12px] text-muted-foreground/70">
+      <div className="flex items-center gap-4 mt-4 text-[12px] text-muted-foreground/60">
         <span>{filtered.length} files</span><span>·</span>
         <span>{seedFiles.filter(f => f.fileType === "pdf").length} PDFs</span><span>·</span>
         <span>{seedFiles.filter(f => f.fileType === "video").length} videos</span><span>·</span>
@@ -173,7 +173,7 @@ export default function AdminContentLibraryPage() {
                 <div className="space-y-2.5">
                   {[{ label: "COURSE", value: previewFile.linkedCourse }, { label: "MODULE", value: previewFile.module }, { label: "UPLOADED BY", value: previewFile.uploaderName }, { label: "UPLOAD DATE", value: previewFile.uploadDate }, { label: "FILE SIZE", value: previewFile.fileSize }].map((row, i) => (
                     <div key={i} className="setting-row flex items-center justify-between py-1.5 px-2 -mx-2 rounded-lg">
-                      <span className="text-[11px] uppercase tracking-wider text-muted-foreground/70">{row.label}</span>
+                      <span className="text-[11px] uppercase tracking-wider text-muted-foreground/60">{row.label}</span>
                       <span className="text-[14px] text-foreground/75 font-sans">{row.value}</span>
                     </div>
                   ))}

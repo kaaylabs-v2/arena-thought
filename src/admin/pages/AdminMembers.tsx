@@ -125,7 +125,7 @@ export default function AdminMembersPage() {
             <button key={t.value} onClick={() => setTab(t.value)}
               className={cn("segment-pill px-3 py-2 text-[13px] font-medium transition-colors relative", tab === t.value ? "text-accent border-b-2 border-accent" : "text-muted-foreground border-b-2 border-transparent")}
             >
-              {t.label} <span className="ml-1 text-[11px] text-muted-foreground/60">{t.count}</span>
+              {t.label} <span className="ml-1 text-[11px] text-muted-foreground/50">{t.count}</span>
             </button>
           ))}
         </div>
@@ -141,7 +141,7 @@ export default function AdminMembersPage() {
           <div className="h-12 w-12 rounded-xl flex items-center justify-center mx-auto mb-3 bg-accent/10">
             <UserPlus className="h-5 w-5 text-accent" />
           </div>
-          <p className="text-sm font-medium mb-1 text-foreground/75">No members found</p>
+          <p className="text-sm font-medium mb-1 text-foreground/60">No members found</p>
           <p className="text-xs mb-4 text-muted-foreground">Try adjusting your filters or search</p>
           <button onClick={() => setInviteOpen(true)} className="btn-apple px-4 py-2 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">Invite Members</button>
         </div>
@@ -173,7 +173,7 @@ export default function AdminMembersPage() {
                     {roleChangeId === member.id && (
                       <div className="absolute left-5 top-10 z-30 w-36 rounded-xl py-1 shadow-elevated animate-scale-in bg-popover border border-border">
                         {(["learner", "manager", "admin"] as MemberRole[]).map(r => (
-                          <button key={r} onClick={() => handleRoleChange(member.id, r)} className={cn("w-full text-left px-3 py-2 text-[13px] hover:bg-muted transition-colors duration-150 capitalize", r === member.role ? "text-accent font-semibold" : "text-foreground/80")}>{r}</button>
+                          <button key={r} onClick={() => handleRoleChange(member.id, r)} className={cn("w-full text-left px-3 py-2 text-[13px] hover:bg-muted transition-colors duration-150 capitalize", r === member.role ? "text-accent font-semibold" : "text-foreground/70")}>{r}</button>
                         ))}
                         <button onClick={() => setRoleChangeId(null)} className="w-full text-left px-3 py-2 text-[12px] transition-colors duration-150 text-muted-foreground">Cancel</button>
                       </div>
@@ -183,7 +183,7 @@ export default function AdminMembersPage() {
                   <td className="px-5 py-3.5">
                     <span className={cn("inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium", statusBadgeCls(member.status))}>{member.status.charAt(0).toUpperCase() + member.status.slice(1)}</span>
                   </td>
-                  <td className="px-5 py-3.5 hidden xl:table-cell"><span className="text-[12px] text-muted-foreground/70">{member.dateJoined}</span></td>
+                  <td className="px-5 py-3.5 hidden xl:table-cell"><span className="text-[12px] text-muted-foreground/60">{member.dateJoined}</span></td>
                   <td className="px-5 py-3.5">
                     {deactivatingId === member.id ? (
                       <div className="flex items-center gap-2 text-[12px] animate-fade-in-fast">
@@ -208,7 +208,7 @@ export default function AdminMembersPage() {
         </div>
       )}
 
-      <div className="flex items-center gap-4 mt-4 text-[12px] text-muted-foreground/70">
+      <div className="flex items-center gap-4 mt-4 text-[12px] text-muted-foreground/60">
         <span>{membersList.length} total members</span><span>·</span>
         <span>{membersList.filter(m => m.role === "admin").length} admins</span><span>·</span>
         <span>{membersList.filter(m => m.role === "manager").length} managers</span><span>·</span>
@@ -281,7 +281,7 @@ export default function AdminMembersPage() {
               </div>
               {bulkFile && (
                 <div className="animate-fade-in-fast">
-                  <p className="text-[12px] font-medium mb-2 text-foreground/75">Preview — {bulkFile}</p>
+                  <p className="text-[12px] font-medium mb-2 text-foreground/60">Preview — {bulkFile}</p>
                   <div className="overflow-hidden rounded-lg border border-border">
                     <table className="w-full text-[12px]">
                       <thead>
@@ -292,7 +292,7 @@ export default function AdminMembersPage() {
                       <tbody>
                         {[{ n: "Alex Thompson", e: "alex@meridian.edu", r: "Learner", d: "Engineering" }, { n: "Maria Santos", e: "maria@meridian.edu", r: "Learner", d: "Product" }, { n: "Chris Wright", e: "chris@meridian.edu", r: "Manager", d: "Operations" }].map((row, i) => (
                           <tr key={i} className="border-b border-border/50">
-                            <td className="px-3 py-2 text-foreground/80">{row.n}</td>
+                            <td className="px-3 py-2 text-foreground/70">{row.n}</td>
                             <td className="px-3 py-2 text-muted-foreground">{row.e}</td>
                             <td className="px-3 py-2 text-muted-foreground">{row.r}</td>
                             <td className="px-3 py-2 text-muted-foreground">{row.d}</td>
@@ -339,7 +339,7 @@ export default function AdminMembersPage() {
                 <div className="space-y-2.5">
                   {[{ label: "EMAIL", value: detailMember.email }, { label: "DEPARTMENT", value: detailMember.department }, { label: "JOINED", value: detailMember.dateJoined }, { label: "LAST ACTIVE", value: detailMember.lastActive }].map((row, i) => (
                     <div key={i} className="setting-row flex items-center justify-between py-1.5 px-2 -mx-2 rounded-lg">
-                      <span className="text-[11px] uppercase tracking-wider text-muted-foreground/70">{row.label}</span>
+                      <span className="text-[11px] uppercase tracking-wider text-muted-foreground/60">{row.label}</span>
                       <span className="text-[14px] text-foreground/75 font-sans">{row.value}</span>
                     </div>
                   ))}

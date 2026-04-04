@@ -71,7 +71,7 @@ export function AdminSidebar() {
                 <ChevronsLeft className="h-3.5 w-3.5" strokeWidth={1.5} />
               </button>
             </div>
-            <span className="text-[10px] tracking-[0.15em] uppercase text-sidebar-foreground/35">
+            <span className="text-[10px] tracking-[0.15em] uppercase text-sidebar-foreground/50">
               Admin Studio
             </span>
           </div>

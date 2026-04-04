@@ -211,7 +211,7 @@ export default function AdminAnalyticsPage() {
       {/* Charts row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div className="card-interactive p-5">
-          <h3 className="font-serif text-base mb-4 font-serif text-base text-foreground/80">Weekly Active Learners</h3>
+          <h3 className="font-serif text-base mb-4 text-foreground/80">Weekly Active Learners</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={weeklyDataByRange[timeRange]}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -224,7 +224,7 @@ export default function AdminAnalyticsPage() {
         </div>
 
         <div className="card-interactive p-5">
-          <h3 className="font-serif text-base mb-4 font-serif text-base text-foreground/80">Course Completions</h3>
+          <h3 className="font-serif text-base mb-4 text-foreground/80">Course Completions</h3>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={completionDataByRange[timeRange]}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -240,7 +240,7 @@ export default function AdminAnalyticsPage() {
       {/* Charts row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div className="lg:col-span-2 card-interactive p-5">
-          <h3 className="font-serif text-base mb-4 font-serif text-base text-foreground/80">Engagement Over Time</h3>
+          <h3 className="font-serif text-base mb-4 text-foreground/80">Engagement Over Time</h3>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={engagementOverTime}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -253,7 +253,7 @@ export default function AdminAnalyticsPage() {
         </div>
 
         <div className="card-interactive p-5">
-          <h3 className="font-serif text-base mb-4 font-serif text-base text-foreground/80">Members by Dept</h3>
+          <h3 className="font-serif text-base mb-4 text-foreground/80">Members by Dept</h3>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie
@@ -285,7 +285,7 @@ export default function AdminAnalyticsPage() {
       {/* Course Performance Table */}
       <div className="card-interactive p-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-serif text-base font-serif text-base text-foreground/80">Course Performance</h3>
+          <h3 className="font-serif text-base text-foreground/80">Course Performance</h3>
           <span className="text-[11px] text-muted-foreground">
             {filteredCourses.length} course{filteredCourses.length !== 1 && "s"}
             {deptFilter !== "all" && ` in ${deptFilter}`}
@@ -322,7 +322,7 @@ export default function AdminAnalyticsPage() {
           <tbody>
             {filteredCourses.map(c => (
               <tr key={c.id} className="transition-colors duration-200 border-b border-border/50 hover:bg-accent/5">
-                <td className="py-3 px-4 font-medium font-serif text-base text-foreground/80">{c.name}</td>
+                <td className="py-3 px-4 font-medium text-foreground/75">{c.name}</td>
                 <td className="py-3 px-4 text-muted-foreground">{c.enrolledCount}</td>
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-2">

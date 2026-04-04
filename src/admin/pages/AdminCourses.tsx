@@ -64,7 +64,7 @@ export default function AdminCoursesPage() {
     switch (s) {
       case "active": return "bg-accent/10 text-accent";
       case "draft": return "bg-muted text-muted-foreground";
-      case "archived": return "bg-muted/50 text-muted-foreground/70";
+      case "archived": return "bg-muted/50 text-muted-foreground/60";
     }
   };
 
@@ -204,7 +204,7 @@ export default function AdminCoursesPage() {
               {filtered.map(course => (
                 <tr key={course.id} className="transition-colors duration-200 group border-b border-border hover:bg-accent/5">
                   <td className="px-5 py-3.5">
-                    <span className="text-[13px] font-medium text-foreground">{course.name}</span>
+                    <span className="text-[13px] font-medium text-foreground/80">{course.name}</span>
                   </td>
                   <td className="px-5 py-3.5 hidden md:table-cell">
                     <span className="text-[12px] text-muted-foreground">{typeLabel(course.type)}</span>
@@ -215,13 +215,13 @@ export default function AdminCoursesPage() {
                     </span>
                   </td>
                   <td className="px-5 py-3.5 hidden lg:table-cell">
-                    <span className="text-[13px] text-foreground/75">{course.enrolledCount}</span>
+                    <span className="text-[13px] text-foreground">{course.enrolledCount}</span>
                   </td>
                   <td className="px-5 py-3.5 hidden lg:table-cell">
-                    <span className="text-[13px] text-foreground/75">{course.masteryRate}%</span>
+                    <span className="text-[13px] text-foreground">{course.masteryRate}%</span>
                   </td>
                   <td className="px-5 py-3.5 hidden xl:table-cell">
-                    <span className="text-[12px] text-muted-foreground/70">{course.dateDeployed}</span>
+                    <span className="text-[12px] text-muted-foreground/60">{course.dateDeployed}</span>
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -291,10 +291,10 @@ export default function AdminCoursesPage() {
                       className="card-interactive w-full flex items-center justify-between p-4 text-left cursor-pointer"
                     >
                       <div>
-                        <p className="text-[13px] font-medium text-foreground">{pw.title}</p>
+                        <p className="text-[13px] font-medium text-foreground/80">{pw.title}</p>
                         <p className="text-[12px] mt-0.5 text-muted-foreground">{pw.desc}</p>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground/60" />
+                      <ChevronRight className="h-4 w-4 text-muted-foreground/40" />
                     </button>
                   ))}
                 </div>
@@ -308,7 +308,7 @@ export default function AdminCoursesPage() {
                       <div key={course.id} className="card-interactive p-4">
                         <div className="flex items-start justify-between">
                           <div>
-                            <p className="text-[13px] font-medium text-foreground">{course.title}</p>
+                            <p className="text-[13px] font-medium text-foreground/80">{course.title}</p>
                             <p className="text-[12px] mt-0.5 text-muted-foreground">{course.description}</p>
                             <span className="inline-block mt-2 text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full bg-accent/10 text-accent">{course.category}</span>
                           </div>
@@ -345,8 +345,8 @@ export default function AdminCoursesPage() {
                     onClick={handleFakeUpload}
                     className="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-250 border-border hover:bg-accent/5 hover:border-accent/30 active:scale-[0.99]"
                   >
-                    <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground/60" />
-                    <p className="text-[13px] font-medium text-foreground/75">Click to upload files</p>
+                    <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground/40" />
+                    <p className="text-[13px] font-medium text-foreground/60">Click to upload files</p>
                     <p className="text-[11px] mt-1 text-muted-foreground">PDF, DOCX, PPT, MP4, or URLs</p>
                   </div>
 
@@ -423,7 +423,7 @@ export default function AdminCoursesPage() {
               {pathway === "commission" && (
                 <div className="space-y-5 animate-fade-in-fast">
                   <button onClick={() => setPathway(null)} className="btn-ghost text-[12px] mb-2 flex items-center gap-1 px-2 py-1 rounded-md text-muted-foreground">← Back</button>
-                  <p className="text-[13px] text-foreground/75">Describe what you need and our content team will work with you to build it.</p>
+                  <p className="text-[13px] text-foreground/60">Describe what you need and our content team will work with you to build it.</p>
                   <div>
                     <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] mb-1.5 text-muted-foreground">Objective</label>
                     <textarea value={commObjective} onChange={e => setCommObjective(e.target.value)} placeholder="Describe the learning objective and audience..." rows={4} className="w-full px-3 py-2 rounded-lg text-[13px] bg-background border border-input focus:outline-none focus:ring-2 focus:ring-accent/30 resize-none transition-shadow duration-200" />
@@ -544,7 +544,7 @@ export default function AdminCoursesPage() {
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-medium bg-accent/15 text-accent">{initials}</div>
                         <div>
-                          <p className="text-[13px] font-medium text-foreground">{m.name}</p>
+                          <p className="text-[13px] font-medium text-foreground/80">{m.name}</p>
                           <p className="text-[11px] text-muted-foreground">{m.email}</p>
                         </div>
                       </div>
@@ -572,7 +572,7 @@ export default function AdminCoursesPage() {
 
 function GraduationCapIcon() {
   return (
-    <svg className="h-10 w-10 mx-auto text-muted-foreground/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+    <svg className="h-10 w-10 mx-auto text-muted-foreground/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
       <path d="M12 14l9-5-9-5-9 5 9 5z" />
       <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
     </svg>

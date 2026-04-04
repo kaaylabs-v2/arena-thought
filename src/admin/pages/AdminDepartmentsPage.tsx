@@ -79,7 +79,7 @@ export default function AdminDepartmentsPage() {
                   </div>
                   <p className="text-sm mb-3 text-muted-foreground">{dept.description}</p>
                   <div className="flex items-center gap-6 text-xs text-muted-foreground">
-                    <span>Manager: <span className="text-foreground/80">{dept.manager}</span></span>
+                    <span>Manager: <span className="text-foreground/70">{dept.manager}</span></span>
                     <span>{dept.coursesAssigned} courses assigned</span>
                   </div>
 
