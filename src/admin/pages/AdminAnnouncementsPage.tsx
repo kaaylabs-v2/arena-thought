@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Megaphone, Plus, Calendar, User } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Megaphone, Plus, Calendar, User, Pencil, Trash2, X } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { type Announcement } from "@/admin/data/mock-data";
 import { Button } from "@/components/ui/button";
@@ -8,29 +8,64 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter, DrawerClose } from "@/components/ui/drawer";
 import { toast } from "sonner";
 
 export default function AdminAnnouncementsPage() {
   const { studioAnnouncements, studioDepartments: departments } = useWorkspace();
   const [items, setItems] = useState<Announcement[]>(studioAnnouncements);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [editingAnn, setEditingAnn] = useState<Announcement | null>(null);
   const [form, setForm] = useState({ title: "", body: "", audience: "All Members" });
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const handleSend = () => {
-    if (!form.title.trim() || !form.body.trim()) return;
-    const newItem: Announcement = {
-      id: `ann-${Date.now()}`,
-      title: form.title,
-      body: form.body,
-      audience: form.audience,
-      sentDate: new Date().toISOString().slice(0, 10),
-      sentBy: "Jordan Reeves",
-    };
-    setItems(prev => [newItem, ...prev]);
-    setDrawerOpen(false);
+  // Listen for keyboard shortcut
+  useEffect(() => {
+    const handler = () => openNew();
+    window.addEventListener("admin-shortcut:announce", handler);
+    return () => window.removeEventListener("admin-shortcut:announce", handler);
+  }, []);
+
+  const openNew = () => {
+    setEditingAnn(null);
     setForm({ title: "", body: "", audience: "All Members" });
-    toast.success("Announcement sent");
+    setDrawerOpen(true);
+  };
+
+  const openEdit = (ann: Announcement) => {
+    setEditingAnn(ann);
+    setForm({ title: ann.title, body: ann.body, audience: ann.audience });
+    setDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setDrawerOpen(false);
+    setEditingAnn(null);
+  };
+
+  const handleSave = () => {
+    if (!form.title.trim() || !form.body.trim()) return;
+    if (editingAnn) {
+      setItems(prev => prev.map(a => a.id === editingAnn.id ? { ...a, title: form.title, body: form.body, audience: form.audience } : a));
+      toast.success("Announcement updated");
+    } else {
+      const newItem: Announcement = {
+        id: `ann-${Date.now()}`,
+        title: form.title,
+        body: form.body,
+        audience: form.audience,
+        sentDate: new Date().toISOString().slice(0, 10),
+        sentBy: "Jordan Reeves",
+      };
+      setItems(prev => [newItem, ...prev]);
+      toast.success("Announcement sent");
+    }
+    closeDrawer();
+  };
+
+  const handleDelete = (id: string) => {
+    setItems(prev => prev.filter(a => a.id !== id));
+    setDeletingId(null);
+    toast.success("Announcement deleted");
   };
 
   return (
@@ -40,7 +75,7 @@ export default function AdminAnnouncementsPage() {
           <h1 className="font-serif text-[2rem] font-normal text-foreground">Announcements</h1>
           <p className="text-sm mt-0.5 text-muted-foreground">Send messages to learners and departments</p>
         </div>
-        <Button onClick={() => setDrawerOpen(true)} className="btn-apple gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
+        <Button onClick={openNew} className="btn-apple gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
           <Plus className="h-4 w-4" /> New Announcement
         </Button>
       </div>
@@ -67,9 +102,24 @@ export default function AdminAnnouncementsPage() {
           <div key={ann.id} className="card-interactive p-5">
             <div className="flex items-start justify-between mb-2">
               <h3 className="font-medium text-sm text-foreground/80">{ann.title}</h3>
-              <Badge variant="outline" className="text-[10px] shrink-0 border-accent/30 text-accent">
-                {ann.audience}
-              </Badge>
+              <div className="flex items-center gap-2 shrink-0">
+                <Badge variant="outline" className="text-[10px] border-accent/30 text-accent">
+                  {ann.audience}
+                </Badge>
+                <button onClick={() => openEdit(ann)} className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+                  <Pencil className="h-3.5 w-3.5" />
+                </button>
+                {deletingId === ann.id ? (
+                  <div className="flex items-center gap-1.5 text-[12px] animate-fade-in-fast">
+                    <button onClick={() => handleDelete(ann.id)} className="font-medium text-destructive">Delete</button>
+                    <button onClick={() => setDeletingId(null)} className="text-muted-foreground">Cancel</button>
+                  </div>
+                ) : (
+                  <button onClick={() => setDeletingId(ann.id)} className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors">
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
             <p className="text-sm leading-relaxed mb-3 text-muted-foreground">{ann.body}</p>
             <div className="flex items-center gap-4 text-xs text-muted-foreground/60">
@@ -80,13 +130,20 @@ export default function AdminAnnouncementsPage() {
         ))}
       </div>
 
-      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-        <DrawerContent>
-          <div className="mx-auto w-full max-w-md">
-            <DrawerHeader>
-              <DrawerTitle className="font-serif">New Announcement</DrawerTitle>
-            </DrawerHeader>
-            <div className="px-4 space-y-4">
+      {/* Right-slide drawer */}
+      {drawerOpen && (
+        <>
+          <div className="fixed inset-0 bg-black/30 z-40 animate-fade-in-gentle" onClick={closeDrawer} />
+          <div className="fixed right-0 top-0 bottom-0 w-[480px] max-w-full z-50 flex flex-col overflow-hidden animate-slide-in-right bg-card border-l border-border">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <h2 className="text-base font-semibold text-foreground font-serif">
+                {editingAnn ? "Edit Announcement" : "New Announcement"}
+              </h2>
+              <button onClick={closeDrawer} className="toolbar-btn h-8 w-8 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6 space-y-5 scrollbar-thin">
               <div>
                 <Label className="text-xs">Title</Label>
                 <Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Announcement title" />
@@ -106,13 +163,15 @@ export default function AdminAnnouncementsPage() {
                 <Textarea value={form.body} onChange={e => setForm(f => ({ ...f, body: e.target.value }))} placeholder="Write your message..." rows={4} />
               </div>
             </div>
-            <DrawerFooter>
-              <Button onClick={handleSend} className="btn-apple bg-accent text-accent-foreground hover:bg-accent/90">Send Announcement</Button>
-              <DrawerClose asChild><Button variant="outline" className="btn-ghost">Cancel</Button></DrawerClose>
-            </DrawerFooter>
+            <div className="px-6 py-4 border-t border-border flex gap-3">
+              <button onClick={closeDrawer} className="btn-ghost flex-1 h-10 text-[13px] font-medium border border-border rounded-lg text-foreground/65 hover:bg-muted">Cancel</button>
+              <button onClick={handleSave} className="btn-apple flex-1 h-10 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">
+                {editingAnn ? "Save Changes" : "Send Announcement"}
+              </button>
+            </div>
           </div>
-        </DrawerContent>
-      </Drawer>
+        </>
+      )}
     </div>
   );
 }

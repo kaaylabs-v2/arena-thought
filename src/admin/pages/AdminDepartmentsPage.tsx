@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { Building2, Users, GraduationCap, Plus, Pencil } from "lucide-react";
+import { Building2, Users, GraduationCap, Plus, Pencil, X } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import type { Department } from "@/admin/data/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter, DrawerClose } from "@/components/ui/drawer";
 import { toast } from "sonner";
 
 export default function AdminDepartmentsPage() {
@@ -21,6 +20,7 @@ export default function AdminDepartmentsPage() {
 
   const openNew = () => { setEditDept(null); setForm({ name: "", description: "", manager: "" }); setDrawerOpen(true); };
   const openEdit = (d: Department) => { setEditDept(d); setForm({ name: d.name, description: d.description, manager: d.manager }); setDrawerOpen(true); };
+  const closeDrawer = () => { setDrawerOpen(false); setEditDept(null); };
 
   const handleSave = () => {
     if (!form.name.trim()) return;
@@ -32,7 +32,7 @@ export default function AdminDepartmentsPage() {
       setDepts(prev => [...prev, newDept]);
       toast.success(`${form.name} created`);
     }
-    setDrawerOpen(false);
+    closeDrawer();
   };
 
   return (
@@ -115,24 +115,29 @@ export default function AdminDepartmentsPage() {
         })}
       </div>
 
-      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-        <DrawerContent>
-          <div className="mx-auto w-full max-w-md">
-            <DrawerHeader>
-              <DrawerTitle className="font-serif">{editDept ? "Edit Department" : "New Department"}</DrawerTitle>
-            </DrawerHeader>
-            <div className="px-4 space-y-4">
+      {/* Right-slide drawer */}
+      {drawerOpen && (
+        <>
+          <div className="fixed inset-0 bg-black/30 z-40 animate-fade-in-gentle" onClick={closeDrawer} />
+          <div className="fixed right-0 top-0 bottom-0 w-[480px] max-w-full z-50 flex flex-col overflow-hidden animate-slide-in-right bg-card border-l border-border">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <h2 className="text-base font-semibold text-foreground font-serif">{editDept ? "Edit Department" : "New Department"}</h2>
+              <button onClick={closeDrawer} className="toolbar-btn h-8 w-8 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6 space-y-5 scrollbar-thin">
               <div><Label className="text-xs">Name</Label><Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Engineering" /></div>
               <div><Label className="text-xs">Description</Label><Input value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Brief description" /></div>
               <div><Label className="text-xs">Manager</Label><Input value={form.manager} onChange={e => setForm(f => ({ ...f, manager: e.target.value }))} placeholder="Manager name" /></div>
             </div>
-            <DrawerFooter>
-              <Button onClick={handleSave} className="btn-apple bg-accent text-accent-foreground hover:bg-accent/90">{editDept ? "Save Changes" : "Create Department"}</Button>
-              <DrawerClose asChild><Button variant="outline" className="btn-ghost">Cancel</Button></DrawerClose>
-            </DrawerFooter>
+            <div className="px-6 py-4 border-t border-border flex gap-3">
+              <button onClick={closeDrawer} className="btn-ghost flex-1 h-10 text-[13px] font-medium border border-border rounded-lg text-foreground/65 hover:bg-muted">Cancel</button>
+              <button onClick={handleSave} className="btn-apple flex-1 h-10 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">{editDept ? "Save Changes" : "Create Department"}</button>
+            </div>
           </div>
-        </DrawerContent>
-      </Drawer>
+        </>
+      )}
     </div>
   );
 }
