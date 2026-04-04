@@ -5,23 +5,62 @@ import { useWorkspace } from "@/context/WorkspaceContext";
 
 type FilterTab = "all" | "active" | "completed" | "pinned";
 
+// Generate deterministic sparkline data from course ID
+function generateSparkline(id: string): number[] {
+  let seed = 0;
+  for (let i = 0; i < id.length; i++) seed += id.charCodeAt(i);
+  const points: number[] = [];
+  for (let i = 0; i < 7; i++) {
+    seed = (seed * 9301 + 49297) % 233280;
+    points.push(seed / 233280);
+  }
+  return points;
+}
+
+function SparklineSVG({ data, className }: { data: number[]; className?: string }) {
+  const w = 80;
+  const h = 20;
+  const padding = 2;
+  const maxVal = Math.max(...data);
+  const minVal = Math.min(...data);
+  const range = maxVal - minVal || 1;
+
+  const points = data.map((v, i) => {
+    const x = padding + (i / (data.length - 1)) * (w - padding * 2);
+    const y = h - padding - ((v - minVal) / range) * (h - padding * 2);
+    return `${x},${y}`;
+  }).join(" ");
+
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className={className} fill="none">
+      <polyline
+        points={points}
+        stroke="hsl(var(--accent))"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.5"
+      />
+    </svg>
+  );
+}
+
 const Library = () => {
   const { adminCourses } = useWorkspace();
   const [filter, setFilter] = useState<FilterTab>("all");
   const [search, setSearch] = useState("");
 
-  // Derive student-facing courses from published admin courses
   const courses = useMemo(() => {
     return adminCourses
       .filter((c) => c.status === "published")
       .map((c) => {
         const sourceCount = c.modules.reduce((acc, m) => acc + m.items.length, 0);
-        // Mock progress/pinned/status based on seed IDs for demo continuity
         const progress = c.id === "4" || c.id === "6" ? 100 : c.id === "1" ? 68 : c.id === "2" ? 42 : c.id === "3" ? 85 : c.id === "5" ? 23 : Math.floor(Math.random() * 80) + 10;
         const pinned = c.id === "1" || c.id === "3";
         const status: "active" | "completed" = progress === 100 ? "completed" : "active";
         const lastAccessed = c.updatedAt;
-        return { id: c.id, title: c.title, description: c.description, progress, lastAccessed, pinned, status, sourceCount };
+        const sparkline = generateSparkline(c.id);
+        return { id: c.id, title: c.title, description: c.description, progress, lastAccessed, pinned, status, sourceCount, sparkline };
       });
   }, [adminCourses]);
 
@@ -119,6 +158,11 @@ const Library = () => {
                   />
                 </div>
                 <span className="text-[11px] font-sans text-muted-foreground tabular-nums">{course.progress}%</span>
+              </div>
+              {/* Sparkline */}
+              <div className="flex items-center justify-between mt-2">
+                <span className="text-[10px] font-sans text-muted-foreground/60">7-day activity</span>
+                <SparklineSVG data={course.sparkline} />
               </div>
             </Link>
           ))}

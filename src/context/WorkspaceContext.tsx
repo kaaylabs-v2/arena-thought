@@ -131,6 +131,7 @@ interface WorkspaceState {
   updateTask: (id: string, updates: Partial<StudyTask>) => void;
   deleteTask: (id: string) => void;
   toggleTask: (id: string) => void;
+  reorderTasks: (orderedIds: string[]) => void;
   // Learner-side course data (with modules)
   adminCourses: AdminCourse[];
   addAdminCourse: (course: Omit<AdminCourse, "id" | "createdAt" | "updatedAt">) => void;
@@ -315,6 +316,14 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const toggleTask = useCallback((id: string) => {
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
   }, []);
+  const reorderTasks = useCallback((orderedIds: string[]) => {
+    setTasks((prev) => {
+      const map = new Map(prev.map((t) => [t.id, t]));
+      const reordered = orderedIds.map((id) => map.get(id)).filter(Boolean) as StudyTask[];
+      const remaining = prev.filter((t) => !orderedIds.includes(t.id));
+      return [...reordered, ...remaining];
+    });
+  }, []);
 
   // Learner-side admin courses (with modules)
   const [adminCourses, setAdminCourses] = useState<AdminCourse[]>(seedAdminCourses);
@@ -367,7 +376,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         reflections, addReflection, deleteReflection,
         userProfile, updateUserProfile,
         appSettings, updateAppSettings,
-        tasks, addTask, updateTask, deleteTask, toggleTask,
+        tasks, addTask, updateTask, deleteTask, toggleTask, reorderTasks,
         adminCourses, addAdminCourse, updateAdminCourse, deleteAdminCourse, publishCourse, unpublishCourse,
         // Admin Studio
         studioMembers, setStudioMembers,

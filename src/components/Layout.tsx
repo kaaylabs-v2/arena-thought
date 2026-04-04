@@ -1,10 +1,14 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { useWorkspace } from "@/context/WorkspaceContext";
+import { CommandPalette } from "@/components/CommandPalette";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 export function Layout() {
   const { appSettings } = useWorkspace();
+  const location = useLocation();
 
   const fontScale =
     appSettings.fontSize === "small" ? "0.92" :
@@ -23,9 +27,14 @@ export function Layout() {
       >
         <AppSidebar />
         <main className="flex-1 min-w-0 font-scaled">
-          <Outlet />
+          <div key={location.pathname} className="animate-fade-in">
+            <Outlet />
+          </div>
         </main>
       </div>
+      <CommandPalette />
+      <KeyboardShortcuts />
+      <ScrollToTop />
     </SidebarProvider>
   );
 }

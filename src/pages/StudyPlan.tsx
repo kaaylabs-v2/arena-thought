@@ -1,6 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useWorkspace, type StudyTask, type TaskPriority } from "@/context/WorkspaceContext";
-import { Plus, Check, Trash2, Calendar as CalendarIcon, BookOpen, ChevronRight, Clock, ExternalLink, RefreshCw } from "lucide-react";
+import { Plus, Check, Trash2, Calendar as CalendarIcon, BookOpen, ChevronRight, Clock, ExternalLink, RefreshCw, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ const syncPlatforms = [
 ];
 
 const StudyPlan = () => {
-  const { tasks, addTask, toggleTask, deleteTask } = useWorkspace();
+  const { tasks, addTask, toggleTask, deleteTask, reorderTasks } = useWorkspace();
 
   const [showAdd, setShowAdd] = useState(false);
   const [newTitle, setNewTitle] = useState("");
@@ -39,6 +39,10 @@ const StudyPlan = () => {
   const [showSync, setShowSync] = useState(false);
   const [platformStates, setPlatformStates] = useState<Record<string, boolean>>({});
 
+  // Drag state
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
+
   const activeTasks = useMemo(() => tasks.filter((t) => !t.completed), [tasks]);
   const completedTasks = useMemo(() => tasks.filter((t) => t.completed), [tasks]);
 
@@ -46,6 +50,13 @@ const StudyPlan = () => {
     const order: Record<TaskPriority, number> = { high: 0, medium: 1, low: 2 };
     return [...activeTasks].sort((a, b) => order[a.priority] - order[b.priority]);
   }, [activeTasks]);
+
+  // Listen for keyboard shortcut
+  useEffect(() => {
+    const handler = () => setShowAdd(true);
+    window.addEventListener("shortcut:new-task", handler);
+    return () => window.removeEventListener("shortcut:new-task", handler);
+  }, []);
 
   const handleAdd = () => {
     if (!newTitle.trim()) return;
@@ -78,6 +89,26 @@ const StudyPlan = () => {
       toast.success(`${name} sync disabled`);
     }
   };
+
+  const handleDragStart = (id: string) => setDragId(id);
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    setDragOverId(id);
+  };
+  const handleDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    if (!dragId || dragId === targetId) { setDragId(null); setDragOverId(null); return; }
+    const ids = sortedActive.map((t) => t.id);
+    const fromIdx = ids.indexOf(dragId);
+    const toIdx = ids.indexOf(targetId);
+    if (fromIdx === -1 || toIdx === -1) { setDragId(null); setDragOverId(null); return; }
+    ids.splice(fromIdx, 1);
+    ids.splice(toIdx, 0, dragId);
+    reorderTasks(ids);
+    setDragId(null);
+    setDragOverId(null);
+  };
+  const handleDragEnd = () => { setDragId(null); setDragOverId(null); };
 
   return (
     <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl mx-auto">
@@ -243,7 +274,18 @@ const StudyPlan = () => {
         ) : (
           <div className="space-y-2">
             {sortedActive.map((task, i) => (
-              <TaskRow key={task.id} task={task} onToggle={toggleTask} onDelete={deleteTask} delay={100 + i * 50} />
+              <TaskRow
+                key={task.id}
+                task={task}
+                onToggle={toggleTask}
+                onDelete={deleteTask}
+                delay={100 + i * 50}
+                isDragOver={dragOverId === task.id}
+                onDragStart={() => handleDragStart(task.id)}
+                onDragOver={(e) => handleDragOver(e, task.id)}
+                onDrop={(e) => handleDrop(e, task.id)}
+                onDragEnd={handleDragEnd}
+              />
             ))}
           </div>
         )}
@@ -272,16 +314,44 @@ const StudyPlan = () => {
   );
 };
 
-function TaskRow({ task, onToggle, onDelete, delay }: { task: StudyTask; onToggle: (id: string) => void; onDelete: (id: string) => void; delay: number }) {
+function TaskRow({
+  task, onToggle, onDelete, delay,
+  isDragOver, onDragStart, onDragOver, onDrop, onDragEnd,
+}: {
+  task: StudyTask;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+  delay: number;
+  isDragOver?: boolean;
+  onDragStart?: () => void;
+  onDragOver?: (e: React.DragEvent) => void;
+  onDrop?: (e: React.DragEvent) => void;
+  onDragEnd?: () => void;
+}) {
   const prio = priorityConfig[task.priority];
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
     <div
-      className={`group flex items-start gap-3 card-interactive pl-5 pr-4 py-3.5 animate-fade-in [animation-fill-mode:backwards] ${
-        task.completed ? "!border-border/50 opacity-60 hover:!shadow-none hover:!translate-y-0" : ""
-      }`}
+      draggable={!task.completed}
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      onDragEnd={onDragEnd}
+      className={cn(
+        "group flex items-start gap-3 card-interactive pl-5 pr-4 py-3.5 animate-fade-in [animation-fill-mode:backwards]",
+        task.completed && "!border-border/50 opacity-60 hover:!shadow-none hover:!translate-y-0",
+        isDragOver && "border-accent/40 bg-accent/5",
+      )}
       style={{ animationDelay: `${delay}ms` }}
     >
+      {/* Drag handle */}
+      {!task.completed && (
+        <div className="mt-1 cursor-grab opacity-0 group-hover:opacity-60 transition-opacity duration-200 shrink-0">
+          <GripVertical className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
+        </div>
+      )}
+
       {/* Checkbox */}
       <button
         onClick={() => onToggle(task.id)}
@@ -319,16 +389,31 @@ function TaskRow({ task, onToggle, onDelete, delay }: { task: StudyTask; onToggl
         </div>
       </div>
 
-      {/* Delete */}
-      <button
-        onClick={() => {
-          onDelete(task.id);
-          toast.success("Task removed");
-        }}
-        className="mt-0.5 h-7 w-7 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 text-muted-foreground/80 hover:text-destructive hover:bg-destructive/5 transition-all duration-250 ease-spring shrink-0"
-      >
-        <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
-      </button>
+      {/* Delete with confirmation */}
+      {confirmDelete ? (
+        <div className="flex items-center gap-1.5 shrink-0 animate-fade-in">
+          <span className="text-[11px] font-sans text-destructive">Delete?</span>
+          <button
+            onClick={() => { onDelete(task.id); toast.success("Task removed"); }}
+            className="px-2 py-0.5 rounded-md bg-destructive text-destructive-foreground text-[10px] font-sans font-medium hover:bg-destructive/90 transition-colors active:scale-[0.97]"
+          >
+            Yes
+          </button>
+          <button
+            onClick={() => setConfirmDelete(false)}
+            className="px-2 py-0.5 rounded-md border border-border text-[10px] font-sans text-muted-foreground hover:text-foreground transition-colors active:scale-[0.97]"
+          >
+            No
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={() => setConfirmDelete(true)}
+          className="mt-0.5 h-7 w-7 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 text-muted-foreground/80 hover:text-destructive hover:bg-destructive/5 transition-all duration-250 ease-spring shrink-0"
+        >
+          <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
+        </button>
+      )}
     </div>
   );
 }
