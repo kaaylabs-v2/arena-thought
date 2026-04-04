@@ -70,20 +70,20 @@ const AdminMessagesPage = () => {
                   onClick={() => handleSelectUser(user.id)}
                   className={cn(
                     "w-full text-left px-4 py-3 border-b border-border/50 transition-colors",
-                    selectedUserId === user.id ? "bg-accent" : "hover:bg-accent/50"
+                    selectedUserId === user.id ? "bg-secondary" : "hover:bg-secondary/50"
                   )}
                 >
                   <div className="flex items-center justify-between mb-0.5">
                     <span className="text-sm font-medium text-foreground truncate">{user.name}</span>
                     {unread > 0 && (
-                      <span className="flex items-center justify-center h-5 w-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold">
+                      <span className="flex items-center justify-center h-5 w-5 rounded-full bg-accent text-accent-foreground text-[10px] font-bold">
                         {unread}
                       </span>
                     )}
                   </div>
                   <p className="text-[11px] text-muted-foreground truncate">{user.email}</p>
                   {lastMsg && (
-                    <p className="text-xs text-muted-foreground/70 truncate mt-1">{lastMsg.content.slice(0, 50)}...</p>
+                    <p className="text-xs text-muted-foreground truncate mt-1">{lastMsg.content.slice(0, 50)}...</p>
                   )}
                 </button>
               );
@@ -115,20 +115,20 @@ const AdminMessagesPage = () => {
                           className={cn(
                             "max-w-[80%] rounded-xl px-4 py-3",
                             msg.fromRole === "admin"
-                              ? "bg-primary/10 ml-auto"
-                              : "bg-muted mr-auto"
+                              ? "bg-accent/15 border border-accent/20 ml-auto"
+                              : "bg-secondary border border-border mr-auto"
                           )}
                         >
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-xs font-medium text-foreground">{msg.fromName}</span>
                             {!msg.read && msg.fromRole === "learner" && (
-                              <Circle className="h-2 w-2 fill-primary text-primary" />
+                              <Circle className="h-2 w-2 fill-accent text-accent" />
                             )}
                           </div>
                           {msg.subject && (
-                            <p className="text-xs font-medium text-foreground/80 mb-1">{msg.subject}</p>
+                            <p className="text-xs font-medium text-foreground mb-1">{msg.subject}</p>
                           )}
-                          <p className="text-sm text-foreground/90 leading-relaxed">{msg.content}</p>
+                          <p className="text-sm text-foreground leading-relaxed">{msg.content}</p>
                           <p className="text-[10px] text-muted-foreground mt-2">{msg.timestamp}</p>
                         </div>
                       ))}
