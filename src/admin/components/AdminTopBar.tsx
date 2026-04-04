@@ -69,7 +69,7 @@ export function AdminTopBar() {
               <div className="max-h-[320px] overflow-y-auto scrollbar-thin">
                 {notifications.length === 0 ? (
                   <div className="py-8 text-center">
-                    <Bell className="h-5 w-5 mx-auto mb-2 text-muted-foreground/30" strokeWidth={1.5} />
+                    <Bell className="h-5 w-5 mx-auto mb-2 text-muted-foreground/50" strokeWidth={1.5} />
                     <p className="text-[13px] text-muted-foreground">No notifications</p>
                   </div>
                 ) : (
@@ -84,13 +84,13 @@ export function AdminTopBar() {
                     >
                       <div className={cn("mt-1.5 h-2 w-2 rounded-full shrink-0 transition-opacity duration-200", n.read ? "opacity-0" : "bg-accent")} />
                       <div className="flex-1 min-w-0">
-                        <p className={cn("text-[12px] leading-snug", n.read ? "text-muted-foreground" : "text-foreground/80")}>{n.text}</p>
-                        <p className="text-[10px] mt-0.5 text-muted-foreground/60">{n.time}</p>
+                        <p className={cn("text-[12px] leading-snug", n.read ? "text-muted-foreground" : "text-foreground")}>{n.text}</p>
+                        <p className="text-[10px] mt-0.5 text-muted-foreground/70">{n.time}</p>
                       </div>
                       {!n.read && (
                         <button
                           onClick={(e) => { e.stopPropagation(); markRead(n.id); }}
-                          className="shrink-0 p-0.5 rounded text-muted-foreground/40 hover:text-accent transition-colors duration-150"
+                          className="shrink-0 p-0.5 rounded text-muted-foreground/60 hover:text-accent transition-colors duration-150"
                           title="Mark as read"
                         >
                           <Check className="h-3 w-3" />

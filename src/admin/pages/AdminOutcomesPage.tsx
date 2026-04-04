@@ -32,13 +32,13 @@ export default function AdminOutcomesPage() {
         ))}
       </div>
 
-      <h2 className="font-serif text-lg mb-4 text-foreground/75">Course Mastery Breakdown</h2>
+      <h2 className="font-serif text-lg mb-4 font-serif text-base text-foreground">Course Mastery Breakdown</h2>
       <div className="grid gap-3 mb-8 stagger-children">
         {activeCourses.map(course => (
           <div key={course.id} className="card-interactive p-5">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h3 className="font-medium text-sm text-foreground/80">{course.name}</h3>
+                <h3 className="font-medium text-sm text-foreground">{course.name}</h3>
                 <p className="text-xs mt-1 text-muted-foreground">{course.department} · {course.enrolledCount} enrolled</p>
               </div>
               <Badge variant="outline" className={course.masteryRate >= 70 ? "border-accent/30 text-accent" : course.masteryRate >= 40 ? "border-accent/20 text-accent/70" : "border-border text-muted-foreground"}>
@@ -47,13 +47,13 @@ export default function AdminOutcomesPage() {
             </div>
             <Progress value={course.masteryRate} className="h-2 progress-glow" />
             <p className="text-[11px] mt-3 leading-relaxed text-muted-foreground">
-              <span className="font-medium text-foreground/55">Mastery definition:</span> {course.masteryDefinition}
+              <span className="font-medium text-foreground/70">Mastery definition:</span> {course.masteryDefinition}
             </p>
           </div>
         ))}
       </div>
 
-      <h2 className="font-serif text-lg mb-4 text-foreground/75">Identified Knowledge Gaps</h2>
+      <h2 className="font-serif text-lg mb-4 font-serif text-base text-foreground">Identified Knowledge Gaps</h2>
       <div className="card-interactive p-5">
         <div className="space-y-3">
           {knowledgeGaps.map((gap, i) => (
@@ -61,7 +61,7 @@ export default function AdminOutcomesPage() {
               <div className="h-6 w-6 rounded-full flex items-center justify-center shrink-0 bg-destructive/10">
                 <AlertTriangle className="h-3 w-3 text-destructive" />
               </div>
-              <span className="text-sm text-foreground/65">{gap}</span>
+              <span className="text-sm text-foreground/80">{gap}</span>
             </div>
           ))}
         </div>

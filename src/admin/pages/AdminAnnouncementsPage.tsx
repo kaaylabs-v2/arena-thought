@@ -66,13 +66,13 @@ export default function AdminAnnouncementsPage() {
         {items.map(ann => (
           <div key={ann.id} className="card-interactive p-5">
             <div className="flex items-start justify-between mb-2">
-              <h3 className="font-medium text-sm text-foreground/80">{ann.title}</h3>
+              <h3 className="font-medium text-sm text-foreground">{ann.title}</h3>
               <Badge variant="outline" className="text-[10px] shrink-0 border-accent/30 text-accent">
                 {ann.audience}
               </Badge>
             </div>
             <p className="text-sm leading-relaxed mb-3 text-muted-foreground">{ann.body}</p>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground/60">
+            <div className="flex items-center gap-4 text-xs text-muted-foreground/70">
               <span className="flex items-center gap-1"><User className="h-3 w-3" />{ann.sentBy}</span>
               <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{ann.sentDate}</span>
             </div>

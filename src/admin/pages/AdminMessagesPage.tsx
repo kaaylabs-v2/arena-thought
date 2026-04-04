@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { Send, Circle, MessageSquare } from "lucide-react";
 import { useWorkspace, mockUsers } from "@/context/WorkspaceContext";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +25,6 @@ const AdminMessagesPage = () => {
 
   const handleSelectUser = (userId: string) => {
     setSelectedUserId(userId);
-    // Mark learner messages as read
     const thread = learnerThreads.find((t) => t.user.id === userId);
     thread?.messages.forEach((m) => {
       if (!m.read && m.fromRole === "learner") markMessageRead(m.id);
@@ -50,20 +46,21 @@ const AdminMessagesPage = () => {
 
   return (
     <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
-      <div className="flex items-start justify-between mb-8">
-        <div>
-          <h1 className="font-serif text-[2rem] font-normal text-foreground">Messages</h1>
-          <p className="text-sm mt-0.5 text-muted-foreground">Send direct messages to learners</p>
-        </div>
+      <div className="mb-6">
+        <h1 className="font-serif text-[2rem] font-normal text-foreground">Messages</h1>
+        <p className="text-sm mt-0.5 text-muted-foreground">Send direct messages to learners</p>
       </div>
 
-      <div className="grid grid-cols-[260px_1fr] gap-0 border border-border rounded-xl overflow-hidden bg-card min-h-[520px]">
+      <div
+        className="flex border border-border rounded-xl overflow-hidden bg-card animate-fade-in"
+        style={{ animationDelay: "80ms", animationFillMode: "backwards", minHeight: "calc(100vh - 220px)" }}
+      >
         {/* Learner list */}
-        <div className="border-r border-border bg-muted/30">
+        <div className="w-[260px] shrink-0 border-r border-border bg-muted/30 flex flex-col">
           <div className="p-3 border-b border-border">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Learners</p>
+            <p className="text-[11px] font-sans uppercase tracking-widest text-muted-foreground">Learners</p>
           </div>
-          <ScrollArea className="h-[470px]">
+          <ScrollArea className="flex-1">
             {learnerThreads.map(({ user, messages, unread }) => {
               const lastMsg = messages[messages.length - 1];
               return (
@@ -94,14 +91,14 @@ const AdminMessagesPage = () => {
         </div>
 
         {/* Conversation */}
-        <div className="flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           {activeThread ? (
             <>
-              <div className="p-4 border-b border-border">
-                <h3 className="text-sm font-medium text-foreground">{activeThread.user.name}</h3>
-                <p className="text-xs text-muted-foreground">{activeThread.user.email}</p>
+              <div className="px-5 py-4 border-b border-border">
+                <h3 className="font-serif text-lg text-foreground leading-snug">{activeThread.user.name}</h3>
+                <p className="text-[11px] font-sans text-muted-foreground/80 uppercase tracking-widest mt-0.5">{activeThread.user.email}</p>
               </div>
-              <ScrollArea className="flex-1 p-4 h-[340px]">
+              <ScrollArea className="flex-1 p-5">
                 {activeThread.messages.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-16">
                     <MessageSquare className="h-8 w-8 mb-2 opacity-30" />
@@ -117,7 +114,7 @@ const AdminMessagesPage = () => {
                           className={cn(
                             "max-w-[80%] rounded-xl px-4 py-3",
                             msg.fromRole === "admin"
-                              ? "bg-accent/15 border border-accent/20 ml-auto"
+                              ? "bg-accent/15 border border-accent/25 ml-auto"
                               : "bg-secondary border border-border mr-auto"
                           )}
                         >
@@ -131,25 +128,26 @@ const AdminMessagesPage = () => {
                             <p className="text-xs font-medium text-foreground mb-1">{msg.subject}</p>
                           )}
                           <p className="text-sm text-foreground leading-relaxed">{msg.content}</p>
-                          <p className="text-[10px] text-muted-foreground mt-2">{msg.timestamp}</p>
+                          <p className="text-[10px] text-muted-foreground/80 mt-2">{msg.timestamp}</p>
                         </div>
                       ))}
                   </div>
                 )}
               </ScrollArea>
-              <div className="p-4 border-t border-border space-y-2">
-                <Input
+              <div className="px-5 py-4 border-t border-border space-y-2">
+                <input
                   value={subjectText}
                   onChange={(e) => setSubjectText(e.target.value)}
                   placeholder="Subject (optional)"
-                  className="text-sm h-9"
+                  className="w-full bg-transparent border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring"
                 />
-                <div className="flex gap-2">
-                  <Textarea
+                <div className="flex gap-2 items-end">
+                  <textarea
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
                     placeholder="Type your message..."
-                    className="min-h-[44px] max-h-[120px] resize-none text-sm"
+                    rows={1}
+                    className="flex-1 bg-transparent border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring resize-none min-h-[44px] max-h-[120px]"
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault();
@@ -157,14 +155,13 @@ const AdminMessagesPage = () => {
                       }
                     }}
                   />
-                  <Button
-                    size="icon"
+                  <button
                     onClick={handleSend}
                     disabled={!messageText.trim()}
-                    className="shrink-0 self-end"
+                    className="h-10 w-10 shrink-0 flex items-center justify-center rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     <Send className="h-4 w-4" />
-                  </Button>
+                  </button>
                 </div>
               </div>
             </>
