@@ -1,62 +1,62 @@
 
 
-## Admin Sidebar Navigation — Analysis & Recommendation
+## Plan: Admin-Learner Messaging System
 
-### Current State (8 items)
+### Overview
+Add a bidirectional messaging system where the admin (Dr. Sarah Mitchell) can send messages to learners from the Admin Studio, and learners can view and reply from the Learner Studio. Messages are shared through the existing `WorkspaceContext`.
 
-| Menu Item | What it does | Lines of code | Complexity |
-|---|---|---|---|
-| **Dashboard** | KPI cards, activity feed, pending actions, quick actions, mastery chart | 130 | Medium |
-| **Courses** | Full CRUD: list, filter, deploy, edit, archive, duplicate, enrollments | 560 | High |
-| **Content Library** | File browser for PDFs/videos/slides linked to courses | 220 | Medium |
-| **Members** | Invite, role/status management, detail view, bulk import | 390 | High |
-| **Departments** | Create/edit departments, see linked members/courses | 140 | Low |
-| **Outcomes** | Mastery rates per course, knowledge gaps list | 70 | Low |
-| **Analytics** | Charts (engagement, completions, department breakdown), export | 360 | High |
-| **Announcements** | Create/list announcements with audience targeting | 120 | Low |
-
-### Recommendation
-
-**Merge to 5 items.** Here is the proposed grouping:
+### Architecture
 
 ```text
-CURRENT (8)              PROPOSED (5)
-─────────────            ─────────────
-Dashboard          →     Dashboard  (unchanged)
-Courses            ┐
-Content Library    ┘→    Courses  (add "Content" as a tab inside Courses)
-Members            ┐
-Departments        ┘→    People  (Members + Departments as tabs)
-Outcomes           ┐
-Analytics          ┘→    Insights  (Analytics charts + Outcomes/mastery as tabs)
-Announcements      →     Announcements  (unchanged — distinct enough)
+WorkspaceContext
+  └── directMessages: DirectMessage[]
+  └── addDirectMessage(msg)
+  └── markMessageRead(id)
+
+Admin Studio                          Learner Studio
+┌─────────────────────┐              ┌─────────────────────┐
+│ /admin/messages      │              │ /messages            │
+│ - Select learner     │  ◄──────►   │ - Inbox view         │
+│ - Compose message    │  shared     │ - Reply to admin     │
+│ - View conversation  │  state      │ - View conversation  │
+│ - See replies        │              │ - Unread badge       │
+└─────────────────────┘              └─────────────────────┘
 ```
 
-### Rationale
+### Changes
 
-1. **Courses + Content Library → "Courses" (with tabs)**
-   Content Library is just the files attached to courses. It has no independent purpose. Moving it to a "Content" tab inside Courses keeps everything course-related in one place and removes a click from the admin's mental model.
+**1. WorkspaceContext — Add messaging state**
+- New `DirectMessage` type: `{ id, fromRole: "admin"|"learner", fromName, toUserId, subject?, content, timestamp, read }`
+- Add `directMessages` state with seed data (2-3 sample messages)
+- Add `addDirectMessage()` and `markMessageRead()` callbacks
+- Expose in context provider
 
-2. **Members + Departments → "People" (with tabs)**
-   Departments are just a grouping mechanism for members. They share the same data (member lists, role assignments). A "Members" tab + "Departments" tab under one "People" section is cleaner and matches how admins think: "I'm managing people."
+**2. Learner Messages Page — `src/pages/Messages.tsx`**
+- Inbox list showing messages from admin, with unread indicators
+- Message detail view with full content and reply composer
+- Replies are added as new `DirectMessage` entries with `fromRole: "learner"`
+- Consistent page header matching other learner pages (unified layout)
 
-3. **Analytics + Outcomes → "Insights" (with tabs)**
-   Outcomes (mastery rates, knowledge gaps) is essentially a specialized analytics view — it's 70 lines and just shows per-course mastery bars. Merging it as a tab alongside the engagement/completion charts creates a single destination for "how are things going?"
+**3. Admin Messages Page — `src/admin/pages/AdminMessagesPage.tsx`**
+- Learner selector (from `mockUsers` / `studioMembers`)
+- Conversation thread view per learner
+- Compose area with subject + message body
+- Shows learner replies inline
 
-4. **Dashboard stays** — it's the landing overview, always needed.
+**4. Routing — `src/App.tsx`**
+- Add `/messages` route under Learner Layout
+- Add `/admin/messages` route under Admin Guard
 
-5. **Announcements stays** — it's a distinct action (compose + send) that doesn't fit naturally elsewhere.
+**5. Sidebar Navigation**
+- Add "Messages" nav item with `MessageSquare` icon to `AppSidebar.tsx` (learner)
+- Add "Messages" nav item to `AdminSidebar.tsx` (admin)
+- Both show unread count badge when there are unread messages
 
-### Result
+**6. Unread Badge on Home**
+- Optionally show a small notification on the learner Home page if there are unread admin messages
 
-The sidebar goes from 8 items to 5, which is within the ideal 4-7 range for scanability. No functionality is removed — everything becomes a tab within its parent page.
-
-### Files to modify
-
-- `src/admin/components/AdminSidebar.tsx` — reduce `navItems` to 5
-- `src/admin/pages/AdminCourses.tsx` — add a "Content" tab, inline the Content Library UI
-- Create `src/admin/pages/AdminPeoplePage.tsx` — tabs for Members + Departments (import existing components)
-- Create `src/admin/pages/AdminInsightsPage.tsx` — tabs for Analytics + Outcomes
-- `src/App.tsx` — update admin routes (`/admin/people`, `/admin/insights`), add redirects for old paths
-- Remove or deprecate: `AdminContentLibrary.tsx`, `AdminMembers.tsx`, `AdminDepartmentsPage.tsx`, `AdminOutcomesPage.tsx`, `AdminAnalyticsPage.tsx` (their content moves into the new tab pages)
+### Seed Data
+- Admin message: "Great progress on the Neural Networks module, Alex. Your backpropagation problem set was excellent."
+- Admin message: "Please review the updated reading materials for Bayesian Inference before next week."
+- Learner reply: "Thank you! I had a question about the chain rule application in deeper networks."
 
