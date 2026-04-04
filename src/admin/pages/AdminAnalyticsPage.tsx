@@ -240,7 +240,7 @@ export default function AdminAnalyticsPage() {
       {/* Charts row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <div className="lg:col-span-2 card-interactive p-5">
-          <h3 className="font-serif text-base mb-4 text-foreground/75">Engagement Over Time</h3>
+          <h3 className="font-serif text-base mb-4 text-foreground/80">Engagement Over Time</h3>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={engagementOverTime}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
