@@ -123,20 +123,20 @@ const Messages = () => {
                         className={cn(
                           "max-w-[80%] rounded-xl px-4 py-3",
                           msg.fromRole === "admin"
-                            ? "bg-muted mr-auto"
-                            : "bg-primary/10 ml-auto"
+                            ? "bg-secondary border border-border mr-auto"
+                            : "bg-accent/15 border border-accent/20 ml-auto"
                         )}
                       >
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs font-medium text-foreground">{msg.fromName}</span>
                           {!msg.read && msg.fromRole === "admin" && (
-                            <Circle className="h-2 w-2 fill-primary text-primary" />
+                            <Circle className="h-2 w-2 fill-accent text-accent" />
                           )}
                         </div>
                         {msg.subject && (
-                          <p className="text-xs font-medium text-foreground/80 mb-1">{msg.subject}</p>
+                          <p className="text-xs font-medium text-foreground mb-1">{msg.subject}</p>
                         )}
-                        <p className="text-sm text-foreground/90 leading-relaxed">{msg.content}</p>
+                        <p className="text-sm text-foreground leading-relaxed">{msg.content}</p>
                         <p className="text-[10px] text-muted-foreground mt-2">{msg.timestamp}</p>
                       </div>
                     ))}
