@@ -127,7 +127,7 @@ export function AppSidebar() {
               ) : (
                 <Sun strokeWidth={1.5} />
               )}
-              <span className="text-[13px] font-sans">{theme === "light" ? "Dark mode" : "Light mode"}</span>
+              <span className="text-sm font-sans">{theme === "light" ? "Dark mode" : "Light mode"}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
