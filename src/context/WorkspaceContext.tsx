@@ -156,6 +156,10 @@ interface WorkspaceState {
   studioOrganization: Organization;
   setStudioOrganization: React.Dispatch<React.SetStateAction<Organization>>;
   studioCurrentAdmin: AdminUser;
+  // Direct messaging
+  directMessages: DirectMessage[];
+  addDirectMessage: (msg: Omit<DirectMessage, "id" | "timestamp" | "read">) => void;
+  markMessageRead: (id: string) => void;
 }
 
 const WorkspaceContext = createContext<WorkspaceState | null>(null);
