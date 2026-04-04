@@ -49,7 +49,7 @@ const AdminMessagesPage = () => {
   };
 
   return (
-    <div>
+    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
       <div className="flex items-start justify-between mb-8">
         <div>
           <h1 className="font-serif text-[2rem] font-normal text-foreground">Messages</h1>
