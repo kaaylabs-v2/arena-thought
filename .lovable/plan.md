@@ -1,80 +1,87 @@
 
 
-## Nexus Learn Studio -- Complete UI Audit
+## Nexus Learn Studio -- Feature & QoL Implementation Plan
 
-### What's Working Well
-- **Header consistency**: All pages use the same `font-serif text-4xl` title + `text-sm text-muted-foreground` subtitle + `mb-8` gap pattern
-- **Animation system**: Staggered `animate-fade-in` with `animation-delay` and `animation-fill-mode: backwards` is applied consistently
-- **Card system**: `card-interactive` class provides uniform hover/active behavior
-- **Sidebar**: Clean, well-spaced navigation with proper active states and keyboard shortcut support
-- **Settings page**: Well-structured tabs, toggle/segmented controls look polished in both modes
-- **Progress page**: Weekly activity chart, summary cards, and course cards all look good
-- **Reflections**: Composer, prompt chips, mood selector, and grouped reflections work well
-- **Dark mode text**: Previous fixes have resolved most visibility issues
+Implementing items **1, 3, 4, 5, 6, 7, 8, 12** from the audit suggestions.
 
 ---
 
-### Issues Found
+### Features to Build
 
-#### 1. Messages page -- Layout inconsistency (HIGH)
-- **Padding mismatch**: Uses `py-10 px-4` instead of the standard `p-8 lg:p-12 xl:p-16` used by all other pages
-- **No `min-h-screen`** or `h-full` like other pages
-- **Missing `animate-fade-in` stagger** on the content grid (other pages have it)
-- **Fixed `grid-cols-[280px_1fr]`** doesn't match the organic, card-based approach of other pages -- feels rigid
-- **Fixed height `h-[450px]` / `h-[340px]`** on scroll areas looks truncated with too much empty space below
-- **Uses shadcn `Button`/`Textarea` components** while other pages use custom-styled native elements for consistency
+#### 1. Global Command Palette (Cmd+K)
+Create `src/components/CommandPalette.tsx` using the existing `cmdk` library (already available via `src/components/ui/command.tsx`). Mount it in `src/components/Layout.tsx`.
 
-#### 2. Messages page -- Style mismatches (MEDIUM)
-- Message bubbles in light mode: the `bg-secondary` received bubbles blend too much with the page background; `bg-accent/15` sent bubbles are barely tinted
-- Thread list header uses `text-xs font-medium` instead of the `text-[11px] uppercase tracking-widest` pattern used everywhere else
-- Conversation header uses generic `text-sm font-medium` instead of the serif/sans hierarchy other pages use
-- Reply textarea uses the default shadcn styling instead of the minimal transparent style used in Reflections/Study Plan composers
+- Groups: **Pages** (Home, Library, Study Plan, Notebook, Progress, Reflections, Messages, Settings, Profile), **Recent Courses** (from workspace context), **Notebook entries**, **Vocab terms**
+- Keyboard shortcut: Cmd+K / Ctrl+K
+- Uses `CommandDialog`, `CommandInput`, `CommandList`, `CommandGroup`, `CommandItem` from existing UI primitives
+- Navigation via `useNavigate()` on item select
+- Subtle, minimal styling consistent with the Studio aesthetic
 
-#### 3. Admin Studio link in sidebar -- Hardcoded white color (MEDIUM)
-- Line 143-145 in `AppSidebar.tsx`: `style={{ color: "rgba(255,255,255,0.35)" }}` with inline `onMouseEnter/Leave` -- this will look wrong in light mode (white text on light sidebar). Should use `text-sidebar-foreground/40` and `hover:text-sidebar-foreground/70` CSS classes instead.
+#### 3. Sidebar Notification Badge on Messages
+In `src/components/AppSidebar.tsx`, read `directMessages` from `useWorkspace()` and compute unread count for the current learner. Render a small dot/count badge next to the "Messages" nav item when unread > 0.
 
-#### 4. Settings -- Console error (LOW)
-- `SettingRow` is a function component receiving refs from `PrivacyPanel` -- causes React warning. Needs `React.forwardRef` or restructuring.
+- Small `h-4 w-4` accent-colored circle with count, or a dot if just 1
+- Only shows when there are unread admin messages for the learner
 
-#### 5. Notebook page -- Tag colors too faint in dark mode (LOW)
-- Tags like "neural-networks" use `text-accent/70` which is slightly dim in dark mode against the card background. Bumping to `text-accent/85` would improve readability.
+#### 4. Keyboard Shortcuts
+Create `src/components/KeyboardShortcuts.tsx` -- a global listener + help overlay triggered by `?` key.
 
-#### 6. Library -- "COMPLETE" badge (LOW)
-- Uses `bg-accent/8` which is nearly invisible in dark mode. Should use `bg-accent/15` minimum.
+- Shortcuts: `N` (new note on Notebook page), `T` (add task on Study Plan page), `R` (start reflection on Reflections page), `Esc` (close modals), `Cmd+K` (command palette)
+- The overlay is a simple modal listing all shortcuts in a clean grid
+- Mount in `Layout.tsx` alongside the command palette
+- Page-specific shortcuts only fire when on the relevant page (check `location.pathname`)
 
-#### 7. Profile page -- `text-foreground/85` and `text-foreground/90` (LOW)
-- Lines 92, 99: Bio and learning goal text use `text-foreground/85` -- unnecessary opacity reduction makes text slightly dim in dark mode. Should be `text-foreground`.
+#### 5. Course Progress Sparklines in Library Cards
+In `src/pages/Library.tsx`, add a tiny inline SVG sparkline (7 data points representing last 7 days of activity) to each course card. Keep it minimal -- a thin polyline path, no axes, no labels, just a subtle visual trend indicator.
 
-#### 8. Missing Settings link in sidebar (OBSERVATION)
-- Settings and Profile are not in the main sidebar nav. Users can only access Settings via the user menu. This is by design but worth noting -- other pages like Messages are directly accessible.
+- Generate mock sparkline data per course (seeded from course ID for consistency)
+- Place below the progress bar, ~20px tall, muted accent color
+- Thin stroke, no fill -- understated, not flashy
+
+#### 6. Smooth Page Transitions
+Add a CSS-only route-level fade transition. Each page already has `animate-fade-in` on mount. Add a subtle exit animation by wrapping the `<Outlet>` in `Layout.tsx` with a key-based re-mount that triggers the entrance animation on route change.
+
+- Use `useLocation().pathname` as a key on a wrapper div around `<Outlet />`
+- Add a subtle `animate-fade-in` class to the wrapper so every route transition gets a consistent entrance
+- No external library needed -- keeps it lightweight
+
+#### 7. "Back to Top" Button
+Create `src/components/ScrollToTop.tsx` -- a floating button that appears after scrolling 400px down. Place it in `Layout.tsx` inside the main content area.
+
+- Small, rounded, semi-transparent button with an up-arrow icon
+- Fades in/out with `opacity` + `translate-y` transition
+- Scrolls smoothly to top on click
+- Positioned bottom-right of the content area
+
+#### 8. Confirmation Dialogs for Destructive Actions
+Add inline "Are you sure?" confirmation steps before deleting notes, vocab terms, tasks, and reflections. Follow the pattern already used in the Notebook editor (the `showDeleteConfirm` state with Yes/No buttons).
+
+- **StudyPlan.tsx**: Add confirmation state per task before `deleteTask` fires
+- **Reflections.tsx**: Add confirmation before `deleteReflection`
+- **Notebook.tsx vocab**: The delete already works inline; add confirmation for vocab delete too
+- Pattern: Replace the delete button with a small "Delete? Yes / No" inline prompt (same as existing note editor pattern)
+
+#### 12. Drag-and-Drop Task Reordering in Study Plan
+Add HTML5 native drag-and-drop to task rows in `src/pages/StudyPlan.tsx`. No external library needed.
+
+- Add `draggable`, `onDragStart`, `onDragOver`, `onDrop` handlers to `TaskRow`
+- Visual feedback: subtle border highlight on the drop target
+- Reorder within the sorted list; store order in workspace context
+- Add `reorderTasks` method to `WorkspaceContext.tsx` that accepts a reordered array of task IDs
 
 ---
 
-### Recommended Changes
+### Files to Create
+- `src/components/CommandPalette.tsx`
+- `src/components/KeyboardShortcuts.tsx`
+- `src/components/ScrollToTop.tsx`
 
-**File: `src/pages/Messages.tsx`** (major rework)
-- Replace root `div` with `<div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-5xl mx-auto">` to match other pages
-- Replace the fixed grid layout with a flex-based layout that fills available height dynamically
-- Replace shadcn `Button`/`Textarea` with custom-styled elements matching the Reflections page composer
-- Match the thread list header to use `text-[11px] uppercase tracking-widest text-muted-foreground`
-- Use `min-h-[500px] flex-1` instead of fixed heights on scroll areas
-- Add `animate-fade-in` entrance animation
-
-**File: `src/components/AppSidebar.tsx`**
-- Replace inline `style` and `onMouseEnter/Leave` on the Admin Studio button with proper Tailwind classes: `text-sidebar-foreground/40 hover:text-sidebar-foreground/70`
-
-**File: `src/pages/Settings.tsx`**
-- Minor: wrap `SettingRow` in `React.forwardRef` or remove the ref passing to fix the console error
-
-**File: `src/pages/Profile.tsx`**
-- Change `text-foreground/85` to `text-foreground` on lines 92 and 99
-
-**File: `src/pages/Library.tsx`**
-- Change `bg-accent/8` to `bg-accent/15` on the "Complete" badge (line 103)
-
-**File: `src/pages/Notebook.tsx`**
-- Bump tag text from `text-accent/70` to `text-accent/85`
-
-### Summary
-The biggest issue is the **Messages page** which uses a completely different layout pattern (padding, heights, components) compared to every other learner page. The remaining issues are minor opacity/contrast tweaks and one inline style that breaks in light mode. Overall the Learn Studio is well-built with strong consistency across the other 7 pages.
+### Files to Edit
+- `src/components/Layout.tsx` -- mount CommandPalette, KeyboardShortcuts, ScrollToTop
+- `src/components/AppSidebar.tsx` -- add unread message badge
+- `src/pages/Library.tsx` -- add sparkline SVG to course cards
+- `src/pages/StudyPlan.tsx` -- add drag-and-drop + delete confirmation
+- `src/pages/Reflections.tsx` -- add delete confirmation
+- `src/pages/Notebook.tsx` -- add vocab delete confirmation
+- `src/context/WorkspaceContext.tsx` -- add `reorderTasks` method
 
