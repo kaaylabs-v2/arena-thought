@@ -10,6 +10,7 @@ import {
   ChevronsRight,
   ListChecks,
   Shield,
+  MessageSquare,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -38,6 +39,7 @@ const mainNav = [
   { title: "Notebook", url: "/notebook", icon: BookOpen },
   { title: "Progress", url: "/progress", icon: BarChart3 },
   { title: "Reflections", url: "/reflections", icon: Sparkles },
+  { title: "Messages", url: "/messages", icon: MessageSquare },
 ];
 
 export function AppSidebar() {

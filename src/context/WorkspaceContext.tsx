@@ -79,6 +79,18 @@ export interface StudyTask {
 
 export type UserRole = "learner" | "admin";
 
+// ─── Direct Messages ───
+export interface DirectMessage {
+  id: string;
+  fromRole: "admin" | "learner";
+  fromName: string;
+  toUserId: string;
+  subject?: string;
+  content: string;
+  timestamp: string;
+  read: boolean;
+}
+
 // ─── Organization & Admin User ───
 export interface Organization {
   name: string; industry: string; contactEmail: string; timezone: string;
@@ -144,6 +156,10 @@ interface WorkspaceState {
   studioOrganization: Organization;
   setStudioOrganization: React.Dispatch<React.SetStateAction<Organization>>;
   studioCurrentAdmin: AdminUser;
+  // Direct messaging
+  directMessages: DirectMessage[];
+  addDirectMessage: (msg: Omit<DirectMessage, "id" | "timestamp" | "read">) => void;
+  markMessageRead: (id: string) => void;
 }
 
 const WorkspaceContext = createContext<WorkspaceState | null>(null);
@@ -326,6 +342,20 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const [studioContent, setStudioContent] = useState<ContentItem[]>(seedStudioContent);
   const [studioOrganization, setStudioOrganization] = useState<Organization>(seedOrganization);
 
+  // ─── Direct Messages ───
+  const seedDirectMessages: DirectMessage[] = [
+    { id: "dm-1", fromRole: "admin", fromName: "Dr. Sarah Mitchell", toUserId: "user-1", subject: "Great progress!", content: "Great progress on the Neural Networks module, Alex. Your backpropagation problem set was excellent.", timestamp: "2 hours ago", read: false },
+    { id: "dm-2", fromRole: "admin", fromName: "Dr. Sarah Mitchell", toUserId: "user-1", subject: "Updated readings", content: "Please review the updated reading materials for Bayesian Inference before next week.", timestamp: "Yesterday", read: false },
+    { id: "dm-3", fromRole: "learner", fromName: "Alex Chen", toUserId: "admin-1", content: "Thank you! I had a question about the chain rule application in deeper networks.", timestamp: "1 hour ago", read: false },
+  ];
+  const [directMessages, setDirectMessages] = useState<DirectMessage[]>(seedDirectMessages);
+  const addDirectMessage = useCallback((msg: Omit<DirectMessage, "id" | "timestamp" | "read">) => {
+    setDirectMessages((prev) => [...prev, { ...msg, id: genId(), timestamp: "Just now", read: false }]);
+  }, []);
+  const markMessageRead = useCallback((id: string) => {
+    setDirectMessages((prev) => prev.map((m) => (m.id === id ? { ...m, read: true } : m)));
+  }, []);
+
   return (
     <WorkspaceContext.Provider
       value={{
@@ -351,6 +381,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         studioPreloadedCourses: seedPreloadedCourses,
         studioOrganization, setStudioOrganization,
         studioCurrentAdmin: seedCurrentAdmin,
+        // Direct messaging
+        directMessages, addDirectMessage, markMessageRead,
       }}
     >
       {children}

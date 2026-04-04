@@ -15,6 +15,7 @@ import Progress from "./pages/Progress";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import StudyPlan from "./pages/StudyPlan";
+import Messages from "./pages/Messages";
 import AdminStudio from "./pages/AdminStudio";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ import AdminInsightsPage from "@/admin/pages/AdminInsightsPage";
 import AdminAnnouncementsPage from "@/admin/pages/AdminAnnouncementsPage";
 import AdminSettingsPage from "@/admin/pages/AdminSettingsPage";
 import AdminHelpPage from "@/admin/pages/AdminHelpPage";
+import AdminMessagesPage from "@/admin/pages/AdminMessagesPage";
 import AdminAccessDenied from "@/admin/pages/AdminAccessDenied";
 import { useAdminAuth } from "@/admin/hooks/useAdminAuth";
 
@@ -58,6 +60,7 @@ const App = () => (
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/study-plan" element={<StudyPlan />} />
+                <Route path="/messages" element={<Messages />} />
               </Route>
 
               {/* Admin Studio — completely separate layout */}
@@ -67,6 +70,7 @@ const App = () => (
                 <Route path="/admin/people" element={<AdminPeoplePage />} />
                 <Route path="/admin/insights" element={<AdminInsightsPage />} />
                 <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
+                <Route path="/admin/messages" element={<AdminMessagesPage />} />
                 <Route path="/admin/settings" element={<AdminSettingsPage />} />
                 <Route path="/admin/help" element={<AdminHelpPage />} />
               </Route>
