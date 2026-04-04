@@ -77,7 +77,7 @@ export function AdminSidebar() {
       </SidebarHeader>
 
       {/* Main nav */}
-      <SidebarContent className="px-2 mt-1">
+      <SidebarContent className="px-2 mt-2">
         <SidebarGroup className="p-0">
           <SidebarGroupContent>
             <SidebarMenu>

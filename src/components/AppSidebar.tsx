@@ -83,7 +83,7 @@ export function AppSidebar() {
       </SidebarHeader>
 
       {/* Main nav */}
-      <SidebarContent className="px-2 mt-6">
+      <SidebarContent className="px-2 mt-2">
         <SidebarGroup className="p-0">
           <SidebarGroupContent>
             <SidebarMenu>
