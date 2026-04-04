@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Bell, X, Check, CheckCheck } from "lucide-react";
+import { useLocation, Link } from "react-router-dom";
+import { Bell, X, Check, CheckCheck, ChevronRight } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { cn } from "@/lib/utils";
 
@@ -10,9 +11,23 @@ interface Notification {
   read: boolean;
 }
 
+const breadcrumbMap: Record<string, string> = {
+  "/admin": "Dashboard",
+  "/admin/courses": "Courses",
+  "/admin/people": "People",
+  "/admin/insights": "Insights",
+  "/admin/announcements": "Announcements",
+  "/admin/messages": "Messages",
+  "/admin/settings": "Settings",
+  "/admin/help": "Help",
+  "/admin/departments": "Departments",
+  "/admin/outcomes": "Outcomes",
+  "/admin/analytics": "Analytics",
+};
 
 export function AdminTopBar() {
   const { studioOrganization: organization, studioActivity: recentActivity } = useWorkspace();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>(() => recentActivity.map(a => ({ id: a.id, text: a.text, time: a.time, read: false })));
 
@@ -31,11 +46,23 @@ export function AdminTopBar() {
     setOpen(false);
   };
 
+  // Build breadcrumbs
+  const path = location.pathname;
+  const currentPage = breadcrumbMap[path] || path.split("/").pop()?.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()) || "";
+
   return (
     <header className="h-14 flex items-center justify-between px-6 border-b border-border bg-background">
-      <span className="text-sm font-medium text-muted-foreground">
-        {organization.name}
-      </span>
+      <div className="flex items-center gap-2 text-sm">
+        <Link to="/admin" className="text-muted-foreground hover:text-foreground transition-colors">
+          {organization.name}
+        </Link>
+        {path !== "/admin" && (
+          <>
+            <ChevronRight className="h-3 w-3 text-muted-foreground/50" />
+            <span className="font-medium text-foreground">{currentPage}</span>
+          </>
+        )}
+      </div>
       <div className="relative">
         <button
           className="p-1.5 rounded-md transition-colors text-muted-foreground hover:text-foreground relative"

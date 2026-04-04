@@ -1,4 +1,4 @@
-import { Users, Activity, GraduationCap, Award, UserPlus, Rocket, Upload, ChevronRight, AlertTriangle } from "lucide-react";
+import { Users, Activity, GraduationCap, Award, UserPlus, Rocket, Upload, ChevronRight, AlertTriangle, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import {
@@ -25,6 +25,8 @@ const quickActions = [
   { label: "Upload Content", icon: Upload, href: "/admin/courses" },
 ];
 
+const statLinks = ["/admin/people", "/admin/insights", "/admin/courses", "/admin/insights"];
+
 export default function AdminDashboard() {
   const { studioMembers: members, studioCourses: adminCourses, studioActivity: recentActivity } = useWorkspace();
 
@@ -43,31 +45,56 @@ export default function AdminDashboard() {
       notAchieved: c.enrolledCount - Math.round(c.enrolledCount * c.masteryRate / 100),
     }));
 
+  const isEmpty = members.length === 0 && adminCourses.length === 0;
+
+  if (isEmpty) {
+    return (
+      <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="h-16 w-16 rounded-2xl flex items-center justify-center bg-accent/10 mb-6">
+            <Sparkles className="h-8 w-8 text-accent" strokeWidth={1.5} />
+          </div>
+          <h1 className="font-serif text-[2rem] font-normal text-foreground mb-2">Welcome to Admin Studio</h1>
+          <p className="text-sm text-muted-foreground max-w-md mb-8">
+            Get started by inviting your team and deploying your first course. Everything you need to manage learning is right here.
+          </p>
+          <div className="flex items-center gap-3">
+            <Link to="/admin/people" className="btn-apple flex items-center gap-2 px-5 py-2.5 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">
+              <UserPlus className="h-4 w-4" /> Invite Members
+            </Link>
+            <Link to="/admin/courses" className="btn-ghost flex items-center gap-2 px-5 py-2.5 text-[13px] font-medium border border-border rounded-lg text-foreground/65">
+              <Rocket className="h-4 w-4" /> Deploy Course
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 lg:p-8 max-w-[1200px] mx-auto space-y-6 animate-fade-in">
-      {/* Header */}
       <div>
         <h1 className="font-serif text-[2rem] font-normal text-foreground">Dashboard</h1>
         <p className="text-sm mt-0.5 text-muted-foreground">Organization overview and pending actions</p>
       </div>
 
-      {/* Stat cards */}
+      {/* Stat cards — now clickable */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
-        {stats.map((stat) => (
-          <div key={stat.label} className="card-interactive p-5">
+        {stats.map((stat, i) => (
+          <Link key={stat.label} to={statLinks[i]} className="card-interactive p-5 group cursor-pointer hover:border-accent/20 transition-colors">
             <div className="flex items-center justify-between mb-3">
               <div className="h-9 w-9 rounded-lg flex items-center justify-center bg-accent/10 text-accent p-2">
                 <stat.icon className="h-5 w-5" strokeWidth={1.5} />
               </div>
+              <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/0 group-hover:text-muted-foreground/50 transition-all duration-200 group-hover:translate-x-0.5" />
             </div>
             <p className="text-2xl font-semibold text-foreground">{stat.value}</p>
             <p className="text-xs mt-0.5 text-muted-foreground">{stat.label}</p>
-          </div>
+          </Link>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Activity Feed */}
         <div className="lg:col-span-2 card-interactive p-5">
           <h2 className="text-sm font-semibold mb-4 text-foreground/75">Recent Activity</h2>
           <div className="space-y-3 scrollbar-thin max-h-[320px] overflow-y-auto pr-1">
@@ -85,7 +112,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Pending + Quick Actions */}
         <div className="space-y-5 stagger-children">
           <div className="card-interactive p-5">
             <h2 className="text-sm font-semibold mb-3 text-foreground/75">Pending Actions</h2>
@@ -118,7 +144,6 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Mastery Overview Chart */}
       <div className="card-interactive p-5">
         <h2 className="text-sm font-semibold mb-4 text-foreground/75">Mastery Overview by Course</h2>
         <div className="h-[220px]">

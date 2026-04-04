@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, Plus, Archive, Copy, Users, Pencil, X, Upload, ChevronRight, Check, Send, RotateCcw } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import AdminContentLibraryPage from "./AdminContentLibrary";
@@ -40,6 +40,7 @@ export default function AdminCoursesPage() {
   const [commObjective, setCommObjective] = useState("");
   const [commTimeline, setCommTimeline] = useState("4 weeks");
   const [commHasMaterials, setCommHasMaterials] = useState(false);
+  const [archivingId, setArchivingId] = useState<string | null>(null);
 
   const tabs: { value: TabFilter; label: string }[] = [
     { value: "all", label: "All" },
@@ -74,6 +75,13 @@ export default function AdminCoursesPage() {
     setCustomTitle(""); setCustomDesc(""); setCustomMastery(""); setCustomDept("");
     setUploadedFiles([]); setCommObjective(""); setCommHasMaterials(false);
   };
+
+  // Listen for keyboard shortcut
+  useEffect(() => {
+    const handler = () => openDeploy();
+    window.addEventListener("admin-shortcut:deploy", handler);
+    return () => window.removeEventListener("admin-shortcut:deploy", handler);
+  }, []);
 
   const handleFakeUpload = () => {
     setUploadedFiles(prev => [...prev,
@@ -224,36 +232,44 @@ export default function AdminCoursesPage() {
                     <span className="text-[12px] text-muted-foreground/60">{course.dateDeployed}</span>
                   </td>
                   <td className="px-5 py-3.5">
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      <button
-                        title="Edit course"
-                        onClick={(e) => { e.stopPropagation(); handleEdit(course); }}
-                        className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-150"
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        title={course.status === "archived" ? "Restore course" : "Archive course"}
-                        onClick={(e) => { e.stopPropagation(); handleArchive(course); }}
-                        className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-150"
-                      >
-                        {course.status === "archived" ? <RotateCcw className="h-3.5 w-3.5" /> : <Archive className="h-3.5 w-3.5" />}
-                      </button>
-                      <button
-                        title="Manage enrollments"
-                        onClick={(e) => { e.stopPropagation(); handleEnrollments(course); }}
-                        className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-150"
-                      >
-                        <Users className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        title="Duplicate course"
-                        onClick={(e) => { e.stopPropagation(); handleDuplicate(course); }}
-                        className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-150"
-                      >
-                        <Copy className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
+                    {archivingId === course.id ? (
+                      <div className="flex items-center gap-2 text-[12px] animate-fade-in-fast">
+                        <span className="text-muted-foreground">{course.status === "archived" ? "Restore?" : "Archive?"}</span>
+                        <button onClick={() => { handleArchive(course); setArchivingId(null); }} className="font-medium text-accent">Confirm</button>
+                        <button onClick={() => setArchivingId(null)} className="text-muted-foreground">Cancel</button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <button
+                          title="Edit course"
+                          onClick={(e) => { e.stopPropagation(); handleEdit(course); }}
+                          className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-150"
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          title={course.status === "archived" ? "Restore course" : "Archive course"}
+                          onClick={(e) => { e.stopPropagation(); setArchivingId(course.id); }}
+                          className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-150"
+                        >
+                          {course.status === "archived" ? <RotateCcw className="h-3.5 w-3.5" /> : <Archive className="h-3.5 w-3.5" />}
+                        </button>
+                        <button
+                          title="Manage enrollments"
+                          onClick={(e) => { e.stopPropagation(); handleEnrollments(course); }}
+                          className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-150"
+                        >
+                          <Users className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          title="Duplicate course"
+                          onClick={(e) => { e.stopPropagation(); handleDuplicate(course); }}
+                          className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-150"
+                        >
+                          <Copy className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}
