@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useTheme } from "@/components/ThemeProvider";
+import { useWorkspace } from "@/context/WorkspaceContext";
 import {
   Sidebar,
   SidebarContent,
@@ -39,12 +40,14 @@ const navItems = [
 export function AdminSidebar() {
   const { state, toggleSidebar } = useSidebar();
   const collapsed = state === "collapsed";
-  
   const { theme, toggleTheme } = useTheme();
+  const { directMessages } = useWorkspace();
+
+  // Count unread messages from learners for admin
+  const unreadCount = directMessages.filter(m => !m.read && m.fromRole === "learner").length;
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
-      {/* Header — logo + collapse toggle */}
       <SidebarHeader className="px-3 py-4">
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
@@ -78,7 +81,6 @@ export function AdminSidebar() {
         )}
       </SidebarHeader>
 
-      {/* Main nav */}
       <SidebarContent className="px-2 mt-2">
         <SidebarGroup className="p-0">
           <SidebarGroupContent>
@@ -98,7 +100,12 @@ export function AdminSidebar() {
                       activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                     >
                       <item.icon strokeWidth={1.5} />
-                      <span className="text-sm font-sans">{item.title}</span>
+                      <span className="text-sm font-sans flex-1">{item.title}</span>
+                      {item.title === "Messages" && unreadCount > 0 && (
+                        <span className="flex items-center justify-center h-4 min-w-[16px] px-1 rounded-full bg-accent text-accent-foreground text-[9px] font-bold">
+                          {unreadCount}
+                        </span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -108,11 +115,9 @@ export function AdminSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer — theme toggle + back to arena + user menu */}
       <SidebarFooter className="px-2 pb-3">
         <SidebarSeparator className="mx-0" />
         <SidebarMenu>
-          {/* Theme toggle */}
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={toggleTheme}
@@ -130,8 +135,6 @@ export function AdminSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-
-        {/* User menu dropdown */}
         <AdminSidebarUserMenu />
       </SidebarFooter>
     </Sidebar>
