@@ -96,10 +96,13 @@ const Notebook = () => {
     setEditingVocab(null); setNewVocab(false);
   }, [vTerm, vDef, vExample, vCourse, newVocab, editingVocab, addVocabulary, updateVocabulary]);
 
+  const [vocabDeleteConfirm, setVocabDeleteConfirm] = useState<string | null>(null);
+
   const handleDeleteVocab = useCallback((id: string) => {
     deleteVocabulary(id);
     toast.success("Term deleted");
     setEditingVocab(null); setNewVocab(false);
+    setVocabDeleteConfirm(null);
   }, [deleteVocabulary]);
 
   const openNoteEditor = useCallback((note: NotebookEntry) => {
