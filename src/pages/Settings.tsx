@@ -281,7 +281,7 @@ function NexiPanel() {
       <div>
         <SectionLabel>Context & Memory</SectionLabel>
         <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow label="Conversation memory" description="Remember context from previous sessions within a course" action={<Toggle checked={conversationMemory} onChange={setConversationMemory} />} />
+          <SettingRow label="Conversation memory" description="Remember context from previous sessions within a course" action={<Toggle checked={conversationMemory} onChange={(v) => updateAppSettings({ conversationMemory: v })} />} />
         </div>
       </div>
 
