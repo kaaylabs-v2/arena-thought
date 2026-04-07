@@ -296,7 +296,7 @@ function NexiPanel() {
               <SegmentedControl
                 value={codeDepth}
                 options={[{ value: "beginner", label: "Beginner" }, { value: "intermediate", label: "Intermediate" }, { value: "advanced", label: "Advanced" }]}
-                onChange={(v) => setCodeDepth(v as "beginner" | "intermediate" | "advanced")}
+                onChange={(v) => updateAppSettings({ codeDepth: v as "beginner" | "intermediate" | "advanced" })}
               />
             }
           />
