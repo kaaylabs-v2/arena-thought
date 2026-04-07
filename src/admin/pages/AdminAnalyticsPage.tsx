@@ -8,6 +8,15 @@ import { toast } from "sonner";
 const AMBER = "#C9963A";
 const AMBER_LIGHT = "hsl(var(--accent) / 0.15)";
 
+const chartTooltipStyle = {
+  fontSize: 12,
+  borderRadius: 8,
+  border: "1px solid hsl(var(--border))",
+  backgroundColor: "hsl(var(--popover))",
+  color: "hsl(var(--foreground))",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+};
+
 type TimeRange = "7d" | "30d" | "90d" | "all";
 type DeptFilter = "all" | string;
 

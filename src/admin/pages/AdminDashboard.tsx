@@ -13,6 +13,15 @@ import {
 
 const AMBER = "#C9963A";
 
+const chartTooltipStyle = {
+  fontSize: 12,
+  borderRadius: 8,
+  border: "1px solid hsl(var(--border))",
+  backgroundColor: "hsl(var(--popover))",
+  color: "hsl(var(--foreground))",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+};
+
 const pendingActions = [
   { text: "2 members haven't started any course in 14 days" },
   { text: "1 course has no mastery outcome defined" },
