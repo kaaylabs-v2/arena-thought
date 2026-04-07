@@ -268,7 +268,7 @@ function NexiPanel() {
               <SegmentedControl
                 value={nexiTone}
                 options={[{ value: "concise", label: "Concise" }, { value: "detailed", label: "Detailed" }, { value: "socratic", label: "Socratic" }]}
-                onChange={(v) => setNexiTone(v as "concise" | "detailed" | "socratic")}
+                onChange={(v) => updateAppSettings({ nexiTone: v as "concise" | "detailed" | "socratic" })}
               />
             }
           />
