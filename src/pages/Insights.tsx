@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { TrendingUp, BookOpen, Library, ArrowRight, BarChart3, Activity, Sparkles } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
+import { fixedCourseData } from "@/lib/course-progress-data";
 import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
 import {
   getTopInsights, getInsightIcon, getInsightTypeLabel,
