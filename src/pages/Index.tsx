@@ -104,7 +104,7 @@ function NotificationInbox({
                   </button>
                 )}
               </div>
-              <p className="text-xs text-muted-foreground line-clamp-2">{n.body}</p>
+              <p className={`text-xs text-muted-foreground ${expandedIds.has(n.id) ? '' : 'line-clamp-2'}`}>{n.body}</p>
               <span className="text-[11px] text-muted-foreground/60 mt-0.5">{n.sentDate}</span>
             </div>
           ))}
