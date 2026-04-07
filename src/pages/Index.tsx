@@ -36,6 +36,7 @@ function NotificationInbox({
   announcements: { id: string; title: string; body: string; sentDate: string; audience: string }[];
 }) {
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   const sorted = useMemo(() => {
     const items = announcements.map((a) => ({
@@ -75,6 +76,15 @@ function NotificationInbox({
           {sorted.map((n) => (
             <div
               key={n.id}
+              onClick={() => {
+                if (!n.dismissed) {
+                  setExpandedIds((prev) => {
+                    const next = new Set(prev);
+                    next.has(n.id) ? next.delete(n.id) : next.add(n.id);
+                    return next;
+                  });
+                }
+              }}
               className={`group relative flex flex-col gap-0.5 px-3 py-2.5 rounded-lg transition-all duration-200 ${
                 n.dismissed
                   ? "border-l-2 border-transparent opacity-50"
@@ -94,7 +104,7 @@ function NotificationInbox({
                   </button>
                 )}
               </div>
-              <p className="text-xs text-muted-foreground line-clamp-2">{n.body}</p>
+              <p className={`text-xs text-muted-foreground ${expandedIds.has(n.id) ? '' : 'line-clamp-2'}`}>{n.body}</p>
               <span className="text-[11px] text-muted-foreground/60 mt-0.5">{n.sentDate}</span>
             </div>
           ))}
