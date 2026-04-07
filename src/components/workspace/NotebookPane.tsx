@@ -148,8 +148,8 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
             <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
           </button>
           <div>
-            <h2 className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest">Notebook</h2>
-            <p className="text-[10px] font-sans text-muted-foreground/70">
+            <h2 className="text-[11px] font-sans text-muted-foreground/80 uppercase tracking-widest">Notebook</h2>
+            <p className="text-[11px] font-sans text-muted-foreground/70">
               {activeTab === "notes" ? `${notebookEntries.length} notes` : `${courseVocab.length} terms`}
             </p>
           </div>
@@ -215,7 +215,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                   className="rounded-lg border border-border/80 bg-background p-3 hover:border-border hover:shadow-soft transition-all duration-200 cursor-pointer animate-fade-in-fast"
                 >
                   <h4 className="text-[12px] font-sans font-medium text-foreground mb-1 line-clamp-1">{note.title}</h4>
-                  <p className="text-[11px] font-sans text-muted-foreground/70 leading-relaxed line-clamp-2 mb-2">{note.snippet}</p>
+                  <p className="text-[11px] font-sans text-muted-foreground/80 leading-relaxed line-clamp-2 mb-2">{note.snippet}</p>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       {note.tags.slice(0, 2).map((tag) => (
@@ -225,7 +225,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                         </span>
                       ))}
                     </div>
-                    <span className="text-[9px] font-sans text-muted-foreground/70">{note.date}</span>
+                    <span className="text-[9px] font-sans text-muted-foreground/60">{note.date}</span>
                   </div>
                 </div>
               ))
@@ -349,12 +349,12 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                     <h4 className="text-[12px] font-serif font-medium text-foreground leading-snug">{v.term}</h4>
                     <button
                       onClick={() => handleDeleteVocab(v.id)}
-                      className="h-5 w-5 flex items-center justify-center rounded text-muted-foreground/0 group-hover:text-muted-foreground/80 hover:!text-destructive transition-all duration-200 shrink-0"
+                      className="h-5 w-5 flex items-center justify-center rounded text-muted-foreground/30 group-hover:text-muted-foreground/80 hover:!text-destructive transition-all duration-200 shrink-0"
                     >
                       <Trash2 className="h-3 w-3" strokeWidth={1.5} />
                     </button>
                   </div>
-                  <p className="text-[11px] font-sans text-muted-foreground/70 leading-relaxed mt-1">{v.definition}</p>
+                  <p className="text-[11px] font-sans text-muted-foreground/80 leading-relaxed mt-1">{v.definition}</p>
                   {v.example && (
                     <p className="text-[10px] font-sans text-accent/70 bg-accent/5 rounded px-2 py-1 mt-2 leading-relaxed italic">
                       "{v.example}"
@@ -368,7 +368,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                         </span>
                       ))}
                     </div>
-                    <span className="text-[9px] font-sans text-muted-foreground/70">{v.date}</span>
+                    <span className="text-[9px] font-sans text-muted-foreground/60">{v.date}</span>
                   </div>
                 </div>
               ))
