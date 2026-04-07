@@ -246,12 +246,12 @@ function GeneralPanel() {
 /* ─── Nexi ─────────────────────────────────────────────── */
 
 function NexiPanel() {
-  const [nexiTone, setNexiTone] = useState<"concise" | "detailed" | "socratic">("detailed");
-  const [citationsVisible, setCitationsVisible] = useState(true);
-  const [followUpChips, setFollowUpChips] = useState(true);
-  const [conversationMemory, setConversationMemory] = useState(true);
-  const [codeDepth, setCodeDepth] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
-  const [preferredLanguage, setPreferredLanguage] = useState("English");
+  const { appSettings, updateAppSettings } = useWorkspace();
+  const nexiTone = appSettings.nexiTone;
+  const citationsVisible = appSettings.showCitations;
+  const followUpChips = appSettings.followUpChips;
+  const conversationMemory = appSettings.conversationMemory;
+  const codeDepth = appSettings.codeDepth;
 
   return (
     <div className="space-y-8">
