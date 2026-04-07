@@ -3,6 +3,7 @@ import {
   Library,
   BookOpen,
   Sparkles,
+  PenLine,
   Moon,
   Sun,
   ChevronsLeft,
