@@ -256,37 +256,6 @@ function NexiPanel() {
   const [codeDepth, setCodeDepth] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
   const [preferredLanguage, setPreferredLanguage] = useState("English");
 
-  // Derive learning patterns from chat messages
-  const totalQuestions = Object.values(chatMessages).flat().filter(m => m.role === "user").length;
-  const publishedCourses = adminCourses.filter(c => c.status === "published");
-
-  const courseMsgCounts = publishedCourses.map(c => ({
-    title: c.title,
-    count: (chatMessages[c.id] || []).filter(m => m.role === "user").length,
-  })).sort((a, b) => b.count - a.count);
-
-  const mostActiveCourse = courseMsgCounts[0]?.title || "—";
-
-  const topicPatterns: { pattern: RegExp; topic: string }[] = [
-    { pattern: /backpropagation|backward pass|chain rule/i, topic: "Backpropagation" },
-    { pattern: /gradient descent|learning rate|sgd/i, topic: "Gradient Descent" },
-    { pattern: /bayes|posterior|prior|likelihood/i, topic: "Bayes' Theorem" },
-    { pattern: /activation function|relu|sigmoid/i, topic: "Activation Functions" },
-    { pattern: /regularization|overfitting|l1|l2/i, topic: "Regularization" },
-    { pattern: /loss function|cost function/i, topic: "Loss Functions" },
-  ];
-
-  const topFocusAreas = topicPatterns
-    .map(tp => {
-      const allMsgs = Object.values(chatMessages).flat();
-      const userHits = allMsgs.filter(m => m.role === "user" && tp.pattern.test(m.content)).length;
-      const nexiHits = allMsgs.filter(m => m.role === "nexi" && tp.pattern.test(m.content)).length;
-      return { topic: tp.topic, followUps: userHits + Math.min(nexiHits, 2) };
-    })
-    .filter(t => t.followUps > 0)
-    .sort((a, b) => b.followUps - a.followUps)
-    .slice(0, 3);
-
   return (
     <div className="space-y-8">
       <PanelHeader title="Nexi" description="Configure your AI companion's behavior and communication style." />
