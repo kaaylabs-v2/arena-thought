@@ -120,9 +120,7 @@ const fontOptions: { value: FontFamily; label: string; family: string }[] = [
 function GeneralPanel() {
   const { theme, setTheme } = useTheme();
   const { appSettings, updateAppSettings } = useWorkspace();
-  const [voiceEnabled, setVoiceEnabled] = useState(true);
-  const [autoExpandSources, setAutoExpandSources] = useState(true);
-  const [autoSave, setAutoSave] = useState(true);
+
 
   const themeOptions: { value: "light" | "auto" | "dark"; label: string; icon: React.ElementType }[] = [
     { value: "light", label: "Light", icon: Sun },

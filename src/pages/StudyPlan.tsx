@@ -108,6 +108,7 @@ const StudyPlan = () => {
     ids.splice(fromIdx, 1);
     ids.splice(toIdx, 0, dragId);
     reorderTasks(ids);
+    setHasManualOrder(true);
     setDragId(null);
     setDragOverId(null);
   };
