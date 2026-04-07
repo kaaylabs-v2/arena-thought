@@ -6,19 +6,6 @@ import { useWorkspace } from "@/context/WorkspaceContext";
 import { toast } from "sonner";
 import { format, isToday, isYesterday, formatDistanceToNow, isBefore, startOfDay } from "date-fns";
 
-/* ─── Shared seeded data (must match Insights.tsx) ─── */
-
-const fixedCourseData = [
-  { module: "Module 4: Neural Networks", progress: 67, status: "in-progress" as const },
-  { module: "Module 2: Regression Analysis", progress: 34, status: "in-progress" as const },
-  { module: "Module 6: Consciousness", progress: 89, status: "in-progress" as const },
-  { module: "Module 1: Vectors & Matrices", progress: 12, status: "in-progress" as const },
-  { module: "Module 5: Memory & Learning", progress: 100, status: "complete" as const },
-  { module: "Module 1: Research Design", progress: 5, status: "not-started" as const },
-];
-
-/** Seeded last-studied offsets per course index (hours ago) */
-const lastStudiedOffsets = [2, 72, 18, 120, 168, 336];
 
 function getGreeting(): string {
   const hour = new Date().getHours();
