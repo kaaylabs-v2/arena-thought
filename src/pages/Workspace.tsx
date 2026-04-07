@@ -10,14 +10,10 @@ import {
 } from "@/components/ui/resizable";
 import type { ImperativePanelHandle } from "react-resizable-panels";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useWorkspace } from "@/context/WorkspaceContext";
+import { getCourseProgress } from "@/lib/course-progress-data";
 import { ChevronLeft, ChevronRight, GripVertical } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-
-const courseData: Record<string, { title: string; module: string }> = {
-  "1": { title: "Foundations of Machine Learning", module: "Week 4: Neural Networks" },
-  "2": { title: "Advanced Statistical Methods", module: "Chapter 7: Bayesian Inference" },
-  "3": { title: "Philosophy of Mind", module: "Section 12: Consciousness" },
-};
 
 export type PaneState = "expanded" | "mini";
 export type SourcesMode = "mini" | "list" | "viewer";
