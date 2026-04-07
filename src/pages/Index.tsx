@@ -254,13 +254,13 @@ const Index = () => {
     return { text: "Continue where you left off.", className: "text-sm text-muted-foreground" };
   }, [tasks]);
 
-  /* ─── Fix 2: Nexi suggestion from focus areas ─── */
-  const topFocus = seededFocusAreas.length > 0 ? seededFocusAreas[0] : null;
-  const focusCourseId = useMemo(() => {
-    if (!topFocus) return null;
-    const match = recentCourses.find((c) => c.title === topFocus.course);
+  /* ─── Fix 2: Nexi suggestion from top insight signal ─── */
+  const topInsight = useMemo(() => getTopInsights(1)[0], []);
+  const insightCourseId = useMemo(() => {
+    if (!topInsight) return null;
+    const match = recentCourses.find((c) => c.title === topInsight.course);
     return match?.id || recentCourses[0]?.id || null;
-  }, [topFocus, recentCourses]);
+  }, [topInsight, recentCourses]);
 
   // Show recently-completed tasks with fade-out, then remove after delay
   const handleToggleTask = useCallback((id: string) => {
