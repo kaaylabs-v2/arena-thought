@@ -26,6 +26,7 @@ interface NotebookPaneProps {
 type PaneTab = "notes" | "vocab";
 
 export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps) {
+  const navigate = useNavigate();
   const isMini = state === "mini";
   const [quickNote, setQuickNote] = useState("");
   const [activeTab, setActiveTab] = useState<PaneTab>("notes");
