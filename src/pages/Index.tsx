@@ -1,19 +1,30 @@
-import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar, Bell, X } from "lucide-react";
+import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar, Bell, X, Sparkles, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { toast } from "sonner";
+import { format, isToday, isYesterday, formatDistanceToNow, isBefore, startOfDay } from "date-fns";
 
-function seedHash(str: string, salt: number = 0): number {
-  let h = salt;
-  for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
-  return (((h >>> 0) % 1000) / 1000);
-}
+/* ─── Shared seeded data (must match Insights.tsx) ─── */
 
-const moduleLabels = [
-  "Neural Networks", "Bayesian Inference", "Consciousness", "Matrix Fundamentals",
-  "Attention & Memory", "Research Design", "Optimization", "Data Modeling",
+const fixedCourseData = [
+  { module: "Module 4: Neural Networks", progress: 67, status: "in-progress" as const },
+  { module: "Module 2: Regression Analysis", progress: 34, status: "in-progress" as const },
+  { module: "Module 6: Consciousness", progress: 89, status: "in-progress" as const },
+  { module: "Module 1: Vectors & Matrices", progress: 12, status: "in-progress" as const },
+  { module: "Module 5: Memory & Learning", progress: 100, status: "complete" as const },
+  { module: "Module 1: Research Design", progress: 5, status: "not-started" as const },
 ];
+
+const seededFocusAreas = [
+  { topic: "Backpropagation", course: "Foundations of Machine Learning", followUps: 5 },
+  { topic: "Bayes' Theorem", course: "Advanced Statistical Methods", followUps: 3 },
+  { topic: "Eigenvalue Decomposition", course: "Linear Algebra for Data Science", followUps: 2 },
+  { topic: "Qualia & Consciousness", course: "Philosophy of Mind", followUps: 2 },
+];
+
+/** Seeded last-studied offsets per course index (hours ago) */
+const lastStudiedOffsets = [2, 72, 18, 120, 168, 336];
 
 function getGreeting(): string {
   const hour = new Date().getHours();
@@ -22,17 +33,22 @@ function getGreeting(): string {
   return "Good evening";
 }
 
-/** Generate a realistic "last active" label from a seed-derived offset */
-function getLastActive(courseId: string): string {
-  const offsets = [2, 18, 72, 120, 168]; // hours ago
-  const idx = Math.floor(seedHash(courseId, 1) * offsets.length);
-  const hoursAgo = offsets[idx];
+function formatLastStudied(hoursAgo: number): string {
   if (hoursAgo < 1) return "Just now";
   if (hoursAgo < 24) return `${hoursAgo} hours ago`;
   const days = Math.floor(hoursAgo / 24);
   if (days === 1) return "Yesterday";
   if (days < 7) return `${days} days ago`;
-  return "1 week ago";
+  const d = new Date();
+  d.setHours(d.getHours() - hoursAgo);
+  return `Last studied ${format(d, "MMM d")}`;
+}
+
+function formatNotificationDate(dateStr: string): string {
+  const d = new Date(dateStr);
+  if (isToday(d)) return "Today";
+  if (isYesterday(d)) return "Yesterday";
+  return format(d, "MMM d");
 }
 
 const priorityDot: Record<string, string> = {
@@ -40,6 +56,27 @@ const priorityDot: Record<string, string> = {
   medium: "bg-accent",
   low: "bg-muted-foreground/40",
 };
+
+/* ─── Animated Progress Bar (matches Insights) ─── */
+function MountAnimatedBar({ targetPercent }: { targetPercent: number }) {
+  const [width, setWidth] = useState(0);
+  const triggered = useRef(false);
+
+  useEffect(() => {
+    if (!triggered.current) {
+      triggered.current = true;
+      const timer = setTimeout(() => setWidth(targetPercent), 50);
+      return () => clearTimeout(timer);
+    }
+  }, [targetPercent]);
+
+  return (
+    <div
+      className="h-full bg-accent/70 rounded-full transition-all duration-700 ease-out"
+      style={{ width: `${width}%` }}
+    />
+  );
+}
 
 /* ─── Notification Inbox ─── */
 function NotificationInbox({
@@ -105,7 +142,7 @@ function NotificationInbox({
               }}
               className={`group relative flex flex-col gap-0.5 px-3 py-2.5 rounded-lg transition-all duration-300 ${
                 n.dismissed
-                  ? "border-l-2 border-transparent opacity-50 scale-[0.98]"
+                  ? "border-l-2 border-transparent opacity-60"
                   : "border-l-2 border-accent bg-accent/5 hover:bg-accent/[0.08] cursor-pointer"
               }`}
             >
@@ -116,7 +153,7 @@ function NotificationInbox({
                 ) : (
                   <button
                     onClick={(e) => handleDismiss(e, n.id)}
-                    className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground p-0.5 rounded shrink-0 transition-opacity duration-150"
+                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground p-0.5 rounded shrink-0 transition-opacity duration-150"
                   >
                     <X className="h-3 w-3" strokeWidth={2} />
                   </button>
@@ -129,13 +166,13 @@ function NotificationInbox({
                 }`}
               >
                 <div className="overflow-hidden">
-                  <p className="text-xs text-muted-foreground">{n.body}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{n.body}</p>
                 </div>
               </div>
               {!expandedIds.has(n.id) && (
-                <p className="text-xs text-muted-foreground line-clamp-2">{n.body}</p>
+                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{n.body}</p>
               )}
-              <span className="text-[11px] text-muted-foreground/60 mt-0.5">{n.sentDate}</span>
+              <span className="text-[11px] text-muted-foreground/60 mt-0.5">{formatNotificationDate(n.sentDate)}</span>
             </div>
           ))}
         </div>
@@ -145,7 +182,7 @@ function NotificationInbox({
       <div className="text-right mt-2">
         <Link
           to="/communication"
-          className="text-[11px] font-sans text-accent hover:text-accent/80 transition-colors duration-250 ease-apple"
+          className="text-[11px] font-sans text-accent hover:text-accent/80 transition-colors duration-200"
         >
           View all →
         </Link>
@@ -159,19 +196,61 @@ const Index = () => {
   const { userProfile, tasks, toggleTask, adminCourses, studioAnnouncements } = useWorkspace();
   const [recentlyCompleted, setRecentlyCompleted] = useState<Set<string>>(new Set());
 
+  /* Build course data from published courses, synced with Insights seeded data */
   const recentCourses = useMemo(() => {
     return adminCourses
       .filter((c) => c.status === "published")
-      .map((c) => ({
-        id: c.id,
-        title: c.title,
-        lastActive: getLastActive(c.id),
-        progress: Math.floor(seedHash(c.id, 2) * 70 + 15),
-        module: moduleLabels[Math.floor(seedHash(c.id, 3) * moduleLabels.length)],
-      }));
+      .map((c, i) => {
+        const data = fixedCourseData[i % fixedCourseData.length];
+        const hoursAgo = lastStudiedOffsets[i % lastStudiedOffsets.length];
+        return {
+          id: c.id,
+          title: c.title,
+          module: data.module,
+          progress: data.progress,
+          status: data.status,
+          lastActive: formatLastStudied(hoursAgo),
+          lastStudiedLabel: hoursAgo < 24 ? `${hoursAgo} hours ago` : formatLastStudied(hoursAgo),
+        };
+      });
   }, [adminCourses]);
 
-  const activeCourse = recentCourses[0];
+  const activeCourse = recentCourses[0]; // First published = continue learning
+
+  /* ─── Fix 1: Context-aware greeting subtitle ─── */
+  const greetingSubtitle = useMemo(() => {
+    const now = new Date();
+    const todayStart = startOfDay(now);
+
+    const hasOverdue = tasks.some(
+      (t) => !t.completed && t.dueDate && isBefore(new Date(t.dueDate), todayStart)
+    );
+    if (hasOverdue) {
+      return { text: "You have overdue tasks to catch up on.", className: "text-sm text-destructive" };
+    }
+
+    const allDone = tasks.length === 0 || tasks.every((t) => t.completed);
+    if (allDone) {
+      return { text: "You're all caught up. Keep it going.", className: "text-sm text-muted-foreground" };
+    }
+
+    const hasCompletedToday = tasks.some(
+      (t) => t.completed && t.dueDate && !isBefore(new Date(t.dueDate), todayStart)
+    );
+    if (!hasCompletedToday) {
+      return { text: "Ready to study? Here's where you left off.", className: "text-sm text-muted-foreground" };
+    }
+
+    return { text: "Continue where you left off.", className: "text-sm text-muted-foreground" };
+  }, [tasks]);
+
+  /* ─── Fix 2: Nexi suggestion from focus areas ─── */
+  const topFocus = seededFocusAreas.length > 0 ? seededFocusAreas[0] : null;
+  const focusCourseId = useMemo(() => {
+    if (!topFocus) return null;
+    const match = recentCourses.find((c) => c.title === topFocus.course);
+    return match?.id || recentCourses[0]?.id || null;
+  }, [topFocus, recentCourses]);
 
   // Show recently-completed tasks with fade-out, then remove after delay
   const handleToggleTask = useCallback((id: string) => {
@@ -191,7 +270,9 @@ const Index = () => {
     }
   }, [tasks, toggleTask]);
 
-  const upcomingTasks = tasks.filter((t) => !t.completed || recentlyCompleted.has(t.id)).slice(0, 4);
+  const incompleteTasks = tasks.filter((t) => !t.completed || recentlyCompleted.has(t.id));
+  const upcomingTasks = incompleteTasks.slice(0, 4);
+  const todayStart = startOfDay(new Date());
 
   /* Empty state */
   if (recentCourses.length === 0) {
@@ -220,7 +301,25 @@ const Index = () => {
         <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1] font-medium">
           {getGreeting()}, {userProfile.name}
         </h1>
-        <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Continue where you left off.</p>
+        <p className={`font-sans tracking-[-0.01em] ${greetingSubtitle.className}`}>
+          {greetingSubtitle.text}
+        </p>
+
+        {/* Fix 2 — Nexi suggestion line */}
+        {topFocus && focusCourseId && (
+          <div className="flex items-center gap-2 mt-3 mb-1 animate-fade-in [animation-delay:120ms] [animation-fill-mode:backwards]">
+            <Sparkles className="w-3.5 h-3.5 text-accent flex-shrink-0" strokeWidth={1.5} />
+            <p className="text-sm text-muted-foreground">
+              Nexi suggests reviewing <span className="text-foreground font-medium">{topFocus.topic}</span> today based on your recent sessions.{" "}
+              <Link
+                to={`/workspace/${focusCourseId}`}
+                className="text-sm text-accent hover:underline"
+              >
+                Review →
+              </Link>
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Two-column grid */}
@@ -229,7 +328,7 @@ const Index = () => {
         <div className="space-y-14">
           {/* Continue Learning */}
           <section className="animate-fade-in [animation-delay:100ms] [animation-fill-mode:backwards]">
-            <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground mb-4">Continue learning</h2>
+            <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground/70 mb-4">Continue learning</h2>
             <Link
               to={`/workspace/${activeCourse.id}`}
               className="group block card-interactive p-6 lg:p-8"
@@ -239,16 +338,13 @@ const Index = () => {
                   <Clock className="h-3 w-3" strokeWidth={1.5} />
                   {activeCourse.lastActive}
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground/80 group-hover:text-foreground icon-hover-rotate" strokeWidth={1.5} />
+                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-accent transition-colors duration-150 icon-hover-rotate" strokeWidth={1.5} />
               </div>
               <h3 className="font-serif text-2xl lg:text-[1.75rem] text-foreground mb-1.5 leading-snug font-medium">{activeCourse.title}</h3>
               <p className="text-muted-foreground font-sans text-sm mb-6 tracking-[-0.01em]">{activeCourse.module}</p>
               <div className="flex items-center gap-3 progress-glow">
                 <div className="flex-1 h-[5px] bg-secondary rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-accent/80 rounded-full"
-                    style={{ width: `${activeCourse.progress}%` }}
-                  />
+                  <MountAnimatedBar targetPercent={activeCourse.progress} />
                 </div>
                 <span className="text-[11px] font-sans text-muted-foreground tabular-nums">{activeCourse.progress}%</span>
               </div>
@@ -256,17 +352,27 @@ const Index = () => {
           </section>
 
           {/* Upcoming Tasks */}
-          {upcomingTasks.length > 0 && (
-            <section className="animate-fade-in [animation-delay:200ms] [animation-fill-mode:backwards]">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground">Upcoming tasks</h2>
-                <Link to="/study-plan" className="text-[11px] font-sans text-accent hover:text-accent/80 transition-colors duration-250 ease-apple">
+          <section className="animate-fade-in [animation-delay:200ms] [animation-fill-mode:backwards]">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground/70">Upcoming tasks</h2>
+              {incompleteTasks.length > 4 && (
+                <Link to="/study-plan" className="text-[11px] font-sans text-accent hover:text-accent/80 transition-colors duration-200">
                   View all →
                 </Link>
+              )}
+            </div>
+            {upcomingTasks.length === 0 ? (
+              <div className="py-4 text-center">
+                <p className="text-sm text-muted-foreground italic">No upcoming tasks — add one in Study Plan.</p>
+                <Link to="/study-plan" className="text-sm text-accent hover:underline mt-1 inline-block">
+                  Go to Study Plan →
+                </Link>
               </div>
+            ) : (
               <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
                 {upcomingTasks.map((task, i) => {
                   const isCompleting = recentlyCompleted.has(task.id);
+                  const isOverdue = !task.completed && task.dueDate && isBefore(new Date(task.dueDate), todayStart);
                   return (
                     <div
                       key={task.id}
@@ -277,7 +383,7 @@ const Index = () => {
                     >
                       <button
                         onClick={() => handleToggleTask(task.id)}
-                        className="h-[18px] w-[18px] rounded-full border-[1.5px] border-border flex items-center justify-center shrink-0 checkbox-apple"
+                        className="h-[18px] w-[18px] rounded-full border-2 border-muted-foreground/40 hover:border-accent flex items-center justify-center shrink-0 transition-colors duration-150 checkbox-apple"
                       >
                         {(task.completed || isCompleting) && <Check className="h-2.5 w-2.5 text-accent animate-check-pop" strokeWidth={2.5} />}
                       </button>
@@ -289,7 +395,8 @@ const Index = () => {
                         {task.priority === "high" ? "High" : task.priority === "medium" ? "Medium" : "Low"}
                       </span>
                       {task.dueDate && (
-                        <span className="text-[10px] font-sans text-muted-foreground/70 shrink-0 flex items-center gap-1">
+                        <span className={`text-[10px] font-sans shrink-0 flex items-center gap-1 ${isOverdue ? "text-destructive" : "text-muted-foreground/70"}`}>
+                          {isOverdue && <AlertCircle className="h-3 w-3 text-destructive" strokeWidth={1.5} />}
                           <Calendar className="h-2.5 w-2.5" strokeWidth={1.5} />
                           {task.dueDate}
                         </span>
@@ -298,32 +405,45 @@ const Index = () => {
                   );
                 })}
               </div>
-            </section>
-          )}
+            )}
+          </section>
 
-          {/* Recent Courses */}
+          {/* Recent Courses — capped at 3 */}
           {recentCourses.length > 1 && (
             <section className="animate-fade-in [animation-delay:300ms] [animation-fill-mode:backwards]">
-              <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground mb-4">Recent courses</h2>
+              <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground/70 mb-4">Recent courses</h2>
               <div className="space-y-2">
-                {recentCourses.slice(1).map((course, i) => (
+                {recentCourses.slice(1, 4).map((course, i) => (
                   <Link
                     key={course.id}
                     to={`/workspace/${course.id}`}
-                    className="group flex items-center justify-between card-interactive px-5 py-4"
+                    className="group block card-interactive px-5 py-4 border border-border"
                     style={{ animationDelay: `${300 + i * 80}ms` }}
                   >
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-serif text-base text-foreground truncate leading-snug font-medium">{course.title}</h3>
-                      <p className="text-[12px] text-muted-foreground font-sans mt-0.5 tracking-[-0.01em]">{course.module}</p>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-serif text-base text-foreground truncate leading-snug font-medium">{course.title}</h3>
+                        <p className="text-[12px] text-muted-foreground font-sans mt-0.5 tracking-[-0.01em]">{course.module}</p>
+                        <p className="text-[11px] text-muted-foreground/60 mt-0.5">{course.lastStudiedLabel}</p>
+                      </div>
+                      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/70 opacity-0 group-hover:opacity-100 icon-hover-rotate ml-4 shrink-0 mt-1" strokeWidth={1.5} />
                     </div>
-                    <div className="flex items-center gap-4 ml-4 shrink-0">
-                      <span className="text-[11px] font-sans text-muted-foreground tabular-nums">{course.progress}%</span>
-                      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground/70 opacity-0 group-hover:opacity-100 icon-hover-rotate" strokeWidth={1.5} />
+                    <div className="flex items-center gap-3 mt-2">
+                      <div className="flex-1 h-1 rounded-full bg-muted overflow-hidden">
+                        <MountAnimatedBar targetPercent={course.progress} />
+                      </div>
+                      <span className="text-xs text-muted-foreground w-8 text-right flex-shrink-0 tabular-nums">{course.progress}%</span>
                     </div>
                   </Link>
                 ))}
               </div>
+              {recentCourses.length > 4 && (
+                <div className="text-right mt-2">
+                  <Link to="/library" className="text-sm text-accent hover:underline">
+                    View all in Library →
+                  </Link>
+                </div>
+              )}
             </section>
           )}
         </div>
@@ -333,19 +453,19 @@ const Index = () => {
           {/* Notification Inbox */}
           <NotificationInbox announcements={studioAnnouncements} />
 
-          {/* Quick Actions */}
+          {/* Quick Actions — reordered by priority */}
           <div>
-            <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground mb-3">Quick actions</h2>
+            <h2 className="font-sans text-[11px] uppercase tracking-widest text-muted-foreground/70 mb-3">Quick actions</h2>
             <div className="flex flex-col gap-2">
               {[
+                { to: "/study-plan", icon: ListChecks, label: "Study Plan" },
                 { to: "/library", icon: Library, label: "Open Library" },
                 { to: "/notebook", icon: BookOpen, label: "Go to Notebook" },
-                { to: "/study-plan", icon: ListChecks, label: "Study Plan" },
               ].map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}
-                  className="flex items-center gap-2.5 w-full rounded-lg bg-muted/50 hover:bg-muted px-3 py-2.5 text-sm font-sans text-foreground transition-colors duration-200"
+                  className="flex items-center gap-2.5 w-full rounded-lg bg-transparent hover:bg-muted/50 px-3 py-2.5 text-sm font-sans text-foreground transition-colors duration-150"
                 >
                   <item.icon className="h-4 w-4 text-muted-foreground" strokeWidth={1.5} />
                   {item.label}
