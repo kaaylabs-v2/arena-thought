@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect, KeyboardEvent } from "react";
+import { useState, useRef, useEffect, KeyboardEvent, useMemo } from "react";
 import {
   Search, X, Mail, MoreHorizontal, Shield, Upload,
   UserPlus, Pencil, UserCog, UserMinus, Play, FileText,
-  BookOpen, Award, ChevronRight,
+  BookOpen, Award, ChevronRight, Lightbulb,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useWorkspace } from "@/context/WorkspaceContext";
@@ -37,6 +37,41 @@ const seedMembers: Member[] = [
 ];
 
 const AMBER = "#C9963A";
+
+// Per-learner struggle topics — seeded deterministically from member id + courseProgress
+const struggleTopicPool = [
+  { topic: "Backpropagation", course: "Python Fundamentals" },
+  { topic: "Gradient Descent", course: "Python Fundamentals" },
+  { topic: "Regularization", course: "Data Privacy & Compliance" },
+  { topic: "Bayes' Theorem", course: "Leadership Basics" },
+  { topic: "Activation Functions", course: "Python Fundamentals" },
+  { topic: "Loss Functions", course: "Data Privacy & Compliance" },
+  { topic: "Hypothesis Testing", course: "Leadership Basics" },
+];
+
+function getMemberStruggleTopics(member: Member): { topic: string; course: string; weight: number }[] {
+  if (member.role !== "learner" || member.status !== "active") return [];
+  const incompleteCourses = (member.courseProgress || []).filter(cp => !cp.mastery && cp.progress > 10);
+  if (incompleteCourses.length === 0) return [];
+
+  // Deterministic pick based on member id hash
+  let h = 0;
+  for (let i = 0; i < member.id.length; i++) h = ((h << 5) - h + member.id.charCodeAt(i)) | 0;
+  const idx = ((h >>> 0) % struggleTopicPool.length);
+
+  const count = Math.min(incompleteCourses.length, 3);
+  const results: { topic: string; course: string; weight: number }[] = [];
+  for (let i = 0; i < count; i++) {
+    const t = struggleTopicPool[(idx + i) % struggleTopicPool.length];
+    const cp = incompleteCourses[i % incompleteCourses.length];
+    results.push({
+      topic: t.topic,
+      course: cp.name,
+      weight: Math.max(0.3, Math.min(1, (100 - cp.progress) / 80)),
+    });
+  }
+  return results;
+}
 type TabFilter = "all" | "learners" | "admins" | "invited" | "inactive";
 let nextId = 100;
 
@@ -166,7 +201,12 @@ export default function AdminMembersPage() {
                 <tr key={member.id} className="transition-colors duration-200 group relative border-b border-border/50 hover:bg-accent/5">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-medium shrink-0 bg-accent/15 text-accent">{initials(member.name)}</div>
+                      <div className="relative h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-medium shrink-0 bg-accent/15 text-accent">
+                        {initials(member.name)}
+                        {getMemberStruggleTopics(member).length > 0 && (
+                          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400/60" title="Has learning signals — click to view" />
+                        )}
+                      </div>
                       <span className="text-[14px] font-medium text-foreground font-sans">{member.name}</span>
                     </div>
                   </td>
@@ -385,6 +425,37 @@ export default function AdminMembersPage() {
                   </div>
                 </div>
               )}
+              {/* Learning Signals */}
+              {(() => {
+                const signals = getMemberStruggleTopics(detailMember);
+                if (signals.length === 0) return null;
+                return (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Lightbulb className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">Learning Signals</p>
+                    </div>
+                    <div className="space-y-3">
+                      {signals.map((sig, i) => (
+                        <div key={i} className="p-3 rounded-lg bg-muted/30 border border-border/50">
+                          <div className="flex items-center gap-2 flex-wrap mb-2">
+                            <span className="text-[13px] font-medium text-foreground/75">{sig.topic}</span>
+                            <span className="text-[11px] text-muted-foreground">·</span>
+                            <span className="text-[11px] text-muted-foreground">{sig.course}</span>
+                            <span className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 rounded-full px-2 py-0.5 text-[11px] font-medium ml-auto">Needs attention</span>
+                          </div>
+                          <div className="h-1 rounded-full bg-amber-200/40 dark:bg-amber-900/20 overflow-hidden">
+                            <div
+                              className="h-full rounded-full bg-amber-400 dark:bg-amber-500/70 transition-all duration-500"
+                              style={{ width: `${sig.weight * 100}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </>

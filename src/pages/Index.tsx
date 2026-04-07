@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar, Megaphone, X } from "lucide-react";
+import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar, Megaphone, X, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
@@ -30,7 +30,7 @@ const priorityDot: Record<string, string> = {
 };
 
 const Index = () => {
-  const { userProfile, tasks, toggleTask, adminCourses, studioAnnouncements } = useWorkspace();
+  const { userProfile, tasks, toggleTask, adminCourses, studioAnnouncements, chatMessages } = useWorkspace();
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
 
   const visibleAnnouncements = useMemo(() => {
@@ -56,6 +56,49 @@ const Index = () => {
   const activeCourse = recentCourses[0];
   const upcomingTasks = tasks.filter((t) => !t.completed).slice(0, 4);
 
+  // Derive focus areas from chat messages — topics where learner asked follow-ups
+  const focusAreas = useMemo(() => {
+    const topicSignals: { topic: string; course: string; courseId: string; followUps: number; weight: number }[] = [];
+    const publishedCourses = adminCourses.filter(c => c.status === "published");
+
+    for (const course of publishedCourses) {
+      const msgs = chatMessages[course.id] || [];
+      const userMsgs = msgs.filter(m => m.role === "user");
+      const nexiMsgs = msgs.filter(m => m.role === "nexi");
+
+      // Detect topics from nexi responses that contain clarification/expansion patterns
+      const clarifyPatterns = /let me clarify|to expand|let me walk|key insight|think of|chain rule|gradient/i;
+      const topicPatterns: { pattern: RegExp; topic: string }[] = [
+        { pattern: /backpropagation|backward pass|chain rule/i, topic: "Backpropagation" },
+        { pattern: /gradient descent|learning rate|sgd|mini.?batch/i, topic: "Gradient Descent" },
+        { pattern: /bayes|posterior|prior|likelihood/i, topic: "Bayes' Theorem" },
+        { pattern: /activation function|relu|sigmoid|tanh/i, topic: "Activation Functions" },
+        { pattern: /consciousness|hard problem|qualia/i, topic: "Consciousness" },
+        { pattern: /regularization|overfitting|l1|l2/i, topic: "Regularization" },
+        { pattern: /loss function|cost function|optimization/i, topic: "Loss Functions" },
+      ];
+
+      for (const tp of topicPatterns) {
+        const relevantNexi = nexiMsgs.filter(m => tp.pattern.test(m.content));
+        const relevantUser = userMsgs.filter(m => tp.pattern.test(m.content));
+        const followUps = relevantUser.length + (relevantNexi.some(m => clarifyPatterns.test(m.content)) ? 1 : 0);
+
+        if (followUps > 0) {
+          topicSignals.push({
+            topic: tp.topic,
+            course: course.title,
+            courseId: course.id,
+            followUps,
+            weight: Math.min(followUps / 4, 1),
+          });
+        }
+      }
+    }
+
+    return topicSignals
+      .sort((a, b) => b.followUps - a.followUps)
+      .slice(0, 4);
+  }, [chatMessages, adminCourses]);
   if (recentCourses.length === 0) {
     return (
       <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl mx-auto flex flex-col items-center justify-center">
@@ -143,6 +186,41 @@ const Index = () => {
             <span className="text-[11px] font-sans text-muted-foreground tabular-nums">{activeCourse.progress}%</span>
           </div>
         </Link>
+      </section>
+
+      {/* Nexi Noticed — Focus Areas */}
+      <section className="mb-14 animate-fade-in [animation-delay:150ms] [animation-fill-mode:backwards]">
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles className="h-4 w-4 text-accent" strokeWidth={1.5} />
+            <h2 className="font-serif text-lg text-foreground font-medium">Nexi noticed</h2>
+          </div>
+          <p className="text-xs text-muted-foreground">Topics worth revisiting based on your recent sessions</p>
+        </div>
+        {focusAreas.length >= 2 ? (
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin">
+            {focusAreas.map((area, i) => (
+              <Link
+                key={`${area.courseId}-${area.topic}`}
+                to={`/workspace/${area.courseId}`}
+                className="group flex-shrink-0 w-48 rounded-xl border border-border bg-card px-4 py-3 transition-all duration-200 hover:bg-accent/[0.08] hover:border-accent/30 cursor-pointer"
+                style={{ animationDelay: `${150 + i * 60}ms` }}
+              >
+                <p className="text-sm font-medium text-foreground truncate">{area.topic}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{area.course}</p>
+                <div className="mt-3 h-1 rounded-full bg-accent/30 overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-accent transition-all duration-700 ease-spring"
+                    style={{ width: `${Math.max(area.weight * 100, 25)}%` }}
+                  />
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-1.5">{area.followUps} follow-up question{area.followUps !== 1 ? "s" : ""}</p>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground italic">Keep studying — Nexi will highlight patterns as you go.</p>
+        )}
       </section>
 
       {/* Upcoming Tasks Widget */}
