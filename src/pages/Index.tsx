@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar, Megaphone, X } from "lucide-react";
+import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar, Megaphone, X, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
