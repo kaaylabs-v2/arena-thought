@@ -88,12 +88,12 @@ export default function AdminAnalyticsPage({ embedded = false }: { embedded?: bo
       if (typeof aVal === "string" && typeof bVal === "string") return sortDir === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
       return sortDir === "asc" ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
     });
-  }, [deptFilter, sortCol, sortDir]);
+  }, [deptFilter, sortCol, sortDir, adminCourses]);
 
   const filteredMembers = useMemo(() => {
     if (deptFilter === "all") return members;
     return members.filter(m => m.department === deptFilter);
-  }, [deptFilter]);
+  }, [deptFilter, members]);
 
   const activeMembers = filteredMembers.filter(m => m.status === "active").length;
   const activeCourses = filteredCourses.filter(c => c.status === "active").length;
