@@ -16,7 +16,7 @@ import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import StudyPlan from "./pages/StudyPlan";
 import Communication from "./pages/Communication";
-import AdminStudio from "./pages/AdminStudio";
+import NotFound from "./pages/NotFound";
 import NotFound from "./pages/NotFound";
 
 // Admin Studio
