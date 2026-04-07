@@ -368,7 +368,7 @@ function AnnouncementsTab() {
   const allDismissed = sorted.every((n) => n.dismissed);
 
   return (
-    <div className="overflow-y-auto h-full px-8 py-6">
+    <div className="overflow-y-auto max-h-[calc(100vh-220px)] py-4">
       <div className="max-w-3xl">
         <p className="text-xs uppercase tracking-widest text-muted-foreground mb-4">From your institution</p>
 
