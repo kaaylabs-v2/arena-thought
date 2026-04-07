@@ -14,7 +14,7 @@ const pages = [
   { title: "Study Plan", url: "/study-plan", icon: ListChecks },
   { title: "Notebook", url: "/notebook", icon: BookOpen },
   { title: "Insights", url: "/insights", icon: Sparkles },
-  { title: "Reflections", url: "/reflections", icon: Sparkles },
+  { title: "Reflections", url: "/reflections", icon: PenLine },
   { title: "Messages", url: "/messages", icon: MessageSquare },
   { title: "Settings", url: "/settings", icon: Settings },
   { title: "Profile", url: "/profile", icon: User },
