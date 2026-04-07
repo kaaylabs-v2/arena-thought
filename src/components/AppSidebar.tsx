@@ -116,7 +116,7 @@ export function AppSidebar() {
                     >
                       <item.icon strokeWidth={1.5} />
                       <span className="text-sm font-sans flex-1">{item.title}</span>
-                      {item.title === "Messages" && unreadCount > 0 && (
+                      {item.title === "Communication" && unreadCount > 0 && (
                         <span className="ml-auto flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent text-[10px] font-sans font-medium text-accent-foreground px-1">
                           {unreadCount}
                         </span>

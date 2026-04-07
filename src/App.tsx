@@ -15,7 +15,7 @@ import Insights from "./pages/Insights";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import StudyPlan from "./pages/StudyPlan";
-import Messages from "./pages/Messages";
+import Communication from "./pages/Communication";
 import AdminStudio from "./pages/AdminStudio";
 import NotFound from "./pages/NotFound";
 
@@ -25,10 +25,9 @@ import AdminDashboard from "@/admin/pages/AdminDashboard";
 import AdminCoursesPage from "@/admin/pages/AdminCourses";
 import AdminPeoplePage from "@/admin/pages/AdminPeoplePage";
 import AdminInsightsPage from "@/admin/pages/AdminInsightsPage";
-import AdminAnnouncementsPage from "@/admin/pages/AdminAnnouncementsPage";
+import AdminCommunicationPage from "@/admin/pages/AdminCommunicationPage";
 import AdminSettingsPage from "@/admin/pages/AdminSettingsPage";
 import AdminHelpPage from "@/admin/pages/AdminHelpPage";
-import AdminMessagesPage from "@/admin/pages/AdminMessagesPage";
 import AdminAccessDenied from "@/admin/pages/AdminAccessDenied";
 import { useAdminAuth } from "@/admin/hooks/useAdminAuth";
 
@@ -60,7 +59,7 @@ const App = () => (
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/study-plan" element={<StudyPlan />} />
-                <Route path="/messages" element={<Messages />} />
+                <Route path="/communication" element={<Communication />} />
               </Route>
 
               {/* Admin Studio — completely separate layout */}
@@ -69,8 +68,7 @@ const App = () => (
                 <Route path="/admin/courses" element={<AdminCoursesPage />} />
                 <Route path="/admin/people" element={<AdminPeoplePage />} />
                 <Route path="/admin/insights" element={<AdminInsightsPage />} />
-                <Route path="/admin/announcements" element={<AdminAnnouncementsPage />} />
-                <Route path="/admin/messages" element={<AdminMessagesPage />} />
+                <Route path="/admin/communication" element={<AdminCommunicationPage />} />
                 <Route path="/admin/settings" element={<AdminSettingsPage />} />
                 <Route path="/admin/help" element={<AdminHelpPage />} />
               </Route>
