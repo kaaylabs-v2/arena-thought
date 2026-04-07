@@ -425,6 +425,37 @@ export default function AdminMembersPage() {
                   </div>
                 </div>
               )}
+              {/* Learning Signals */}
+              {(() => {
+                const signals = getMemberStruggleTopics(detailMember);
+                if (signals.length === 0) return null;
+                return (
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Lightbulb className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">Learning Signals</p>
+                    </div>
+                    <div className="space-y-3">
+                      {signals.map((sig, i) => (
+                        <div key={i} className="p-3 rounded-lg bg-muted/30 border border-border/50">
+                          <div className="flex items-center gap-2 flex-wrap mb-2">
+                            <span className="text-[13px] font-medium text-foreground/75">{sig.topic}</span>
+                            <span className="text-[11px] text-muted-foreground">·</span>
+                            <span className="text-[11px] text-muted-foreground">{sig.course}</span>
+                            <span className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 rounded-full px-2 py-0.5 text-[11px] font-medium ml-auto">Needs attention</span>
+                          </div>
+                          <div className="h-1 rounded-full bg-amber-200/40 dark:bg-amber-900/20 overflow-hidden">
+                            <div
+                              className="h-full rounded-full bg-amber-400 dark:bg-amber-500/70 transition-all duration-500"
+                              style={{ width: `${sig.weight * 100}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </>
