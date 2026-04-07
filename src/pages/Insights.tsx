@@ -46,7 +46,7 @@ const seededFocusAreas = [
 type InsightsTab = "overview" | "progress" | "patterns";
 
 const tabConfig: { id: InsightsTab; label: string; icon: React.ElementType }[] = [
-  { id: "overview", label: "Overview", icon: Sparkles },
+  { id: "overview", label: "Overview", icon: TrendingUp },
   { id: "progress", label: "Progress", icon: BarChart3 },
   { id: "patterns", label: "Patterns", icon: Activity },
 ];
