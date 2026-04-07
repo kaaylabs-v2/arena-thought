@@ -30,8 +30,17 @@ const priorityDot: Record<string, string> = {
 };
 
 const Index = () => {
-  const { userProfile, tasks, toggleTask, adminCourses } = useWorkspace();
+  const { userProfile, tasks, toggleTask, adminCourses, studioAnnouncements } = useWorkspace();
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
 
+  const visibleAnnouncements = useMemo(() => {
+    return studioAnnouncements
+      .filter(a => !dismissedIds.has(a.id))
+      .sort((a, b) => new Date(b.sentDate).getTime() - new Date(a.sentDate).getTime())
+      .slice(0, 2);
+  }, [studioAnnouncements, dismissedIds]);
+
+  const totalUndismissed = studioAnnouncements.filter(a => !dismissedIds.has(a.id)).length;
   const recentCourses = useMemo(() => {
     return adminCourses
       .filter((c) => c.status === "published")
