@@ -186,7 +186,7 @@ export function VocabSelectionPopover({ containerRef, courseTitle }: VocabSelect
           className="absolute z-50 animate-fade-in-fast"
           style={{
             top: selection.top - 8,
-            left: Math.max(16, Math.min(selection.left, 500)),
+            left: Math.max(16, Math.min(selection.left, (containerRef.current?.clientWidth || 500) - 166)),
             transform: "translateX(-50%)",
           }}
         >
