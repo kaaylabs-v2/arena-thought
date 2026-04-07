@@ -107,7 +107,7 @@ export default {
           to: { opacity: "1", transform: "translateY(0)" },
         },
         "page-enter": {
-          from: { opacity: "0", transform: "translateY(4px) scale(0.999)" },
+          from: { opacity: "0", transform: "translateY(8px) scale(0.985)" },
           to: { opacity: "1", transform: "translateY(0) scale(1)" },
         },
         "fade-in-gentle": {

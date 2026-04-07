@@ -108,7 +108,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children animate-fade-in [animation-delay:50ms] [animation-fill-mode:backwards]">
         {stats.map((stat, i) => (
           <Link key={stat.label} to={statLinks[i]} className="card-interactive p-5 group cursor-pointer hover:border-accent/20 transition-colors">
             <div className="flex items-center justify-between mb-3">
@@ -123,8 +123,8 @@ export default function AdminDashboard() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 card-interactive p-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in [animation-delay:100ms] [animation-fill-mode:backwards]">
+        <div className="lg:col-span-2 card-interactive p-5 animate-fade-in [animation-delay:150ms] [animation-fill-mode:backwards]">
           <h2 className="text-sm font-semibold mb-4 text-foreground/75">Recent Activity</h2>
           <div className="space-y-3 scrollbar-thin max-h-[320px] overflow-y-auto pr-1">
             {recentActivity.slice(0, 6).map((event) => (
@@ -173,7 +173,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="card-interactive p-5">
+      <div className="card-interactive p-5 animate-fade-in [animation-delay:200ms] [animation-fill-mode:backwards]">
         <h2 className="text-sm font-semibold mb-4 text-foreground/75">Mastery Overview by Course</h2>
         {masteryChartData.length === 0 ? (
           <div className="text-center py-8 text-sm text-muted-foreground">No active courses to display</div>
