@@ -143,12 +143,15 @@ function OverviewTab() {
         </ResponsiveContainer>
       </div>
 
+      {/* Nexi Insights card */}
+      <NexiInsightsCard publishedCourses={publishedCourses} delay={250} />
+
       {/* Continue Learning nudge */}
       {continueCourse && (
         <Link
           to={`/workspace/${continueCourse.id}`}
           className="block bg-card border border-border rounded-xl px-5 py-4 hover:bg-accent/[0.06] hover:border-accent/30 transition-all duration-200 animate-fade-in"
-          style={{ animationDelay: "300ms", animationFillMode: "both" }}
+          style={{ animationDelay: "350ms", animationFillMode: "both" }}
         >
           <div className="flex items-center justify-between">
             <div>
