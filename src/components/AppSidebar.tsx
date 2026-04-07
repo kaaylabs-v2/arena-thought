@@ -39,7 +39,7 @@ const mainNav = [
   { title: "Library", url: "/library", icon: Library },
   { title: "Study Plan", url: "/study-plan", icon: ListChecks },
   { title: "Notebook", url: "/notebook", icon: BookOpen },
-  { title: "Insights", url: "/insights", icon: Sparkles },
+  { title: "Insights", url: "/insights", icon: TrendingUp },
   { title: "Reflections", url: "/reflections", icon: PenLine },
   { title: "Communication", url: "/communication", icon: MessageSquare },
 ];
