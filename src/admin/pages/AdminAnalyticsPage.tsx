@@ -145,13 +145,15 @@ export default function AdminAnalyticsPage({ embedded = false }: { embedded?: bo
   const engTrend = engagementTrendByRange[timeRange];
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
+    <div className={embedded ? "" : "p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in"}>
       {/* Header + Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        {!embedded && (
         <div>
           <h1 className="font-serif text-[2rem] font-normal text-foreground">Analytics</h1>
           <p className="text-sm mt-0.5 text-muted-foreground">Organization-level insights and engagement data</p>
         </div>
+        )}
         <div className="flex items-center gap-3">
           {/* Department filter */}
           <select
