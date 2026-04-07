@@ -1,24 +1,12 @@
 import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar, Bell, X, Sparkles, AlertCircle } from "lucide-react";
 import { getTopInsights, getInsightIcon } from "@/lib/nexi-insights-data";
+import { fixedCourseData, lastStudiedOffsets } from "@/lib/course-progress-data";
 import { Link } from "react-router-dom";
 import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { toast } from "sonner";
 import { format, isToday, isYesterday, formatDistanceToNow, isBefore, startOfDay } from "date-fns";
 
-/* ─── Shared seeded data (must match Insights.tsx) ─── */
-
-const fixedCourseData = [
-  { module: "Module 4: Neural Networks", progress: 67, status: "in-progress" as const },
-  { module: "Module 2: Regression Analysis", progress: 34, status: "in-progress" as const },
-  { module: "Module 6: Consciousness", progress: 89, status: "in-progress" as const },
-  { module: "Module 1: Vectors & Matrices", progress: 12, status: "in-progress" as const },
-  { module: "Module 5: Memory & Learning", progress: 100, status: "complete" as const },
-  { module: "Module 1: Research Design", progress: 5, status: "not-started" as const },
-];
-
-/** Seeded last-studied offsets per course index (hours ago) */
-const lastStudiedOffsets = [2, 72, 18, 120, 168, 336];
 
 function getGreeting(): string {
   const hour = new Date().getHours();
@@ -163,8 +151,8 @@ function NotificationInbox({
                   <p className="text-xs text-muted-foreground leading-relaxed">{n.body}</p>
                 </div>
               </div>
-              {!expandedIds.has(n.id) && (
-                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{n.body}</p>
+              {!expandedIds.has(n.id) && !n.dismissed && (
+                <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed">{n.body}</p>
               )}
               <span className="text-[11px] text-muted-foreground/60 mt-0.5">{formatNotificationDate(n.sentDate)}</span>
             </div>

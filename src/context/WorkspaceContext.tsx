@@ -61,6 +61,9 @@ export type FontFamily = "default" | "sans" | "serif" | "dyslexic";
 
 export interface AppSettings {
   compactMode: boolean; fontSize: "small" | "medium" | "large"; fontFamily: FontFamily; language: string;
+  voiceInput: boolean; autoExpandSources: boolean; autoSaveNotes: boolean;
+  nexiTone: "concise" | "detailed" | "socratic"; showCitations: boolean; followUpChips: boolean;
+  conversationMemory: boolean; codeDepth: "beginner" | "intermediate" | "advanced";
 }
 
 export type TaskPriority = "high" | "medium" | "low";
@@ -294,7 +297,12 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setUserProfile((prev) => ({ ...prev, ...updates }));
   }, []);
 
-  const [appSettings, setAppSettings] = useState<AppSettings>({ compactMode: false, fontSize: "medium", fontFamily: "default", language: "English" });
+  const [appSettings, setAppSettings] = useState<AppSettings>({
+    compactMode: false, fontSize: "medium", fontFamily: "default", language: "English",
+    voiceInput: true, autoExpandSources: true, autoSaveNotes: true,
+    nexiTone: "detailed", showCitations: true, followUpChips: true,
+    conversationMemory: true, codeDepth: "intermediate",
+  });
   const updateAppSettings = useCallback((updates: Partial<AppSettings>) => {
     setAppSettings((prev) => ({ ...prev, ...updates }));
   }, []);

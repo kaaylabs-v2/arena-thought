@@ -60,10 +60,10 @@ const Communication = () => {
   ];
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
-      <div className="mb-6">
-        <h1 className="font-serif text-[2rem] font-normal text-foreground">Communication</h1>
-        <p className="text-sm mt-0.5 text-muted-foreground">Messages and announcements from your institution</p>
+    <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-5xl mx-auto animate-fade-in">
+      <div className="mb-8">
+        <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1] font-medium">Communication</h1>
+        <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Messages and announcements from your institution.</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as Tab)}>

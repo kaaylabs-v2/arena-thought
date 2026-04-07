@@ -10,14 +10,10 @@ import {
 } from "@/components/ui/resizable";
 import type { ImperativePanelHandle } from "react-resizable-panels";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useWorkspace } from "@/context/WorkspaceContext";
+import { getCourseProgress } from "@/lib/course-progress-data";
 import { ChevronLeft, ChevronRight, GripVertical } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-
-const courseData: Record<string, { title: string; module: string }> = {
-  "1": { title: "Foundations of Machine Learning", module: "Week 4: Neural Networks" },
-  "2": { title: "Advanced Statistical Methods", module: "Chapter 7: Bayesian Inference" },
-  "3": { title: "Philosophy of Mind", module: "Section 12: Consciousness" },
-};
 
 export type PaneState = "expanded" | "mini";
 export type SourcesMode = "mini" | "list" | "viewer";
@@ -42,8 +38,24 @@ function pxToPercent(px: number, containerWidth: number) {
 
 const Workspace = () => {
   const { id } = useParams();
+  const { adminCourses } = useWorkspace();
   const courseId = id || "1";
-  const course = courseData[courseId] || courseData["1"];
+
+  // Dynamically resolve course data from published courses
+  const course = (() => {
+    const published = adminCourses.filter((c) => c.status === "published");
+    const match = published.find((c) => c.id === courseId);
+    if (match) {
+      const idx = published.indexOf(match);
+      const progress = getCourseProgress(idx);
+      return { title: match.title, module: progress.module };
+    }
+    // Fallback for first published course
+    if (published.length > 0) {
+      return { title: published[0].title, module: getCourseProgress(0).module };
+    }
+    return { title: "Course", module: "Module 1" };
+  })();
   const isMobile = useIsMobile();
 
   const [sourcesMode, setSourcesMode] = useState<SourcesMode>("list");

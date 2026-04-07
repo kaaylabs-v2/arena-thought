@@ -120,9 +120,7 @@ const fontOptions: { value: FontFamily; label: string; family: string }[] = [
 function GeneralPanel() {
   const { theme, setTheme } = useTheme();
   const { appSettings, updateAppSettings } = useWorkspace();
-  const [voiceEnabled, setVoiceEnabled] = useState(true);
-  const [autoExpandSources, setAutoExpandSources] = useState(true);
-  const [autoSave, setAutoSave] = useState(true);
+
 
   const themeOptions: { value: "light" | "auto" | "dark"; label: string; icon: React.ElementType }[] = [
     { value: "light", label: "Light", icon: Sun },
@@ -229,7 +227,7 @@ function GeneralPanel() {
       <div>
         <SectionLabel>Voice & Input</SectionLabel>
         <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow label="Voice input" description="Enable microphone for voice-to-text in Nexi" action={<Toggle checked={voiceEnabled} onChange={setVoiceEnabled} />} />
+          <SettingRow label="Voice input" description="Enable microphone for voice-to-text in Nexi" action={<Toggle checked={appSettings.voiceInput} onChange={(v) => updateAppSettings({ voiceInput: v })} />} />
         </div>
       </div>
 
@@ -237,8 +235,8 @@ function GeneralPanel() {
       <div>
         <SectionLabel>Reading & Sources</SectionLabel>
         <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow label="Auto-expand sources" description="Automatically open viewer when selecting a source" action={<Toggle checked={autoExpandSources} onChange={setAutoExpandSources} />} />
-          <SettingRow label="Auto-save notes" description="Automatically save Nexi responses when bookmarked" action={<Toggle checked={autoSave} onChange={setAutoSave} />} />
+          <SettingRow label="Auto-expand sources" description="Automatically open viewer when selecting a source" action={<Toggle checked={appSettings.autoExpandSources} onChange={(v) => updateAppSettings({ autoExpandSources: v })} />} />
+          <SettingRow label="Auto-save notes" description="Automatically save Nexi responses when bookmarked" action={<Toggle checked={appSettings.autoSaveNotes} onChange={(v) => updateAppSettings({ autoSaveNotes: v })} />} />
         </div>
       </div>
     </div>
@@ -248,12 +246,12 @@ function GeneralPanel() {
 /* ─── Nexi ─────────────────────────────────────────────── */
 
 function NexiPanel() {
-  const [nexiTone, setNexiTone] = useState<"concise" | "detailed" | "socratic">("detailed");
-  const [citationsVisible, setCitationsVisible] = useState(true);
-  const [followUpChips, setFollowUpChips] = useState(true);
-  const [conversationMemory, setConversationMemory] = useState(true);
-  const [codeDepth, setCodeDepth] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
-  const [preferredLanguage, setPreferredLanguage] = useState("English");
+  const { appSettings, updateAppSettings } = useWorkspace();
+  const nexiTone = appSettings.nexiTone;
+  const citationsVisible = appSettings.showCitations;
+  const followUpChips = appSettings.followUpChips;
+  const conversationMemory = appSettings.conversationMemory;
+  const codeDepth = appSettings.codeDepth;
 
   return (
     <div className="space-y-8">
@@ -270,12 +268,12 @@ function NexiPanel() {
               <SegmentedControl
                 value={nexiTone}
                 options={[{ value: "concise", label: "Concise" }, { value: "detailed", label: "Detailed" }, { value: "socratic", label: "Socratic" }]}
-                onChange={(v) => setNexiTone(v as "concise" | "detailed" | "socratic")}
+                onChange={(v) => updateAppSettings({ nexiTone: v as "concise" | "detailed" | "socratic" })}
               />
             }
           />
-          <SettingRow label="Show citations" description="Display source references in Nexi responses" action={<Toggle checked={citationsVisible} onChange={setCitationsVisible} />} />
-          <SettingRow label="Follow-up suggestions" description="Show suggested actions after each response" action={<Toggle checked={followUpChips} onChange={setFollowUpChips} />} />
+          <SettingRow label="Show citations" description="Display source references in Nexi responses" action={<Toggle checked={citationsVisible} onChange={(v) => updateAppSettings({ showCitations: v })} />} />
+          <SettingRow label="Follow-up suggestions" description="Show suggested actions after each response" action={<Toggle checked={followUpChips} onChange={(v) => updateAppSettings({ followUpChips: v })} />} />
         </div>
       </div>
 
@@ -283,7 +281,7 @@ function NexiPanel() {
       <div>
         <SectionLabel>Context & Memory</SectionLabel>
         <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow label="Conversation memory" description="Remember context from previous sessions within a course" action={<Toggle checked={conversationMemory} onChange={setConversationMemory} />} />
+          <SettingRow label="Conversation memory" description="Remember context from previous sessions within a course" action={<Toggle checked={conversationMemory} onChange={(v) => updateAppSettings({ conversationMemory: v })} />} />
         </div>
       </div>
 
@@ -298,7 +296,7 @@ function NexiPanel() {
               <SegmentedControl
                 value={codeDepth}
                 options={[{ value: "beginner", label: "Beginner" }, { value: "intermediate", label: "Intermediate" }, { value: "advanced", label: "Advanced" }]}
-                onChange={(v) => setCodeDepth(v as "beginner" | "intermediate" | "advanced")}
+                onChange={(v) => updateAppSettings({ codeDepth: v as "beginner" | "intermediate" | "advanced" })}
               />
             }
           />
@@ -307,12 +305,13 @@ function NexiPanel() {
             description="Language Nexi uses for explanations"
             action={
               <select
-                value={preferredLanguage}
+                value={appSettings.language}
                 onChange={(e) => {
                   const val = e.target.value;
                   if (val !== "English") {
                     toast("Language support coming in a future update");
-                    setPreferredLanguage("English");
+                  } else {
+                    updateAppSettings({ language: val });
                   }
                 }}
                 className="px-3 py-1.5 rounded-lg border border-border bg-background text-[12px] font-sans text-foreground focus:outline-none focus:ring-1 focus:ring-ring/30 cursor-pointer"

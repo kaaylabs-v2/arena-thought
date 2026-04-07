@@ -2,6 +2,7 @@ import { Search, Pin, BookOpen, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
+import { getCourseProgress } from "@/lib/course-progress-data";
 
 type FilterTab = "all" | "active" | "completed" | "pinned";
 
@@ -13,10 +14,11 @@ const Library = () => {
   const courses = useMemo(() => {
     return adminCourses
       .filter((c) => c.status === "published")
-      .map((c) => {
+      .map((c, i) => {
         const sourceCount = c.modules.reduce((acc, m) => acc + m.items.length, 0);
-        const progress = c.id === "4" || c.id === "6" ? 100 : c.id === "1" ? 68 : c.id === "2" ? 42 : c.id === "3" ? 85 : c.id === "5" ? 23 : Math.floor(Math.random() * 80) + 10;
-        const pinned = c.id === "1" || c.id === "3";
+        const progressData = getCourseProgress(i);
+        const progress = progressData.progress;
+        const pinned = i === 0 || i === 2;
         const status: "active" | "completed" = progress === 100 ? "completed" : "active";
         const lastAccessed = c.updatedAt;
         return { id: c.id, title: c.title, description: c.description, progress, lastAccessed, pinned, status, sourceCount };

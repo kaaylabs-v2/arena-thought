@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { TrendingUp, BookOpen, Library, ArrowRight, BarChart3, Activity, Sparkles } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
+import { fixedCourseData } from "@/lib/course-progress-data";
 import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
 import {
   getTopInsights, getInsightIcon, getInsightTypeLabel,
@@ -26,27 +27,6 @@ const weeklyActivity = [
 
 const weeklyTotalHours = weeklyActivity.reduce((s, d) => s + d.hours, 0);
 
-/** Fixed per-course progress data keyed by course id index */
-const fixedCourseData: {
-  module: string;
-  progress: number;
-  status: "complete" | "in-progress" | "not-started";
-}[] = [
-  { module: "Module 4: Neural Networks", progress: 67, status: "in-progress" },
-  { module: "Module 2: Regression Analysis", progress: 34, status: "in-progress" },
-  { module: "Module 6: Consciousness", progress: 89, status: "in-progress" },
-  { module: "Module 1: Vectors & Matrices", progress: 12, status: "in-progress" },
-  { module: "Module 5: Memory & Learning", progress: 100, status: "complete" },
-  { module: "Module 1: Research Design", progress: 5, status: "not-started" },
-];
-
-/** Seeded focus areas */
-const seededFocusAreas = [
-  { topic: "Backpropagation", course: "Foundations of Machine Learning", followUps: 5 },
-  { topic: "Bayes' Theorem", course: "Advanced Statistical Methods", followUps: 3 },
-  { topic: "Eigenvalue Decomposition", course: "Linear Algebra for Data Science", followUps: 2 },
-  { topic: "Qualia & Consciousness", course: "Philosophy of Mind", followUps: 2 },
-];
 
 type InsightsTab = "overview" | "progress" | "patterns";
 
@@ -355,8 +335,7 @@ function PatternsTab() {
     .sort((a, b) => b.count - a.count);
 
   const mostActiveCourse = courseMsgCounts[0]?.title || "Foundations of Machine Learning";
-  const topInsights = useMemo(() => getTopInsights(2), []);
-  const completedTasks = Math.max(tasks.filter((t) => t.completed).length, 3);
+  const allInsights = useMemo(() => getTopInsights(7), []);
 
   // Most used mood from reflections
   const moodCounts: Record<string, number> = {};
@@ -366,7 +345,10 @@ function PatternsTab() {
   const rawMood = Object.entries(moodCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "focused";
   const mostUsedMood = rawMood.charAt(0).toUpperCase() + rawMood.slice(1);
 
-  const maxFollowUps = Math.max(...seededFocusAreas.map((f) => f.followUps), 1);
+  const completedTasks = Math.max(tasks.filter((t) => t.completed).length, 3);
+  const topInsights = allInsights.slice(0, 2);
+  const focusAreas = allInsights.filter((ins) => ins.type === "struggle" || ins.type === "repeated-question" || ins.type === "confidence-decay");
+  const maxMetricValue = Math.max(focusAreas.length, 1);
 
   return (
     <div className="space-y-6">
@@ -430,34 +412,30 @@ function PatternsTab() {
         </p>
 
         <div className="space-y-3">
-          {seededFocusAreas.map((area, i) => {
-            // Match severity from insights if available
-            const matchingInsight = topInsights.find((ins) => ins.topic === area.topic);
-            const borderClass = matchingInsight
-              ? getSeverityBorderColor(matchingInsight.severity)
-              : "border-l-border";
+          {focusAreas.map((insight, i) => {
+            const borderClass = getSeverityBorderColor(insight.severity);
 
             return (
               <div
-                key={area.topic}
+                key={insight.id}
                 className={`bg-card border border-border border-l-2 ${borderClass} rounded-xl px-5 py-4 animate-fade-in`}
                 style={{ animationDelay: `${240 + i * 50}ms`, animationFillMode: "both" }}
               >
                 <div>
-                  <span className="text-sm font-medium text-foreground">{area.topic}</span>
+                  <span className="text-sm font-medium text-foreground">{insight.topic}</span>
                 </div>
                 <div className="mt-1">
                   <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5 inline-block">
-                    {area.course}
+                    {insight.course}
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  {area.followUps} follow-up question{area.followUps !== 1 ? "s" : ""}
+                  {insight.suggestion}
                 </p>
                 <div className="h-1 rounded-full bg-muted mt-3 overflow-hidden">
                   <div
                     className="h-full bg-accent rounded-full transition-all duration-700 ease-smooth"
-                    style={{ width: mounted ? `${(area.followUps / maxFollowUps) * 100}%` : "0%" }}
+                    style={{ width: mounted ? `${((focusAreas.length - i) / maxMetricValue) * 100}%` : "0%" }}
                   />
                 </div>
               </div>
@@ -465,7 +443,7 @@ function PatternsTab() {
           })}
         </div>
 
-        {seededFocusAreas.length < 4 && (
+        {focusAreas.length < 4 && (
           <p className="mt-6 text-xs text-muted-foreground italic">
             Nexi surfaces more patterns the more you study.
           </p>
