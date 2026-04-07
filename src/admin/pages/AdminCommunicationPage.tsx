@@ -532,7 +532,7 @@ function ComposeTab({
   };
 
   return (
-    <div className="overflow-y-auto h-full px-8 py-6">
+    <div className="overflow-y-auto max-h-[calc(100vh-220px)] py-4">
       <div className="max-w-2xl mx-auto">
         <h2 className="font-serif text-2xl text-foreground">New Announcement</h2>
         <p className="text-sm text-muted-foreground mt-1 mb-8">Broadcast a message to your learners</p>
