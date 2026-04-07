@@ -3,7 +3,7 @@ import { Send, Circle, Mail, Bell, X, ArrowLeft } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 /* ─── Dynamic timestamp helpers ─── */
 function formatClockTime(ts: string): string {
   const now = new Date();
