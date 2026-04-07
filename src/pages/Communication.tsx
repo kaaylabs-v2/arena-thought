@@ -176,22 +176,6 @@ function DirectMessagesTab() {
 
   const handleBack = useCallback(() => setSelectedThread(null), []);
 
-  if (threadKeys.length === 0) {
-    return (
-      <div className="flex-1 flex items-center justify-center px-6">
-        <div className="rounded-2xl border-2 border-dashed border-border p-8 flex flex-col items-center max-w-sm animate-fade-in">
-          <div className="h-14 w-14 rounded-xl bg-muted/50 flex items-center justify-center mb-4">
-            <Mail className="h-7 w-7 text-muted-foreground/40" strokeWidth={1.5} />
-          </div>
-          <h3 className="font-serif text-lg text-foreground font-medium mb-1.5">No conversations yet</h3>
-          <p className="text-[13px] font-sans text-muted-foreground/70 text-center leading-relaxed">
-            When your instructor sends you a message, it will appear here.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   // Mobile: show list or thread, not both
   const showList = isMobile ? !selectedThread : true;
   const showThread = isMobile ? !!selectedThread || !!activeThread : true;
@@ -211,6 +195,22 @@ function DirectMessagesTab() {
     });
     return groups;
   }, [activeMessages]);
+
+  if (threadKeys.length === 0) {
+    return (
+      <div className="flex-1 flex items-center justify-center px-6">
+        <div className="rounded-2xl border-2 border-dashed border-border p-8 flex flex-col items-center max-w-sm animate-fade-in">
+          <div className="h-14 w-14 rounded-xl bg-muted/50 flex items-center justify-center mb-4">
+            <Mail className="h-7 w-7 text-muted-foreground/40" strokeWidth={1.5} />
+          </div>
+          <h3 className="font-serif text-lg text-foreground font-medium mb-1.5">No conversations yet</h3>
+          <p className="text-[13px] font-sans text-muted-foreground/70 text-center leading-relaxed">
+            When your instructor sends you a message, it will appear here.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-1 min-h-0 h-full">
