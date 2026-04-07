@@ -235,8 +235,8 @@ function GeneralPanel() {
       <div>
         <SectionLabel>Reading & Sources</SectionLabel>
         <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow label="Auto-expand sources" description="Automatically open viewer when selecting a source" action={<Toggle checked={autoExpandSources} onChange={setAutoExpandSources} />} />
-          <SettingRow label="Auto-save notes" description="Automatically save Nexi responses when bookmarked" action={<Toggle checked={autoSave} onChange={setAutoSave} />} />
+          <SettingRow label="Auto-expand sources" description="Automatically open viewer when selecting a source" action={<Toggle checked={appSettings.autoExpandSources} onChange={(v) => updateAppSettings({ autoExpandSources: v })} />} />
+          <SettingRow label="Auto-save notes" description="Automatically save Nexi responses when bookmarked" action={<Toggle checked={appSettings.autoSaveNotes} onChange={(v) => updateAppSettings({ autoSaveNotes: v })} />} />
         </div>
       </div>
     </div>
