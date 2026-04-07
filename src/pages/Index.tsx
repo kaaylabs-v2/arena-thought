@@ -30,7 +30,7 @@ const priorityDot: Record<string, string> = {
 };
 
 const Index = () => {
-  const { userProfile, tasks, toggleTask, adminCourses, studioAnnouncements } = useWorkspace();
+  const { userProfile, tasks, toggleTask, adminCourses, studioAnnouncements, chatMessages } = useWorkspace();
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
 
   const visibleAnnouncements = useMemo(() => {
