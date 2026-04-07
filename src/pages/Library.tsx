@@ -2,6 +2,7 @@ import { Search, Pin, BookOpen, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
+import { getCourseProgress } from "@/lib/course-progress-data";
 
 type FilterTab = "all" | "active" | "completed" | "pinned";
 
