@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Library, ListChecks, BookOpen, BarChart3, Sparkles, MessageSquare, Settings, User,
+  Home, Library, ListChecks, BookOpen, Sparkles, MessageSquare, Settings, User,
 } from "lucide-react";
 import {
   CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem,
