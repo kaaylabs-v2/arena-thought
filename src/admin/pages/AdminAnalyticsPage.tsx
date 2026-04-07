@@ -277,7 +277,7 @@ export default function AdminAnalyticsPage() {
                   <Cell key={i} fill={entry.fill} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))" }} />
+              <Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }} itemStyle={{ color: "hsl(var(--foreground))" }} />
             </PieChart>
           </ResponsiveContainer>
           <div className="flex flex-wrap justify-center gap-3 mt-2">
