@@ -3,7 +3,6 @@ import {
   Library,
   BookOpen,
   Sparkles,
-  BarChart3,
   Moon,
   Sun,
   ChevronsLeft,

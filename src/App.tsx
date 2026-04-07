@@ -56,7 +56,7 @@ const App = () => (
                 <Route path="/workspace/:id" element={<Workspace />} />
                 <Route path="/notebook" element={<Notebook />} />
                 <Route path="/reflections" element={<Reflections />} />
-                <Route path="/progress" element={<Progress />} />
+                <Route path="/insights" element={<Insights />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/study-plan" element={<StudyPlan />} />
