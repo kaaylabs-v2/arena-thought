@@ -9,7 +9,7 @@ const shortcuts = [
   { keys: ["?"], description: "Show this help", global: true },
   { keys: ["I"], description: "Invite members", page: "/admin/people" },
   { keys: ["D"], description: "Deploy course", page: "/admin/courses" },
-  { keys: ["A"], description: "New announcement", page: "/admin/announcements" },
+  { keys: ["A"], description: "New announcement", page: "/admin/communication" },
   { keys: ["Esc"], description: "Close dialogs", global: true },
 ];
 
