@@ -40,7 +40,7 @@ export function AdminKeyboardShortcuts() {
         window.dispatchEvent(new CustomEvent("admin-shortcut:invite"));
       } else if (key === "d" && location.pathname === "/admin/courses") {
         window.dispatchEvent(new CustomEvent("admin-shortcut:deploy"));
-      } else if (key === "a" && location.pathname === "/admin/announcements") {
+      } else if (key === "a" && location.pathname === "/admin/communication") {
         window.dispatchEvent(new CustomEvent("admin-shortcut:announce"));
       }
     };
