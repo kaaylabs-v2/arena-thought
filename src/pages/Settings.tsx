@@ -248,7 +248,6 @@ function GeneralPanel() {
 /* ─── Nexi ─────────────────────────────────────────────── */
 
 function NexiPanel() {
-  const { chatMessages } = useWorkspace();
   const [nexiTone, setNexiTone] = useState<"concise" | "detailed" | "socratic">("detailed");
   const [citationsVisible, setCitationsVisible] = useState(true);
   const [followUpChips, setFollowUpChips] = useState(true);
