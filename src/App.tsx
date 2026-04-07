@@ -17,7 +17,6 @@ import Profile from "./pages/Profile";
 import StudyPlan from "./pages/StudyPlan";
 import Communication from "./pages/Communication";
 import NotFound from "./pages/NotFound";
-import NotFound from "./pages/NotFound";
 
 // Admin Studio
 import { AdminLayout } from "@/admin/components/AdminLayout";
