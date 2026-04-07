@@ -19,20 +19,12 @@ export default function AdminPeoplePage() {
           <TabsTrigger value="departments" className="text-[13px]">Departments</TabsTrigger>
         </TabsList>
         <TabsContent value="members">
-          <MembersInline />
+          <AdminMembersPage embedded />
         </TabsContent>
         <TabsContent value="departments">
-          <DepartmentsInline />
+          <AdminDepartmentsPage embedded />
         </TabsContent>
       </Tabs>
     </div>
   );
-}
-
-function MembersInline() {
-  return <div className="-m-6 lg:-m-8"><AdminMembersPage /></div>;
-}
-
-function DepartmentsInline() {
-  return <div className="-m-6 lg:-m-8"><AdminDepartmentsPage /></div>;
 }

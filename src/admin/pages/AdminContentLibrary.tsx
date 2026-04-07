@@ -4,29 +4,11 @@ import {
   LayoutGrid, List, Upload, X, Play, ExternalLink,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useWorkspace } from "@/context/WorkspaceContext";
+import type { ContentItem } from "@/admin/data/mock-data";
 import { cn } from "@/lib/utils";
 
 type FileType = "pdf" | "video" | "slides" | "doc" | "link";
-
-interface ContentFile {
-  id: string; fileName: string; fileType: FileType; linkedCourse: string;
-  module: string; uploadDate: string; uploaderName: string; fileSize: string;
-}
-
-const seedFiles: ContentFile[] = [
-  { id: "f-1", fileName: "Introduction to Python.pdf", fileType: "pdf", linkedCourse: "Python Fundamentals", module: "Module 1", uploadDate: "2025-09-28", uploaderName: "Jordan Reeves", fileSize: "2.4 MB" },
-  { id: "f-2", fileName: "Week 2 Lecture Slides.pptx", fileType: "slides", linkedCourse: "Python Fundamentals", module: "Module 2", uploadDate: "2025-10-05", uploaderName: "Jordan Reeves", fileSize: "5.1 MB" },
-  { id: "f-3", fileName: "Neural Networks Overview", fileType: "link", linkedCourse: "Python Fundamentals", module: "Module 3", uploadDate: "2025-10-12", uploaderName: "Priya Sharma", fileSize: "—" },
-  { id: "f-4", fileName: "Leadership Framework.pdf", fileType: "pdf", linkedCourse: "Leadership Basics", module: "Module 1", uploadDate: "2025-11-10", uploaderName: "Marcus Chen", fileSize: "1.8 MB" },
-  { id: "f-5", fileName: "Case Study Video.mp4", fileType: "video", linkedCourse: "Leadership Basics", module: "Module 2", uploadDate: "2025-11-15", uploaderName: "Marcus Chen", fileSize: "84 MB" },
-  { id: "f-6", fileName: "GDPR Guidelines.pdf", fileType: "pdf", linkedCourse: "Data Privacy & Compliance", module: "Module 1", uploadDate: "2025-09-18", uploaderName: "Elena Vasquez", fileSize: "3.2 MB" },
-  { id: "f-7", fileName: "Compliance Checklist.docx", fileType: "doc", linkedCourse: "Data Privacy & Compliance", module: "Module 1", uploadDate: "2025-09-20", uploaderName: "Jordan Reeves", fileSize: "0.4 MB" },
-  { id: "f-8", fileName: "Training Video: Data Handling.mp4", fileType: "video", linkedCourse: "Data Privacy & Compliance", module: "Module 3", uploadDate: "2025-09-22", uploaderName: "Elena Vasquez", fileSize: "120 MB" },
-  { id: "f-9", fileName: "PM Methodology Guide.pdf", fileType: "pdf", linkedCourse: "Project Management Essentials", module: "Module 1", uploadDate: "2026-02-15", uploaderName: "Jordan Reeves", fileSize: "4.7 MB" },
-  { id: "f-10", fileName: "Project Charter Template.docx", fileType: "doc", linkedCourse: "Project Management Essentials", module: "Module 2", uploadDate: "2026-02-20", uploaderName: "Jordan Reeves", fileSize: "0.6 MB" },
-];
-
-const AMBER = "#C9963A";
 type TypeFilter = "all" | FileType;
 type ViewMode = "grid" | "list";
 
@@ -37,25 +19,28 @@ const typeIcon = (t: FileType, size = "h-4 w-4") => {
 const typeLabel = (t: FileType) => { switch (t) { case "pdf": return "PDF"; case "video": return "Video"; case "slides": return "Slides"; case "doc": return "Document"; case "link": return "Link"; } };
 const initials = (name: string) => name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
 
-export default function AdminContentLibraryPage() {
+export default function AdminContentLibraryPage({ embedded = false }: { embedded?: boolean }) {
+  const { studioContent: files } = useWorkspace();
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
   const [courseFilter, setCourseFilter] = useState("all");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [previewFile, setPreviewFile] = useState<ContentFile | null>(null);
+  const [previewFile, setPreviewFile] = useState<ContentItem | null>(null);
 
-  const uniqueCourses = [...new Set(seedFiles.map(f => f.linkedCourse))];
-  const filtered = seedFiles
+  const uniqueCourses = [...new Set(files.map(f => f.linkedCourse))];
+  const filtered = files
     .filter(f => typeFilter === "all" || f.fileType === typeFilter)
     .filter(f => courseFilter === "all" || f.linkedCourse === courseFilter)
     .filter(f => f.fileName.toLowerCase().includes(search.toLowerCase()) || f.linkedCourse.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
-      <div className="mb-6">
-        <h1 className="font-serif text-[2rem] font-normal text-foreground">Content Library</h1>
-        <p className="text-[14px] mt-0.5 text-muted-foreground font-sans">All uploaded files and sources across all courses</p>
-      </div>
+    <div className={embedded ? "" : "p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in"}>
+      {!embedded && (
+        <div className="mb-6">
+          <h1 className="font-serif text-[2rem] font-normal text-foreground">Content Library</h1>
+          <p className="text-[14px] mt-0.5 text-muted-foreground font-sans">All uploaded files and sources across all courses</p>
+        </div>
+      )}
 
       {/* Toolbar */}
       <div className="flex flex-col md:flex-row md:items-center gap-3 mb-6">
@@ -101,7 +86,6 @@ export default function AdminContentLibraryPage() {
               <div className="h-10 w-10 rounded-lg flex items-center justify-center mb-3 bg-accent/10 text-accent">{typeIcon(file.fileType, "h-5 w-5")}</div>
               <p className="text-[14px] font-medium leading-snug line-clamp-2 mb-2 text-foreground font-sans">{file.fileName}</p>
               <span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium mb-1 bg-accent/10 text-accent">{file.linkedCourse}</span>
-              <p className="text-[12px] text-muted-foreground font-sans">{file.module}</p>
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-border/50">
                 <div className="flex items-center gap-2">
                   <span className="text-[11px] text-muted-foreground/60">{file.uploadDate}</span>
@@ -118,8 +102,8 @@ export default function AdminContentLibraryPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-border">
-                {["File", "Type", "Course", "Module", "Uploaded", "Size", "Uploader"].map((h, i) => (
-                  <th key={i} className={cn("px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground", i === 3 && "hidden md:table-cell", i === 4 && "hidden lg:table-cell", i === 5 && "hidden lg:table-cell", i === 6 && "hidden xl:table-cell")}>{h}</th>
+                {["File", "Type", "Course", "Uploaded", "Size", "Uploader"].map((h, i) => (
+                  <th key={i} className={cn("px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground", i === 3 && "hidden lg:table-cell", i === 4 && "hidden lg:table-cell", i === 5 && "hidden xl:table-cell")}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -134,7 +118,6 @@ export default function AdminContentLibraryPage() {
                   </td>
                   <td className="px-5 py-3.5"><span className="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium uppercase bg-accent/10 text-accent">{typeLabel(file.fileType)}</span></td>
                   <td className="px-5 py-3.5"><span className="text-[12px] text-muted-foreground">{file.linkedCourse}</span></td>
-                  <td className="px-5 py-3.5 hidden md:table-cell"><span className="text-[12px] text-muted-foreground">{file.module}</span></td>
                   <td className="px-5 py-3.5 hidden lg:table-cell"><span className="text-[12px] text-muted-foreground/60">{file.uploadDate}</span></td>
                   <td className="px-5 py-3.5 hidden lg:table-cell"><span className="text-[12px] text-muted-foreground/60">{file.fileSize}</span></td>
                   <td className="px-5 py-3.5 hidden xl:table-cell"><span className="text-[12px] text-muted-foreground">{file.uploaderName}</span></td>
@@ -147,8 +130,8 @@ export default function AdminContentLibraryPage() {
 
       <div className="flex items-center gap-4 mt-4 text-[12px] text-muted-foreground/60">
         <span>{filtered.length} files</span><span>·</span>
-        <span>{seedFiles.filter(f => f.fileType === "pdf").length} PDFs</span><span>·</span>
-        <span>{seedFiles.filter(f => f.fileType === "video").length} videos</span><span>·</span>
+        <span>{files.filter(f => f.fileType === "pdf").length} PDFs</span><span>·</span>
+        <span>{files.filter(f => f.fileType === "video").length} videos</span><span>·</span>
         <span>{uniqueCourses.length} courses</span>
       </div>
 
@@ -171,7 +154,7 @@ export default function AdminContentLibraryPage() {
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.08em] mb-3 text-muted-foreground">Details</p>
                 <div className="space-y-2.5">
-                  {[{ label: "COURSE", value: previewFile.linkedCourse }, { label: "MODULE", value: previewFile.module }, { label: "UPLOADED BY", value: previewFile.uploaderName }, { label: "UPLOAD DATE", value: previewFile.uploadDate }, { label: "FILE SIZE", value: previewFile.fileSize }].map((row, i) => (
+                  {[{ label: "COURSE", value: previewFile.linkedCourse }, { label: "UPLOADED BY", value: previewFile.uploaderName }, { label: "UPLOAD DATE", value: previewFile.uploadDate }, { label: "FILE SIZE", value: previewFile.fileSize }].map((row, i) => (
                     <div key={i} className="setting-row flex items-center justify-between py-1.5 px-2 -mx-2 rounded-lg">
                       <span className="text-[11px] uppercase tracking-wider text-muted-foreground/60">{row.label}</span>
                       <span className="text-[14px] text-foreground/75 font-sans">{row.value}</span>
@@ -195,7 +178,7 @@ export default function AdminContentLibraryPage() {
                 {previewFile.fileType === "link" && (
                   <div className="rounded-lg p-3 bg-muted/30 border border-border">
                     <code className="text-[13px] break-all text-muted-foreground font-mono">
-                      https://resources.meridian.edu/{previewFile.linkedCourse.toLowerCase().replace(/ /g, "-")}/{previewFile.module.toLowerCase().replace(/ /g, "-")}
+                      https://resources.meridian.edu/{previewFile.linkedCourse.toLowerCase().replace(/ /g, "-")}
                     </code>
                   </div>
                 )}
@@ -205,8 +188,6 @@ export default function AdminContentLibraryPage() {
               <button
                 onClick={() => {
                   setPreviewFile(null);
-                  const coursePath = `/admin/courses`;
-                  window.location.hash = "";
                   toast.success(`Navigating to ${previewFile.linkedCourse}`, { description: "Opening course view" });
                 }}
                 className="flex items-center gap-2 text-[13px] font-medium text-accent transition-colors duration-200 hover:text-accent/80"

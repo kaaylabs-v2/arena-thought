@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useWorkspace } from "@/context/WorkspaceContext";
+import type { AdminMember } from "@/admin/data/mock-data";
 import { cn } from "@/lib/utils";
 
 // ─── Types ──────────────────────────────────────────────────
@@ -13,70 +14,44 @@ import { cn } from "@/lib/utils";
 type MemberRole = "learner" | "manager" | "admin";
 type MemberStatus = "active" | "invited" | "inactive";
 
-interface Member {
-  id: string; name: string; email: string; role: MemberRole; department: string;
-  status: MemberStatus; dateJoined: string; coursesEnrolled: number; lastActive: string;
-  masteryAchieved: number; courseProgress?: { name: string; progress: number; mastery: boolean }[];
-}
-
-// ─── Seed data ──────────────────────────────────────────────
-
-const seedMembers: Member[] = [
-  { id: "m-1", name: "Aisha Patel", email: "aisha@meridian.edu", role: "learner", department: "Engineering", status: "active", dateJoined: "2025-09-15", coursesEnrolled: 3, lastActive: "2 hours ago", masteryAchieved: 2, courseProgress: [{ name: "Python Fundamentals", progress: 85, mastery: true }, { name: "Data Privacy & Compliance", progress: 100, mastery: true }, { name: "Leadership Basics", progress: 40, mastery: false }] },
-  { id: "m-2", name: "James Liu", email: "james@meridian.edu", role: "learner", department: "Product", status: "active", dateJoined: "2025-10-02", coursesEnrolled: 2, lastActive: "1 day ago", masteryAchieved: 1, courseProgress: [{ name: "Leadership Basics", progress: 72, mastery: true }, { name: "Python Fundamentals", progress: 30, mastery: false }] },
-  { id: "m-3", name: "Priya Sharma", email: "priya@meridian.edu", role: "learner", department: "Operations", status: "active", dateJoined: "2025-08-20", coursesEnrolled: 2, lastActive: "3 hours ago", masteryAchieved: 2, courseProgress: [{ name: "Data Privacy & Compliance", progress: 100, mastery: true }, { name: "Python Fundamentals", progress: 90, mastery: true }] },
-  { id: "m-4", name: "David Okafor", email: "david@meridian.edu", role: "manager", department: "Engineering", status: "active", dateJoined: "2025-08-15", coursesEnrolled: 2, lastActive: "5 hours ago", masteryAchieved: 1, courseProgress: [{ name: "Python Fundamentals", progress: 60, mastery: false }, { name: "Leadership Basics", progress: 100, mastery: true }] },
-  { id: "m-5", name: "Sarah Kim", email: "sarah@meridian.edu", role: "learner", department: "Product", status: "invited", dateJoined: "2026-03-20", coursesEnrolled: 0, lastActive: "Never", masteryAchieved: 0 },
-  { id: "m-6", name: "Marcus Chen", email: "marcus@meridian.edu", role: "learner", department: "Operations", status: "active", dateJoined: "2025-11-01", coursesEnrolled: 2, lastActive: "4 hours ago", masteryAchieved: 0, courseProgress: [{ name: "Data Privacy & Compliance", progress: 45, mastery: false }, { name: "Leadership Basics", progress: 20, mastery: false }] },
-  { id: "m-7", name: "Elena Rodriguez", email: "elena@meridian.edu", role: "admin", department: "Product", status: "active", dateJoined: "2025-07-30", coursesEnrolled: 1, lastActive: "1 hour ago", masteryAchieved: 1, courseProgress: [{ name: "Leadership Basics", progress: 100, mastery: true }] },
-  { id: "m-8", name: "Tom Walsh", email: "tom@meridian.edu", role: "learner", department: "Engineering", status: "inactive", dateJoined: "2025-09-01", coursesEnrolled: 1, lastActive: "30 days ago", masteryAchieved: 0, courseProgress: [{ name: "Python Fundamentals", progress: 15, mastery: false }] },
-  { id: "m-9", name: "Fatima Al-Hassan", email: "fatima@meridian.edu", role: "learner", department: "Operations", status: "active", dateJoined: "2025-10-15", coursesEnrolled: 2, lastActive: "6 hours ago", masteryAchieved: 1, courseProgress: [{ name: "Data Privacy & Compliance", progress: 100, mastery: true }, { name: "Leadership Basics", progress: 55, mastery: false }] },
-  { id: "m-10", name: "Ryan Park", email: "ryan@meridian.edu", role: "learner", department: "Engineering", status: "invited", dateJoined: "2026-03-28", coursesEnrolled: 0, lastActive: "Never", masteryAchieved: 0 },
-  { id: "m-11", name: "Nadia Osei", email: "nadia@meridian.edu", role: "manager", department: "Product", status: "active", dateJoined: "2025-08-10", coursesEnrolled: 2, lastActive: "2 hours ago", masteryAchieved: 1, courseProgress: [{ name: "Leadership Basics", progress: 100, mastery: true }, { name: "Python Fundamentals", progress: 50, mastery: false }] },
-  { id: "m-12", name: "Jordan Reeves", email: "jordan@meridian.edu", role: "admin", department: "Operations", status: "active", dateJoined: "2025-07-15", coursesEnrolled: 0, lastActive: "1 hour ago", masteryAchieved: 0 },
-];
-
-const AMBER = "#C9963A";
-
 // Per-learner struggle topics — seeded deterministically from member id + courseProgress
 const struggleTopicPool = [
-  { topic: "Backpropagation", course: "Python Fundamentals" },
-  { topic: "Gradient Descent", course: "Python Fundamentals" },
-  { topic: "Regularization", course: "Data Privacy & Compliance" },
-  { topic: "Bayes' Theorem", course: "Leadership Basics" },
-  { topic: "Activation Functions", course: "Python Fundamentals" },
-  { topic: "Loss Functions", course: "Data Privacy & Compliance" },
-  { topic: "Hypothesis Testing", course: "Leadership Basics" },
+  { topic: "Backpropagation", course: "Foundations of Machine Learning" },
+  { topic: "Gradient Descent", course: "Foundations of Machine Learning" },
+  { topic: "Regularization", course: "Advanced Statistical Methods" },
+  { topic: "Bayes' Theorem", course: "Advanced Statistical Methods" },
+  { topic: "Activation Functions", course: "Foundations of Machine Learning" },
+  { topic: "Loss Functions", course: "Advanced Statistical Methods" },
+  { topic: "Hypothesis Testing", course: "Philosophy of Mind" },
 ];
 
-function getMemberStruggleTopics(member: Member): { topic: string; course: string; weight: number }[] {
+function getMemberStruggleTopics(member: AdminMember): { topic: string; course: string; weight: number }[] {
   if (member.role !== "learner" || member.status !== "active") return [];
-  const incompleteCourses = (member.courseProgress || []).filter(cp => !cp.mastery && cp.progress > 10);
-  if (incompleteCourses.length === 0) return [];
+  // Use coursesEnrolled and masteryAchieved as proxy for incomplete courses
+  const incomplete = member.coursesEnrolled - member.masteryAchieved;
+  if (incomplete <= 0) return [];
 
-  // Deterministic pick based on member id hash
   let h = 0;
   for (let i = 0; i < member.id.length; i++) h = ((h << 5) - h + member.id.charCodeAt(i)) | 0;
   const idx = ((h >>> 0) % struggleTopicPool.length);
 
-  const count = Math.min(incompleteCourses.length, 3);
+  const count = Math.min(incomplete, 3);
   const results: { topic: string; course: string; weight: number }[] = [];
   for (let i = 0; i < count; i++) {
     const t = struggleTopicPool[(idx + i) % struggleTopicPool.length];
-    const cp = incompleteCourses[i % incompleteCourses.length];
     results.push({
       topic: t.topic,
-      course: cp.name,
-      weight: Math.max(0.3, Math.min(1, (100 - cp.progress) / 80)),
+      course: t.course,
+      weight: Math.max(0.3, Math.min(1, (100 - (member.masteryAchieved * 30 + 20)) / 80)),
     });
   }
   return results;
 }
+
 type TabFilter = "all" | "learners" | "admins" | "invited" | "inactive";
 let nextId = 100;
 
 const initials = (name: string) => name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
-// departments reference will come from useWorkspace inside component
 
 const roleBadgeCls = (r: MemberRole) => {
   switch (r) {
@@ -96,14 +71,15 @@ const statusBadgeCls = (s: MemberStatus) => {
 
 // ─── Component ──────────────────────────────────────────────
 
-export default function AdminMembersPage() {
-  const { studioDepartments: departments } = useWorkspace();
-  const [membersList, setMembersList] = useState<Member[]>(seedMembers);
+export default function AdminMembersPage({ embedded = false }: { embedded?: boolean }) {
+  const { studioDepartments: departments, studioMembers, setStudioMembers } = useWorkspace();
+  const membersList = studioMembers;
+  const setMembersList = setStudioMembers;
   const [tab, setTab] = useState<TabFilter>("all");
   const [search, setSearch] = useState("");
   const [inviteOpen, setInviteOpen] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
-  const [detailMember, setDetailMember] = useState<Member | null>(null);
+  const [detailMember, setDetailMember] = useState<AdminMember | null>(null);
   const [deactivatingId, setDeactivatingId] = useState<string | null>(null);
   const [roleChangeId, setRoleChangeId] = useState<string | null>(null);
   const [emailChips, setEmailChips] = useState<string[]>([]);
@@ -114,12 +90,12 @@ export default function AdminMembersPage() {
   const [bulkFile, setBulkFile] = useState<string | null>(null);
   const emailRef = useRef<HTMLInputElement>(null);
 
-  // Listen for keyboard shortcut
   useEffect(() => {
     const handler = () => setInviteOpen(true);
     window.addEventListener("admin-shortcut:invite", handler);
     return () => window.removeEventListener("admin-shortcut:invite", handler);
   }, []);
+
   const tabs: { value: TabFilter; label: string; count: number }[] = [
     { value: "all", label: "All", count: membersList.length },
     { value: "learners", label: "Learners", count: membersList.filter(m => m.role === "learner").length },
@@ -135,29 +111,61 @@ export default function AdminMembersPage() {
   const addEmailChip = (email: string) => { const trimmed = email.trim().toLowerCase(); if (trimmed && !emailChips.includes(trimmed)) setEmailChips(prev => [...prev, trimmed]); setEmailInput(""); };
   const handleEmailKeyDown = (e: KeyboardEvent<HTMLInputElement>) => { if ((e.key === "Enter" || e.key === ",") && emailInput.trim()) { e.preventDefault(); addEmailChip(emailInput); } if (e.key === "Backspace" && !emailInput && emailChips.length > 0) setEmailChips(prev => prev.slice(0, -1)); };
   const closeInvite = () => { setInviteOpen(false); setEmailChips([]); setEmailInput(""); setInvRole("learner"); setInvDept(""); setInvMessage(""); };
-  const handleSendInvites = () => { if (emailChips.length === 0) return; const newMembers: Member[] = emailChips.map((email, i) => ({ id: `m-${++nextId}`, name: email.split("@")[0].replace(/[._]/g, " ").replace(/\b\w/g, l => l.toUpperCase()), email, role: invRole, department: invDept || "No department", status: "invited" as MemberStatus, dateJoined: new Date().toISOString().split("T")[0], coursesEnrolled: 0, lastActive: "Never", masteryAchieved: 0, })); setMembersList(prev => [...newMembers, ...prev]); toast.success(`${emailChips.length} invite${emailChips.length > 1 ? "s" : ""} sent successfully`); closeInvite(); };
+  const handleSendInvites = () => {
+    if (emailChips.length === 0) return;
+    const newMembers: AdminMember[] = emailChips.map((email, i) => ({
+      id: `m-${++nextId}`,
+      name: email.split("@")[0].replace(/[._]/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
+      email,
+      role: invRole,
+      department: invDept || "No department",
+      status: "invited" as MemberStatus,
+      dateJoined: new Date().toISOString().split("T")[0],
+      coursesEnrolled: 0,
+      lastActive: "Never",
+      masteryAchieved: 0,
+    }));
+    setMembersList(prev => [...newMembers, ...prev]);
+    toast.success(`${emailChips.length} invite${emailChips.length > 1 ? "s" : ""} sent successfully`);
+    closeInvite();
+  };
   const closeBulk = () => { setBulkOpen(false); setBulkFile(null); };
   const handleBulkImport = () => { toast.success("12 members imported"); closeBulk(); };
   const handleDeactivate = (id: string) => { setMembersList(prev => prev.map(m => m.id === id ? { ...m, status: "inactive" as MemberStatus } : m)); toast.success("Member deactivated"); setDeactivatingId(null); };
   const handleRoleChange = (id: string, newRole: MemberRole) => { setMembersList(prev => prev.map(m => m.id === id ? { ...m, role: newRole } : m)); toast.success("Role updated"); setRoleChangeId(null); };
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
+    <div className={embedded ? "" : "p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in"}>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="font-serif text-[2rem] font-normal text-foreground">Members</h1>
-          <p className="text-[14px] mt-0.5 text-muted-foreground font-sans">Manage learners and admins in your organization</p>
+      {!embedded && (
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="font-serif text-[2rem] font-normal text-foreground">Members</h1>
+            <p className="text-[14px] mt-0.5 text-muted-foreground font-sans">Manage learners and admins in your organization</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setBulkOpen(true)} className="btn-ghost flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium border border-border rounded-lg text-foreground/65">
+              <Upload className="h-4 w-4" /> Bulk Import
+            </button>
+            <button onClick={() => setInviteOpen(true)} className="btn-apple flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">
+              <UserPlus className="h-4 w-4" /> Invite Members
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setBulkOpen(true)} className="btn-ghost flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium border border-border rounded-lg text-foreground/65">
-            <Upload className="h-4 w-4" /> Bulk Import
-          </button>
-          <button onClick={() => setInviteOpen(true)} className="btn-apple flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">
-            <UserPlus className="h-4 w-4" /> Invite Members
-          </button>
+      )}
+
+      {embedded && (
+        <div className="flex items-center justify-end mb-4">
+          <div className="flex items-center gap-2">
+            <button onClick={() => setBulkOpen(true)} className="btn-ghost flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium border border-border rounded-lg text-foreground/65">
+              <Upload className="h-4 w-4" /> Bulk Import
+            </button>
+            <button onClick={() => setInviteOpen(true)} className="btn-apple flex items-center gap-2 px-4 py-2.5 text-[13px] font-medium bg-primary text-primary-foreground rounded-lg">
+              <UserPlus className="h-4 w-4" /> Invite Members
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Filter bar */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
@@ -204,7 +212,7 @@ export default function AdminMembersPage() {
                       <div className="relative h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-medium shrink-0 bg-accent/15 text-accent">
                         {initials(member.name)}
                         {getMemberStruggleTopics(member).length > 0 && (
-                          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400/60" title="Has learning signals — click to view" />
+                          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent/60" title="Has learning signals — click to view" />
                         )}
                       </div>
                       <span className="text-[14px] font-medium text-foreground font-sans">{member.name}</span>
@@ -238,7 +246,7 @@ export default function AdminMembersPage() {
                         <button onClick={() => setDeactivatingId(null)} className="text-muted-foreground">Cancel</button>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
                         <button onClick={() => setDetailMember(member)} className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center" title="View details"><Pencil className="h-3.5 w-3.5 text-muted-foreground" /></button>
                         <button onClick={() => setRoleChangeId(roleChangeId === member.id ? null : member.id)} className="toolbar-btn h-7 w-7 rounded-md flex items-center justify-center" title="Change role"><UserCog className="h-3.5 w-3.5 text-muted-foreground" /></button>
                         {member.status !== "inactive" && (
@@ -336,7 +344,7 @@ export default function AdminMembersPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {[{ n: "Alex Thompson", e: "alex@meridian.edu", r: "Learner", d: "Engineering" }, { n: "Maria Santos", e: "maria@meridian.edu", r: "Learner", d: "Product" }, { n: "Chris Wright", e: "chris@meridian.edu", r: "Manager", d: "Operations" }].map((row, i) => (
+                        {[{ n: "Alex Thompson", e: "alex@meridian.edu", r: "Learner", d: "Computer Science" }, { n: "Maria Santos", e: "maria@meridian.edu", r: "Learner", d: "Mathematics & Statistics" }, { n: "Chris Wright", e: "chris@meridian.edu", r: "Manager", d: "Humanities & Cognitive Science" }].map((row, i) => (
                           <tr key={i} className="border-b border-border/50">
                             <td className="px-3 py-2 text-foreground/70">{row.n}</td>
                             <td className="px-3 py-2 text-muted-foreground">{row.e}</td>
@@ -391,40 +399,19 @@ export default function AdminMembersPage() {
                   ))}
                 </div>
               </div>
-              {detailMember.courseProgress && detailMember.courseProgress.length > 0 && (
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.08em] mb-3 text-muted-foreground">Enrolled Courses</p>
-                  <div className="space-y-3 stagger-children">
-                    {detailMember.courseProgress.slice(0, 4).map((cp, i) => (
-                      <div key={i} className="p-3 rounded-lg bg-muted/30 border border-border/50 transition-colors duration-200 hover:bg-muted/50">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-[13px] font-medium text-foreground/75">{cp.name}</span>
-                          <span className="text-[12px] font-medium text-accent">{cp.progress}%</span>
-                        </div>
-                        <div className="h-1.5 rounded-full overflow-hidden bg-accent/12">
-                          <div className="h-full rounded-full transition-all duration-600 ease-smooth" style={{ width: `${cp.progress}%`, backgroundColor: AMBER }} />
-                        </div>
-                      </div>
-                    ))}
-                    {detailMember.courseProgress.length > 4 && (<button className="text-[13px] font-medium text-accent">View all →</button>)}
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] mb-3 text-muted-foreground">Overview</p>
+                <div className="space-y-2.5">
+                  <div className="setting-row flex items-center justify-between py-1.5 px-2 -mx-2 rounded-lg">
+                    <span className="text-[11px] uppercase tracking-wider text-muted-foreground/60">COURSES ENROLLED</span>
+                    <span className="text-[14px] text-foreground/75 font-sans">{detailMember.coursesEnrolled}</span>
+                  </div>
+                  <div className="setting-row flex items-center justify-between py-1.5 px-2 -mx-2 rounded-lg">
+                    <span className="text-[11px] uppercase tracking-wider text-muted-foreground/60">MASTERY ACHIEVED</span>
+                    <span className="text-[14px] text-foreground/75 font-sans">{detailMember.masteryAchieved}</span>
                   </div>
                 </div>
-              )}
-              {detailMember.courseProgress && detailMember.courseProgress.length > 0 && (
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.08em] mb-3 text-muted-foreground">Mastery</p>
-                  <div className="space-y-2">
-                    {detailMember.courseProgress.map((cp, i) => (
-                      <div key={i} className="setting-row flex items-center justify-between py-1.5 px-2 -mx-2 rounded-lg">
-                        <span className="text-[13px] text-foreground/65">{cp.name}</span>
-                        <span className={cn("inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium", cp.mastery ? "bg-accent/12 text-accent border border-accent/25" : "bg-muted/50 text-muted-foreground/60 border border-border/50")}>
-                          {cp.mastery ? "Mastery Achieved" : "Not Yet"}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              </div>
               {/* Learning Signals */}
               {(() => {
                 const signals = getMemberStruggleTopics(detailMember);
@@ -442,11 +429,11 @@ export default function AdminMembersPage() {
                             <span className="text-[13px] font-medium text-foreground/75">{sig.topic}</span>
                             <span className="text-[11px] text-muted-foreground">·</span>
                             <span className="text-[11px] text-muted-foreground">{sig.course}</span>
-                            <span className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 rounded-full px-2 py-0.5 text-[11px] font-medium ml-auto">Needs attention</span>
+                            <span className="bg-accent/10 text-accent border border-accent/20 rounded-full px-2 py-0.5 text-[11px] font-medium ml-auto">Needs attention</span>
                           </div>
-                          <div className="h-1 rounded-full bg-amber-200/40 dark:bg-amber-900/20 overflow-hidden">
+                          <div className="h-1 rounded-full bg-accent/10 overflow-hidden">
                             <div
-                              className="h-full rounded-full bg-amber-400 dark:bg-amber-500/70 transition-all duration-500"
+                              className="h-full rounded-full bg-accent/60 transition-all duration-500"
                               style={{ width: `${sig.weight * 100}%` }}
                             />
                           </div>
