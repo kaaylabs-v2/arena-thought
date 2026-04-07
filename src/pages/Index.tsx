@@ -198,7 +198,7 @@ const Index = () => {
 
   /* Build course data from published courses, synced with Insights seeded data */
   const recentCourses = useMemo(() => {
-    return adminCourses
+    const courses = adminCourses
       .filter((c) => c.status === "published")
       .map((c, i) => {
         const data = fixedCourseData[i % fixedCourseData.length];
@@ -211,8 +211,11 @@ const Index = () => {
           status: data.status,
           lastActive: formatLastStudied(hoursAgo),
           lastStudiedLabel: hoursAgo < 24 ? `${hoursAgo} hours ago` : formatLastStudied(hoursAgo),
+          lastStudiedHoursAgo: hoursAgo,
         };
       });
+    // Sort by most recently studied
+    return [...courses].sort((a, b) => a.lastStudiedHoursAgo - b.lastStudiedHoursAgo);
   }, [adminCourses]);
 
   const activeCourse = recentCourses[0]; // First published = continue learning
@@ -221,6 +224,7 @@ const Index = () => {
   const greetingSubtitle = useMemo(() => {
     const now = new Date();
     const todayStart = startOfDay(now);
+    const in48Hours = new Date(now.getTime() + 48 * 60 * 60 * 1000);
 
     const hasOverdue = tasks.some(
       (t) => !t.completed && t.dueDate && isBefore(new Date(t.dueDate), todayStart)
@@ -229,16 +233,21 @@ const Index = () => {
       return { text: "You have overdue tasks to catch up on.", className: "text-sm text-destructive" };
     }
 
+    const hasUrgent = tasks.some(
+      (t) =>
+        !t.completed &&
+        t.dueDate &&
+        t.priority === "high" &&
+        !isBefore(new Date(t.dueDate), now) &&
+        isBefore(new Date(t.dueDate), in48Hours)
+    );
+    if (hasUrgent) {
+      return { text: "You have high-priority tasks due soon.", className: "text-sm text-destructive" };
+    }
+
     const allDone = tasks.length === 0 || tasks.every((t) => t.completed);
     if (allDone) {
       return { text: "You're all caught up. Keep it going.", className: "text-sm text-muted-foreground" };
-    }
-
-    const hasCompletedToday = tasks.some(
-      (t) => t.completed && t.dueDate && !isBefore(new Date(t.dueDate), todayStart)
-    );
-    if (!hasCompletedToday) {
-      return { text: "Ready to study? Here's where you left off.", className: "text-sm text-muted-foreground" };
     }
 
     return { text: "Continue where you left off.", className: "text-sm text-muted-foreground" };
@@ -307,7 +316,7 @@ const Index = () => {
 
         {/* Fix 2 — Nexi suggestion line */}
         {topFocus && focusCourseId && (
-          <div className="flex items-center gap-2 mt-3 mb-1 animate-fade-in [animation-delay:120ms] [animation-fill-mode:backwards]">
+          <div className="flex items-center gap-2 mt-2 animate-fade-in [animation-delay:120ms] [animation-fill-mode:backwards]">
             <Sparkles className="w-3.5 h-3.5 text-accent flex-shrink-0" strokeWidth={1.5} />
             <p className="text-sm text-muted-foreground">
               Nexi suggests reviewing <span className="text-foreground font-medium">{topFocus.topic}</span> today based on your recent sessions.{" "}
