@@ -19,8 +19,7 @@ const Library = () => {
         const pinned = c.id === "1" || c.id === "3";
         const status: "active" | "completed" = progress === 100 ? "completed" : "active";
         const lastAccessed = c.updatedAt;
-        const sparkline = generateSparkline(c.id);
-        return { id: c.id, title: c.title, description: c.description, progress, lastAccessed, pinned, status, sourceCount, sparkline };
+        return { id: c.id, title: c.title, description: c.description, progress, lastAccessed, pinned, status, sourceCount };
       });
   }, [adminCourses]);
 
