@@ -157,8 +157,9 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.25s cubic-bezier(0.22, 1, 0.36, 1)",
         "accordion-up": "accordion-up 0.2s cubic-bezier(0.22, 1, 0.36, 1)",
-        "fade-in": "fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-        "fade-in-fast": "fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+        "fade-in": "fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both",
+        "fade-in-fast": "fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both",
+        "page-enter": "page-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1) both",
         "fade-in-gentle": "fade-in-gentle 0.5s ease-out",
         "slide-in-right": "slide-in-right 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
         "slide-in-left": "slide-in-left 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
