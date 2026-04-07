@@ -27,7 +27,7 @@ export function Layout() {
       >
         <AppSidebar />
         <main className="flex-1 min-w-0 font-scaled">
-          <div key={location.pathname} className="animate-fade-in">
+          <div key={location.pathname} className="animate-page-enter will-change-[transform,opacity]">
             <Outlet />
           </div>
         </main>
