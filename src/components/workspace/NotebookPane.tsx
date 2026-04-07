@@ -214,6 +214,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
               notebookEntries.map((note) => (
                 <div
                   key={note.id}
+                  onClick={() => navigate("/notebook")}
                   className="rounded-lg border border-border/80 bg-background p-3 hover:border-border hover:shadow-soft transition-all duration-200 cursor-pointer animate-fade-in-fast"
                 >
                   <h4 className="text-[12px] font-sans font-medium text-foreground mb-1 line-clamp-1">{note.title}</h4>
