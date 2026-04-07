@@ -355,7 +355,8 @@ function PatternsTab() {
     .sort((a, b) => b.count - a.count);
 
   const mostActiveCourse = courseMsgCounts[0]?.title || "Foundations of Machine Learning";
-  const topFocus = seededFocusAreas[0];
+  const topInsights = useMemo(() => getTopInsights(2), []);
+  const completedTasks = Math.max(tasks.filter((t) => t.completed).length, 3);
   const completedTasks = Math.max(tasks.filter((t) => t.completed).length, 3);
 
   // Most used mood from reflections
