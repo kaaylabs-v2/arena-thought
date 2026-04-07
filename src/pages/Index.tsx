@@ -198,7 +198,7 @@ const Index = () => {
 
   /* Build course data from published courses, synced with Insights seeded data */
   const recentCourses = useMemo(() => {
-    return adminCourses
+    const courses = adminCourses
       .filter((c) => c.status === "published")
       .map((c, i) => {
         const data = fixedCourseData[i % fixedCourseData.length];
@@ -211,8 +211,11 @@ const Index = () => {
           status: data.status,
           lastActive: formatLastStudied(hoursAgo),
           lastStudiedLabel: hoursAgo < 24 ? `${hoursAgo} hours ago` : formatLastStudied(hoursAgo),
+          lastStudiedHoursAgo: hoursAgo,
         };
       });
+    // Sort by most recently studied
+    return [...courses].sort((a, b) => a.lastStudiedHoursAgo - b.lastStudiedHoursAgo);
   }, [adminCourses]);
 
   const activeCourse = recentCourses[0]; // First published = continue learning
