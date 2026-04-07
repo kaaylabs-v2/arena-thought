@@ -286,7 +286,7 @@ const Workspace = () => {
           collapsedSize={0}
           order={1}
           onResize={handleSourcesResize}
-          className="border-r border-border bg-card"
+          className="bg-card"
           style={{ transition: "flex 280ms cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           {!sourcesCollapsed && (
@@ -381,7 +381,7 @@ const Workspace = () => {
           collapsedSize={0}
           order={3}
           onResize={handleNotebookResize}
-          className="border-l border-border bg-card"
+          className="bg-card"
           style={{ transition: "flex 280ms cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           {!notebookCollapsed && (
