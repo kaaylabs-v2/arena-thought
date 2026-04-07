@@ -1,6 +1,6 @@
-import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar } from "lucide-react";
+import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar, Megaphone, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 
 // Simple deterministic hash from string to number 0-1
