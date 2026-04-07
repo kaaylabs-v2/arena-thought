@@ -206,7 +206,7 @@ function ProgressTab() {
   if (courseProgress.length === 0) {
     return (
       <div className="text-center py-24">
-        <Sparkles className="h-10 w-10 text-muted-foreground/70 mx-auto mb-3" strokeWidth={1} />
+        <BarChart3 className="h-10 w-10 text-muted-foreground/70 mx-auto mb-3" strokeWidth={1} />
         <p className="text-muted-foreground/70 font-sans text-sm mb-4">Start a course to see your progress here.</p>
         <Link to="/library" className="inline-flex items-center gap-2 text-sm font-sans text-accent hover:text-accent/80 transition-colors">
           <Library className="h-4 w-4" strokeWidth={1.5} />
