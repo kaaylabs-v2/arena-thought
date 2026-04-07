@@ -4,6 +4,11 @@ import { TrendingUp, BookOpen, Library, ArrowRight, BarChart3, Activity, Sparkle
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
 import {
+  getTopInsights, getInsightIcon, getInsightTypeLabel,
+  getSeverityColor, getSeverityBorderColor,
+  type NexiInsight,
+} from "@/lib/nexi-insights-data";
+import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 
@@ -138,12 +143,15 @@ function OverviewTab() {
         </ResponsiveContainer>
       </div>
 
+      {/* Nexi Insights card */}
+      <NexiInsightsCard publishedCourses={publishedCourses} delay={250} />
+
       {/* Continue Learning nudge */}
       {continueCourse && (
         <Link
           to={`/workspace/${continueCourse.id}`}
           className="block bg-card border border-border rounded-xl px-5 py-4 hover:bg-accent/[0.06] hover:border-accent/30 transition-all duration-200 animate-fade-in"
-          style={{ animationDelay: "300ms", animationFillMode: "both" }}
+          style={{ animationDelay: "350ms", animationFillMode: "both" }}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -157,6 +165,57 @@ function OverviewTab() {
           </div>
         </Link>
       )}
+    </div>
+  );
+}
+
+/* ─── Nexi Insights Card (shared) ─── */
+
+function NexiInsightsCard({ publishedCourses, delay }: { publishedCourses: { id: string; title: string }[]; delay: number }) {
+  const insights = useMemo(() => getTopInsights(3), []);
+
+  const findCourseId = (courseName: string) => {
+    const match = publishedCourses.find((c) => c.title === courseName);
+    return match?.id || publishedCourses[0]?.id;
+  };
+
+  return (
+    <div
+      className="bg-card border border-border rounded-xl overflow-hidden animate-fade-in"
+      style={{ animationDelay: `${delay}ms`, animationFillMode: "both" }}
+    >
+      <div className="px-5 py-3 border-b border-border flex items-center gap-2">
+        <Sparkles className="h-3.5 w-3.5 text-accent" strokeWidth={1.5} />
+        <h3 className="text-[11px] font-sans text-muted-foreground uppercase tracking-widest">Nexi Insights</h3>
+      </div>
+      <div className="divide-y divide-border">
+        {insights.map((insight) => {
+          const Icon = getInsightIcon(insight.type);
+          const severityColor = getSeverityColor(insight.severity);
+          const courseId = findCourseId(insight.course);
+
+          return (
+            <div key={insight.id} className="px-5 py-3.5 flex items-start gap-3">
+              <Icon className={`h-4 w-4 mt-0.5 shrink-0 ${severityColor}`} strokeWidth={1.5} />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-foreground leading-snug">{insight.message}</p>
+                <p className="text-xs text-muted-foreground mt-1">{insight.suggestion}</p>
+                {courseId && (
+                  <Link
+                    to={`/workspace/${courseId}`}
+                    className="inline-flex items-center gap-1 text-xs text-accent hover:underline mt-2"
+                  >
+                    Review in Nexi <ArrowRight className="h-3 w-3" />
+                  </Link>
+                )}
+              </div>
+              <span className={`text-[11px] font-medium shrink-0 tabular-nums ${severityColor}`}>
+                {insight.metric}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -296,7 +355,7 @@ function PatternsTab() {
     .sort((a, b) => b.count - a.count);
 
   const mostActiveCourse = courseMsgCounts[0]?.title || "Foundations of Machine Learning";
-  const topFocus = seededFocusAreas[0];
+  const topInsights = useMemo(() => getTopInsights(2), []);
   const completedTasks = Math.max(tasks.filter((t) => t.completed).length, 3);
 
   // Most used mood from reflections
@@ -319,15 +378,35 @@ function PatternsTab() {
         <div className="divide-y divide-border">
           <PatternRow label="Most active course" value={mostActiveCourse} />
           <PatternRow label="Questions asked" value={String(totalQuestions)} />
-          <PatternRow
-            label="Top focus area"
-            value={`${topFocus.topic} · ${topFocus.followUps} follow-up${topFocus.followUps !== 1 ? "s" : ""}`}
-          />
+        </div>
+      </div>
+
+      {/* Learning Signals from Nexi */}
+      <div className="bg-card border border-border rounded-xl overflow-hidden animate-fade-in" style={{ animationDelay: "60ms", animationFillMode: "both" }}>
+        <div className="px-5 py-3 border-b border-border flex items-center gap-2">
+          <Sparkles className="h-3.5 w-3.5 text-accent" strokeWidth={1.5} />
+          <h3 className="text-[11px] font-sans text-muted-foreground uppercase tracking-widest">Learning Signals</h3>
+        </div>
+        <div className="divide-y divide-border">
+          {topInsights.map((insight) => {
+            const Icon = getInsightIcon(insight.type);
+            const severityColor = getSeverityColor(insight.severity);
+            return (
+              <div key={insight.id} className="px-5 py-3 flex items-center gap-3">
+                <Icon className={`h-4 w-4 shrink-0 ${severityColor}`} strokeWidth={1.5} />
+                <div className="flex-1 min-w-0">
+                  <span className="text-sm text-foreground">{insight.topic}</span>
+                  <span className="text-xs text-muted-foreground ml-2">{getInsightTypeLabel(insight.type)}</span>
+                </div>
+                <span className={`text-[11px] shrink-0 tabular-nums ${severityColor}`}>{insight.metric}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Study Habits */}
-      <div className="bg-card border border-border rounded-xl overflow-hidden animate-fade-in" style={{ animationDelay: "80ms", animationFillMode: "both" }}>
+      <div className="bg-card border border-border rounded-xl overflow-hidden animate-fade-in" style={{ animationDelay: "120ms", animationFillMode: "both" }}>
         <div className="px-5 py-3 border-b border-border">
           <h3 className="text-[11px] font-sans text-muted-foreground uppercase tracking-widest">Study Habits</h3>
         </div>
@@ -339,8 +418,8 @@ function PatternsTab() {
         </div>
       </div>
 
-      {/* Topics to Revisit (merged Focus Areas) */}
-      <div className="animate-fade-in" style={{ animationDelay: "160ms", animationFillMode: "both" }}>
+      {/* Topics to Revisit with severity borders */}
+      <div className="animate-fade-in" style={{ animationDelay: "200ms", animationFillMode: "both" }}>
         <div className="flex items-center gap-2 mb-1">
           <h2 className="font-serif text-2xl text-foreground">Topics to revisit</h2>
           <BookOpen className="h-5 w-5 text-accent" strokeWidth={1.5} />
@@ -351,31 +430,39 @@ function PatternsTab() {
         </p>
 
         <div className="space-y-3">
-          {seededFocusAreas.map((area, i) => (
-            <div
-              key={area.topic}
-              className="bg-card border border-border rounded-xl px-5 py-4 animate-fade-in"
-              style={{ animationDelay: `${200 + i * 50}ms`, animationFillMode: "both" }}
-            >
-              <div>
-                <span className="text-sm font-medium text-foreground">{area.topic}</span>
+          {seededFocusAreas.map((area, i) => {
+            // Match severity from insights if available
+            const matchingInsight = topInsights.find((ins) => ins.topic === area.topic);
+            const borderClass = matchingInsight
+              ? getSeverityBorderColor(matchingInsight.severity)
+              : "border-l-border";
+
+            return (
+              <div
+                key={area.topic}
+                className={`bg-card border border-border border-l-2 ${borderClass} rounded-xl px-5 py-4 animate-fade-in`}
+                style={{ animationDelay: `${240 + i * 50}ms`, animationFillMode: "both" }}
+              >
+                <div>
+                  <span className="text-sm font-medium text-foreground">{area.topic}</span>
+                </div>
+                <div className="mt-1">
+                  <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5 inline-block">
+                    {area.course}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  {area.followUps} follow-up question{area.followUps !== 1 ? "s" : ""}
+                </p>
+                <div className="h-1 rounded-full bg-muted mt-3 overflow-hidden">
+                  <div
+                    className="h-full bg-accent rounded-full transition-all duration-700 ease-smooth"
+                    style={{ width: mounted ? `${(area.followUps / maxFollowUps) * 100}%` : "0%" }}
+                  />
+                </div>
               </div>
-              <div className="mt-1">
-                <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5 inline-block">
-                  {area.course}
-                </span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                {area.followUps} follow-up question{area.followUps !== 1 ? "s" : ""}
-              </p>
-              <div className="h-1 rounded-full bg-muted mt-3 overflow-hidden">
-                <div
-                  className="h-full bg-accent rounded-full transition-all duration-700 ease-smooth"
-                  style={{ width: mounted ? `${(area.followUps / maxFollowUps) * 100}%` : "0%" }}
-                />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {seededFocusAreas.length < 4 && (

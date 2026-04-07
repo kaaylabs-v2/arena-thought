@@ -1,4 +1,5 @@
 import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar, Bell, X, Sparkles, AlertCircle } from "lucide-react";
+import { getTopInsights, getInsightIcon } from "@/lib/nexi-insights-data";
 import { Link } from "react-router-dom";
 import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
@@ -14,13 +15,6 @@ const fixedCourseData = [
   { module: "Module 1: Vectors & Matrices", progress: 12, status: "in-progress" as const },
   { module: "Module 5: Memory & Learning", progress: 100, status: "complete" as const },
   { module: "Module 1: Research Design", progress: 5, status: "not-started" as const },
-];
-
-const seededFocusAreas = [
-  { topic: "Backpropagation", course: "Foundations of Machine Learning", followUps: 5 },
-  { topic: "Bayes' Theorem", course: "Advanced Statistical Methods", followUps: 3 },
-  { topic: "Eigenvalue Decomposition", course: "Linear Algebra for Data Science", followUps: 2 },
-  { topic: "Qualia & Consciousness", course: "Philosophy of Mind", followUps: 2 },
 ];
 
 /** Seeded last-studied offsets per course index (hours ago) */
@@ -253,13 +247,13 @@ const Index = () => {
     return { text: "Continue where you left off.", className: "text-sm text-muted-foreground" };
   }, [tasks]);
 
-  /* ─── Fix 2: Nexi suggestion from focus areas ─── */
-  const topFocus = seededFocusAreas.length > 0 ? seededFocusAreas[0] : null;
-  const focusCourseId = useMemo(() => {
-    if (!topFocus) return null;
-    const match = recentCourses.find((c) => c.title === topFocus.course);
+  /* ─── Fix 2: Nexi suggestion from top insight signal ─── */
+  const topInsight = useMemo(() => getTopInsights(1)[0], []);
+  const insightCourseId = useMemo(() => {
+    if (!topInsight) return null;
+    const match = recentCourses.find((c) => c.title === topInsight.course);
     return match?.id || recentCourses[0]?.id || null;
-  }, [topFocus, recentCourses]);
+  }, [topInsight, recentCourses]);
 
   // Show recently-completed tasks with fade-out, then remove after delay
   const handleToggleTask = useCallback((id: string) => {
@@ -314,14 +308,14 @@ const Index = () => {
           {greetingSubtitle.text}
         </p>
 
-        {/* Fix 2 — Nexi suggestion line */}
-        {topFocus && focusCourseId && (
+        {/* Nexi insight suggestion line */}
+        {topInsight && insightCourseId && (
           <div className="flex items-center gap-2 mt-2 animate-fade-in [animation-delay:120ms] [animation-fill-mode:backwards]">
             <Sparkles className="w-3.5 h-3.5 text-accent flex-shrink-0" strokeWidth={1.5} />
             <p className="text-sm text-muted-foreground">
-              Nexi suggests reviewing <span className="text-foreground font-medium">{topFocus.topic}</span> today based on your recent sessions.{" "}
+              {topInsight.message}{" "}
               <Link
-                to={`/workspace/${focusCourseId}`}
+                to={`/workspace/${insightCourseId}`}
                 className="text-sm text-accent hover:underline"
               >
                 Review →
