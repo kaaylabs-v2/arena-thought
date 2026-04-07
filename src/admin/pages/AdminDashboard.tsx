@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Users, Activity, GraduationCap, Award, UserPlus, Rocket, Upload, ChevronRight, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useWorkspace } from "@/context/WorkspaceContext";
@@ -19,14 +20,8 @@ const chartTooltipStyle = {
   border: "1px solid hsl(var(--border))",
   backgroundColor: "hsl(var(--popover))",
   color: "hsl(var(--foreground))",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+  boxShadow: "0 4px 12px hsl(var(--foreground) / 0.1)",
 };
-
-const pendingActions = [
-  { text: "2 members haven't started any course in 14 days" },
-  { text: "1 course has no mastery outcome defined" },
-  { text: "3 invited members haven't accepted yet" },
-];
 
 const quickActions = [
   { label: "Invite Members", icon: UserPlus, href: "/admin/people" },
@@ -41,10 +36,35 @@ export default function AdminDashboard() {
 
   const stats = [
     { label: "Total Members", value: members.length, icon: Users },
-    { label: "Active This Week", value: members.filter(m => !["30 days ago", "Never"].includes(m.lastActive)).length, icon: Activity },
+    { label: "Active Members", value: members.filter(m => m.status === "active").length, icon: Activity },
     { label: "Courses Deployed", value: adminCourses.filter(c => c.status === "active").length, icon: GraduationCap },
     { label: "Mastery Achieved", value: members.reduce((acc, m) => acc + m.masteryAchieved, 0), icon: Award },
   ];
+
+  // Dynamic pending actions computed from real data
+  const pendingActions = useMemo(() => {
+    const actions: { text: string }[] = [];
+    const invitedCount = members.filter(m => m.status === "invited").length;
+    if (invitedCount > 0) {
+      actions.push({ text: `${invitedCount} invited member${invitedCount > 1 ? "s" : ""} haven't accepted yet` });
+    }
+    const inactiveRecent = members.filter(m => m.status === "active" && (m.lastActive === "30 days ago" || m.lastActive === "Never" || m.lastActive.includes("days ago"))).length;
+    if (inactiveRecent > 0) {
+      actions.push({ text: `${inactiveRecent} member${inactiveRecent > 1 ? "s" : ""} haven't been active recently` });
+    }
+    const coursesNoMastery = adminCourses.filter(c => c.status === "active" && (!c.masteryDefinition || c.masteryDefinition === "Not defined")).length;
+    if (coursesNoMastery > 0) {
+      actions.push({ text: `${coursesNoMastery} course${coursesNoMastery > 1 ? "s" : ""} ha${coursesNoMastery > 1 ? "ve" : "s"} no mastery outcome defined` });
+    }
+    const draftCourses = adminCourses.filter(c => c.status === "draft").length;
+    if (draftCourses > 0) {
+      actions.push({ text: `${draftCourses} course${draftCourses > 1 ? "s are" : " is"} still in draft` });
+    }
+    if (actions.length === 0) {
+      actions.push({ text: "No pending actions — everything looks good!" });
+    }
+    return actions;
+  }, [members, adminCourses]);
 
   const masteryChartData = adminCourses
     .filter(c => c.status === "active")
@@ -87,7 +107,7 @@ export default function AdminDashboard() {
         <p className="text-sm mt-0.5 text-muted-foreground">Organization overview and pending actions</p>
       </div>
 
-      {/* Stat cards — now clickable */}
+      {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
         {stats.map((stat, i) => (
           <Link key={stat.label} to={statLinks[i]} className="card-interactive p-5 group cursor-pointer hover:border-accent/20 transition-colors">
@@ -155,30 +175,34 @@ export default function AdminDashboard() {
 
       <div className="card-interactive p-5">
         <h2 className="text-sm font-semibold mb-4 text-foreground/75">Mastery Overview by Course</h2>
-        <div className="h-[220px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={masteryChartData} layout="vertical" margin={{ left: 20, right: 20 }}>
-              <XAxis type="number" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-              <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} width={140} />
-              <Tooltip
-                contentStyle={chartTooltipStyle}
-                labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }}
-                itemStyle={{ color: "hsl(var(--foreground))" }}
-                cursor={{ fill: "hsl(var(--accent) / 0.06)" }}
-              />
-              <Bar dataKey="achieved" stackId="a" radius={[0, 0, 0, 0]} name="Mastery Achieved">
-                {masteryChartData.map((_, i) => (
-                  <Cell key={i} fill={AMBER} />
-                ))}
-              </Bar>
-              <Bar dataKey="notAchieved" stackId="a" radius={[0, 4, 4, 0]} name="Not Achieved">
-                {masteryChartData.map((_, i) => (
-                  <Cell key={i} fill="hsl(var(--muted))" />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        {masteryChartData.length === 0 ? (
+          <div className="text-center py-8 text-sm text-muted-foreground">No active courses to display</div>
+        ) : (
+          <div className="h-[220px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={masteryChartData} layout="vertical" margin={{ left: 20, right: 20 }}>
+                <XAxis type="number" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} width={140} />
+                <Tooltip
+                  contentStyle={chartTooltipStyle}
+                  labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }}
+                  itemStyle={{ color: "hsl(var(--foreground))" }}
+                  cursor={{ fill: "hsl(var(--accent) / 0.06)" }}
+                />
+                <Bar dataKey="achieved" stackId="a" radius={[0, 0, 0, 0]} name="Mastery Achieved">
+                  {masteryChartData.map((_, i) => (
+                    <Cell key={i} fill={AMBER} />
+                  ))}
+                </Bar>
+                <Bar dataKey="notAchieved" stackId="a" radius={[0, 4, 4, 0]} name="Not Achieved">
+                  {masteryChartData.map((_, i) => (
+                    <Cell key={i} fill="hsl(var(--muted))" />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ const chartTooltipStyle = {
   border: "1px solid hsl(var(--border))",
   backgroundColor: "hsl(var(--popover))",
   color: "hsl(var(--foreground))",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+  boxShadow: "0 4px 12px hsl(var(--foreground) / 0.1)",
 };
 
 type TimeRange = "7d" | "30d" | "90d" | "all";
@@ -53,7 +53,7 @@ const engagementTrendByRange: Record<TimeRange, number> = {
   "all": 8,
 };
 
-export default function AdminAnalyticsPage() {
+export default function AdminAnalyticsPage({ embedded = false }: { embedded?: boolean }) {
   const { studioCourses: adminCourses, studioMembers: members, studioDepartments: departments, studioWeeklyActive: weeklyActiveData } = useWorkspace();
   const [timeRange, setTimeRange] = useState<TimeRange>("all");
   const [deptFilter, setDeptFilter] = useState<DeptFilter>("all");
@@ -88,12 +88,12 @@ export default function AdminAnalyticsPage() {
       if (typeof aVal === "string" && typeof bVal === "string") return sortDir === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
       return sortDir === "asc" ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
     });
-  }, [deptFilter, sortCol, sortDir]);
+  }, [deptFilter, sortCol, sortDir, adminCourses]);
 
   const filteredMembers = useMemo(() => {
     if (deptFilter === "all") return members;
     return members.filter(m => m.department === deptFilter);
-  }, [deptFilter]);
+  }, [deptFilter, members]);
 
   const activeMembers = filteredMembers.filter(m => m.status === "active").length;
   const activeCourses = filteredCourses.filter(c => c.status === "active").length;
@@ -109,7 +109,7 @@ export default function AdminAnalyticsPage() {
       value: d.memberCount,
       fill: deptColors[i % deptColors.length],
     }));
-  }, []);
+  }, [departments]);
 
   // Engagement over time (area chart)
   const engagementOverTime = useMemo(() => {
@@ -145,13 +145,15 @@ export default function AdminAnalyticsPage() {
   const engTrend = engagementTrendByRange[timeRange];
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
+    <div className={embedded ? "" : "p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in"}>
       {/* Header + Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        {!embedded && (
         <div>
           <h1 className="font-serif text-[2rem] font-normal text-foreground">Analytics</h1>
           <p className="text-sm mt-0.5 text-muted-foreground">Organization-level insights and engagement data</p>
         </div>
+        )}
         <div className="flex items-center gap-3">
           {/* Department filter */}
           <select

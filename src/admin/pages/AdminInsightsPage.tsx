@@ -19,10 +19,10 @@ export default function AdminInsightsPage() {
           <TabsTrigger value="outcomes" className="text-[13px]">Outcomes</TabsTrigger>
         </TabsList>
         <TabsContent value="analytics">
-          <div className="-m-6 lg:-m-8"><AdminAnalyticsPage /></div>
+          <AdminAnalyticsPage embedded />
         </TabsContent>
         <TabsContent value="outcomes">
-          <div className="-m-6 lg:-m-8"><AdminOutcomesPage /></div>
+          <AdminOutcomesPage embedded />
         </TabsContent>
       </Tabs>
     </div>

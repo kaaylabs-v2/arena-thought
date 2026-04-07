@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Search, Plus, Archive, Copy, Users, Pencil, X, Upload, ChevronRight, Check, Send, RotateCcw } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import AdminContentLibraryPage from "./AdminContentLibrary";
@@ -11,14 +11,11 @@ import {
 } from "@/admin/data/mock-data";
 import { cn } from "@/lib/utils";
 
-const AMBER = "#C9963A";
-
 type TabFilter = "all" | "active" | "draft" | "archived";
 type DeployPathway = null | "preloaded" | "custom" | "commission";
 
 export default function AdminCoursesPage() {
-  const { studioCourses, studioMembers: members, studioDepartments: departments } = useWorkspace();
-  const [courses, setCourses] = useState<AdminCourseItem[]>(studioCourses);
+  const { studioCourses: courses, setStudioCourses: setCourses, studioMembers: members, studioDepartments: departments } = useWorkspace();
   const [tab, setTab] = useState<TabFilter>("all");
   const [search, setSearch] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -26,7 +23,7 @@ export default function AdminCoursesPage() {
 
   // Edit drawer state
   const [editCourse, setEditCourse] = useState<AdminCourseItem | null>(null);
-  const [editForm, setEditForm] = useState({ name: "", masteryDefinition: "", department: "" });
+  const [editForm, setEditForm] = useState({ name: "", masteryDefinition: "", department: "", status: "active" as CourseStatus });
 
   // Enrollments drawer state
   const [enrollCourse, setEnrollCourse] = useState<AdminCourseItem | null>(null);
@@ -76,7 +73,6 @@ export default function AdminCoursesPage() {
     setUploadedFiles([]); setCommObjective(""); setCommHasMaterials(false);
   };
 
-  // Listen for keyboard shortcut
   useEffect(() => {
     const handler = () => openDeploy();
     window.addEventListener("admin-shortcut:deploy", handler);
@@ -93,12 +89,12 @@ export default function AdminCoursesPage() {
   // ── Action handlers ───────────────────────────────
   const handleEdit = (course: AdminCourseItem) => {
     setEditCourse(course);
-    setEditForm({ name: course.name, masteryDefinition: course.masteryDefinition, department: course.department });
+    setEditForm({ name: course.name, masteryDefinition: course.masteryDefinition, department: course.department, status: course.status });
   };
 
   const handleEditSave = () => {
     if (!editCourse || !editForm.name.trim()) return;
-    setCourses(prev => prev.map(c => c.id === editCourse.id ? { ...c, name: editForm.name, masteryDefinition: editForm.masteryDefinition, department: editForm.department } : c));
+    setCourses(prev => prev.map(c => c.id === editCourse.id ? { ...c, name: editForm.name, masteryDefinition: editForm.masteryDefinition, department: editForm.department, status: editForm.status } : c));
     toast.success(`${editForm.name} updated`);
     setEditCourse(null);
   };
@@ -127,7 +123,6 @@ export default function AdminCoursesPage() {
     setEnrollCourse(course);
   };
 
-  // Members for enrollment view
   const courseMembers = enrollCourse
     ? members.filter(m => m.department === enrollCourse.department && m.status === "active")
     : [];
@@ -239,7 +234,7 @@ export default function AdminCoursesPage() {
                         <button onClick={() => setArchivingId(null)} className="text-muted-foreground">Cancel</button>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
                         <button
                           title="Edit course"
                           onClick={(e) => { e.stopPropagation(); handleEdit(course); }}
@@ -502,10 +497,10 @@ export default function AdminCoursesPage() {
                   {(["active", "draft", "archived"] as CourseStatus[]).map(s => (
                     <button
                       key={s}
-                      onClick={() => setCourses(prev => prev.map(c => c.id === editCourse.id ? { ...c, status: s } : c))}
+                      onClick={() => setEditForm(f => ({ ...f, status: s }))}
                       className={cn(
                         "px-3 py-1.5 rounded-md text-[12px] font-medium capitalize transition-colors duration-150",
-                        courses.find(c => c.id === editCourse.id)?.status === s
+                        editForm.status === s
                           ? "bg-accent/10 text-accent"
                           : "text-muted-foreground hover:bg-muted"
                       )}
@@ -554,11 +549,11 @@ export default function AdminCoursesPage() {
               </div>
               <div className="space-y-2">
                 {courseMembers.map(m => {
-                  const initials = m.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
+                  const ini = m.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
                   return (
                     <div key={m.id} className="setting-row flex items-center justify-between px-3 py-2.5 -mx-3 rounded-lg">
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-medium bg-accent/15 text-accent">{initials}</div>
+                        <div className="h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-medium bg-accent/15 text-accent">{ini}</div>
                         <div>
                           <p className="text-[13px] font-medium text-foreground/80">{m.name}</p>
                           <p className="text-[11px] text-muted-foreground">{m.email}</p>
@@ -579,7 +574,7 @@ export default function AdminCoursesPage() {
         </TabsContent>
 
         <TabsContent value="content">
-          <div className="-m-6 lg:-m-8"><AdminContentLibraryPage /></div>
+          <AdminContentLibraryPage embedded />
         </TabsContent>
       </Tabs>
     </div>

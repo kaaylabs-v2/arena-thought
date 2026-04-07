@@ -3,7 +3,7 @@ import { useWorkspace } from "@/context/WorkspaceContext";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 
-export default function AdminOutcomesPage() {
+export default function AdminOutcomesPage({ embedded = false }: { embedded?: boolean }) {
   const { studioCourses: adminCourses, studioMembers: members, studioKnowledgeGaps: knowledgeGaps } = useWorkspace();
   const activeCourses = adminCourses.filter(c => c.status === "active");
   const avgMastery = Math.round(activeCourses.reduce((s, c) => s + c.masteryRate, 0) / (activeCourses.length || 1));
@@ -11,9 +11,13 @@ export default function AdminOutcomesPage() {
   const membersWithMastery = members.filter(m => m.masteryAchieved > 0).length;
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
-      <h1 className="font-serif text-[2rem] font-normal text-foreground">Outcomes</h1>
-      <p className="text-sm mt-0.5 mb-8 text-muted-foreground">Track mastery definitions and who achieved them</p>
+    <div className={embedded ? "" : "p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in"}>
+      {!embedded && (
+        <>
+          <h1 className="font-serif text-[2rem] font-normal text-foreground">Outcomes</h1>
+          <p className="text-sm mt-0.5 mb-8 text-muted-foreground">Track mastery definitions and who achieved them</p>
+        </>
+      )}
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 stagger-children">
         {[
@@ -51,6 +55,11 @@ export default function AdminOutcomesPage() {
             </p>
           </div>
         ))}
+        {activeCourses.length === 0 && (
+          <div className="text-center py-12 card-interactive">
+            <p className="text-sm text-muted-foreground">No active courses to display</p>
+          </div>
+        )}
       </div>
 
       <h2 className="font-serif text-base mb-4 text-foreground/80">Identified Knowledge Gaps</h2>

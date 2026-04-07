@@ -8,9 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
-export default function AdminDepartmentsPage() {
-  const { studioDepartments, studioMembers: members, studioCourses: adminCourses } = useWorkspace();
-  const [depts, setDepts] = useState<Department[]>(studioDepartments);
+export default function AdminDepartmentsPage({ embedded = false }: { embedded?: boolean }) {
+  const { studioDepartments, setStudioDepartments, studioMembers: members, studioCourses: adminCourses } = useWorkspace();
+  const depts = studioDepartments;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editDept, setEditDept] = useState<Department | null>(null);
   const [form, setForm] = useState({ name: "", description: "", manager: "" });
@@ -25,27 +25,35 @@ export default function AdminDepartmentsPage() {
   const handleSave = () => {
     if (!form.name.trim()) return;
     if (editDept) {
-      setDepts(prev => prev.map(d => d.id === editDept.id ? { ...d, ...form } : d));
+      setStudioDepartments(prev => prev.map(d => d.id === editDept.id ? { ...d, ...form } : d));
       toast.success(`${form.name} updated`);
     } else {
       const newDept: Department = { id: `dept-${Date.now()}`, name: form.name, description: form.description, manager: form.manager, memberCount: 0, coursesAssigned: 0 };
-      setDepts(prev => [...prev, newDept]);
+      setStudioDepartments(prev => [...prev, newDept]);
       toast.success(`${form.name} created`);
     }
     closeDrawer();
   };
 
   return (
-    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
-      <div className="flex items-start justify-between mb-8">
-        <div>
-          <h1 className="font-serif text-[2rem] font-normal text-foreground">Departments</h1>
-          <p className="text-sm mt-0.5 text-muted-foreground">Organize learners into groups, teams, and cohorts</p>
+    <div className={embedded ? "" : "p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in"}>
+      {!embedded ? (
+        <div className="flex items-start justify-between mb-8">
+          <div>
+            <h1 className="font-serif text-[2rem] font-normal text-foreground">Departments</h1>
+            <p className="text-sm mt-0.5 text-muted-foreground">Organize learners into groups, teams, and cohorts</p>
+          </div>
+          <Button onClick={openNew} className="btn-apple gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
+            <Plus className="h-4 w-4" /> New Department
+          </Button>
         </div>
-        <Button onClick={openNew} className="btn-apple gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
-          <Plus className="h-4 w-4" /> New Department
-        </Button>
-      </div>
+      ) : (
+        <div className="flex items-center justify-end mb-4">
+          <Button onClick={openNew} className="btn-apple gap-2 bg-accent text-accent-foreground hover:bg-accent/90">
+            <Plus className="h-4 w-4" /> New Department
+          </Button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 stagger-children">
         {[
