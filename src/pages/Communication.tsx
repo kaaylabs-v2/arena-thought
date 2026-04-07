@@ -60,47 +60,36 @@ const Communication = () => {
   ];
 
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)] animate-fade-in">
-      {/* Header */}
-      <div className="flex-shrink-0 px-8 pt-8 pb-0">
-        <h1 className="font-serif text-4xl text-foreground font-medium leading-[1.1]">Communication</h1>
-        <p className="text-sm text-muted-foreground mt-1">Messages and announcements from your institution</p>
+    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
+      <div className="mb-6">
+        <h1 className="font-serif text-[2rem] font-normal text-foreground">Communication</h1>
+        <p className="text-sm mt-0.5 text-muted-foreground">Messages and announcements from your institution</p>
       </div>
 
-      {/* Tab bar */}
-      <div className="flex-shrink-0 border-b border-border px-8 mt-6">
-        <div className="flex gap-6">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "pb-3 text-sm font-medium transition-colors relative",
-                activeTab === tab.id
-                  ? "text-foreground border-b-2 border-accent"
-                  : "text-muted-foreground hover:text-foreground"
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as Tab)}>
+        <TabsList className="mb-6 bg-muted/50">
+          <TabsTrigger value="messages" className="text-[13px]">
+            <span className="flex items-center gap-1.5">
+              Direct Messages
+              {unreadDMs > 0 && (
+                <span className="bg-accent text-accent-foreground rounded-full text-[10px] px-1.5 font-medium">
+                  {unreadDMs}
+                </span>
               )}
-            >
-              <span className="flex items-center gap-1.5">
-                {tab.label}
-                {tab.badge && (
-                  <span className="bg-accent text-accent-foreground rounded-full text-[10px] px-1.5 font-medium">
-                    {tab.badge}
-                  </span>
-                )}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="announcements" className="text-[13px]">Announcements</TabsTrigger>
+        </TabsList>
 
-      {/* Tab content — keyed for animation */}
-      <div className="flex-1 min-h-0 overflow-hidden">
-        <div key={activeTab} className="animate-fade-in h-full flex flex-col">
-          {activeTab === "messages" && <DirectMessagesTab />}
-          {activeTab === "announcements" && <AnnouncementsTab />}
-        </div>
-      </div>
+        <TabsContent value="messages" className="mt-0">
+          <div className="h-[calc(100vh-220px)] flex flex-col border border-border rounded-xl overflow-hidden">
+            <DirectMessagesTab />
+          </div>
+        </TabsContent>
+        <TabsContent value="announcements" className="mt-0">
+          <AnnouncementsTab />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
