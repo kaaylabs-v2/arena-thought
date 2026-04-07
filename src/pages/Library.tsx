@@ -118,11 +118,6 @@ const Library = () => {
                 </div>
                 <span className="text-[11px] font-sans text-muted-foreground tabular-nums">{course.progress}%</span>
               </div>
-              {/* Sparkline */}
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-[10px] font-sans text-muted-foreground/60">7-day activity</span>
-                <SparklineSVG data={course.sparkline} />
-              </div>
             </Link>
           ))}
         </div>
