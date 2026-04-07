@@ -4,7 +4,6 @@ import {
   Users,
   BarChart3,
   MessageSquare,
-  HelpCircle,
   ChevronsLeft,
   ChevronsRight,
   Moon,
@@ -34,7 +33,6 @@ const navItems = [
   { title: "People", url: "/admin/people", icon: Users },
   { title: "Insights", url: "/admin/insights", icon: BarChart3 },
   { title: "Communication", url: "/admin/communication", icon: MessageSquare },
-  { title: "Help", url: "/admin/help", icon: HelpCircle },
 ];
 
 export function AdminSidebar() {
