@@ -255,7 +255,7 @@ export default function AdminAnalyticsPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis dataKey="period" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
               <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} unit="h" />
-              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))" }} formatter={(val: number) => [`${val}h/wk`, "Engagement"]} />
+              <Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }} itemStyle={{ color: "hsl(var(--foreground))" }} formatter={(val: number) => [`${val}h/wk`, "Engagement"]} />
               <Area type="monotone" dataKey="hours" stroke={AMBER} fill={AMBER} fillOpacity={0.12} strokeWidth={2} animationDuration={500} />
             </AreaChart>
           </ResponsiveContainer>
