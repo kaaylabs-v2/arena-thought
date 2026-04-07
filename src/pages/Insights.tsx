@@ -169,6 +169,57 @@ function OverviewTab() {
   );
 }
 
+/* ─── Nexi Insights Card (shared) ─── */
+
+function NexiInsightsCard({ publishedCourses, delay }: { publishedCourses: { id: string; title: string }[]; delay: number }) {
+  const insights = useMemo(() => getTopInsights(3), []);
+
+  const findCourseId = (courseName: string) => {
+    const match = publishedCourses.find((c) => c.title === courseName);
+    return match?.id || publishedCourses[0]?.id;
+  };
+
+  return (
+    <div
+      className="bg-card border border-border rounded-xl overflow-hidden animate-fade-in"
+      style={{ animationDelay: `${delay}ms`, animationFillMode: "both" }}
+    >
+      <div className="px-5 py-3 border-b border-border flex items-center gap-2">
+        <Sparkles className="h-3.5 w-3.5 text-accent" strokeWidth={1.5} />
+        <h3 className="text-[11px] font-sans text-muted-foreground uppercase tracking-widest">Nexi Insights</h3>
+      </div>
+      <div className="divide-y divide-border">
+        {insights.map((insight) => {
+          const Icon = getInsightIcon(insight.type);
+          const severityColor = getSeverityColor(insight.severity);
+          const courseId = findCourseId(insight.course);
+
+          return (
+            <div key={insight.id} className="px-5 py-3.5 flex items-start gap-3">
+              <Icon className={`h-4 w-4 mt-0.5 shrink-0 ${severityColor}`} strokeWidth={1.5} />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-foreground leading-snug">{insight.message}</p>
+                <p className="text-xs text-muted-foreground mt-1">{insight.suggestion}</p>
+                {courseId && (
+                  <Link
+                    to={`/workspace/${courseId}`}
+                    className="inline-flex items-center gap-1 text-xs text-accent hover:underline mt-2"
+                  >
+                    Review in Nexi <ArrowRight className="h-3 w-3" />
+                  </Link>
+                )}
+              </div>
+              <span className={`text-[11px] font-medium shrink-0 tabular-nums ${severityColor}`}>
+                {insight.metric}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Progress Tab ─── */
 
 function AnimatedProgressBar({ targetPercent, isVisible, delay }: { targetPercent: number; isVisible: boolean; delay: number }) {
