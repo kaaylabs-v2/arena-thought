@@ -111,14 +111,14 @@ function NotificationInbox({
         </div>
       )}
 
-      {/* View all */}
+      {/* View all → Communication announcements tab */}
       <div className="text-right mt-2">
-        <button
-          onClick={() => toast("Announcement history coming soon")}
-          className="text-xs text-accent hover:underline cursor-pointer"
+        <Link
+          to="/communication"
+          className="text-xs text-accent hover:underline"
         >
           View all
-        </button>
+        </Link>
       </div>
     </div>
   );
