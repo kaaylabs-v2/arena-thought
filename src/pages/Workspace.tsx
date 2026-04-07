@@ -286,7 +286,7 @@ const Workspace = () => {
           collapsedSize={0}
           order={1}
           onResize={handleSourcesResize}
-          className="border-r border-border bg-card"
+          className="bg-card"
           style={{ transition: "flex 280ms cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           {!sourcesCollapsed && (
@@ -320,7 +320,7 @@ const Workspace = () => {
 
         {/* ── Collapsed Sources expand button ── */}
         {sourcesCollapsed && (
-          <div className="flex items-start pt-3 shrink-0">
+          <div className="flex items-center justify-center shrink-0 h-full">
             <button
               onClick={expandSources}
               className="h-7 w-7 flex items-center justify-center rounded-r-lg border border-l-0 border-border bg-card hover:bg-secondary text-muted-foreground hover:text-foreground transition-all duration-200"
@@ -343,7 +343,7 @@ const Workspace = () => {
 
         {/* ── Collapsed Notebook expand button ── */}
         {notebookCollapsed && (
-          <div className="flex items-start pt-3 shrink-0">
+          <div className="flex items-center justify-center shrink-0 h-full">
             <button
               onClick={expandNotebook}
               className="h-7 w-7 flex items-center justify-center rounded-l-lg border border-r-0 border-border bg-card hover:bg-secondary text-muted-foreground hover:text-foreground transition-all duration-200"
@@ -381,7 +381,7 @@ const Workspace = () => {
           collapsedSize={0}
           order={3}
           onResize={handleNotebookResize}
-          className="border-l border-border bg-card"
+          className="bg-card"
           style={{ transition: "flex 280ms cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           {!notebookCollapsed && (

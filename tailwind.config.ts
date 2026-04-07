@@ -153,6 +153,10 @@ export default {
           "40%": { transform: "translateX(8px) scale(1.08, 0.92)" },
           "100%": { transform: "translateX(0) scale(1)" },
         },
+        "bounce-dot": {
+          "0%, 80%, 100%": { transform: "translateY(0)" },
+          "40%": { transform: "translateY(-4px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.25s cubic-bezier(0.22, 1, 0.36, 1)",
@@ -169,6 +173,7 @@ export default {
         "toggle-on": "toggle-on 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards",
         "toggle-off": "toggle-off 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards",
         "pulse-soft": "pulse-soft 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "bounce-dot": "bounce-dot 1.2s ease-in-out infinite",
       },
     },
   },

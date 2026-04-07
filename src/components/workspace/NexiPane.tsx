@@ -200,7 +200,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                         {msg.citations.map((cite, i) => (
                           <span
                             key={i}
-                            className="text-[10px] font-sans text-muted-foreground/70 bg-muted/50 px-2 py-0.5 rounded-full flex items-center gap-1 transition-colors hover:text-muted-foreground hover:bg-muted"
+                            className="text-[10px] font-sans text-muted-foreground/80 bg-muted/50 px-2 py-0.5 rounded-full flex items-center gap-1 transition-colors hover:text-muted-foreground hover:bg-muted"
                           >
                             <FileText className="h-2.5 w-2.5" strokeWidth={1.5} />
                             {cite}
@@ -248,9 +248,9 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
             <div className="animate-fade-in-fast">
               <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-5 py-4 w-fit shadow-soft">
                 <div className="flex gap-1.5 items-center h-4">
-                  <span className="h-1.5 w-1.5 bg-muted-foreground/30 rounded-full animate-pulse" />
-                  <span className="h-1.5 w-1.5 bg-muted-foreground/30 rounded-full animate-pulse [animation-delay:150ms]" />
-                  <span className="h-1.5 w-1.5 bg-muted-foreground/30 rounded-full animate-pulse [animation-delay:300ms]" />
+                  <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full animate-bounce-dot" />
+                  <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full animate-bounce-dot [animation-delay:150ms]" />
+                  <span className="h-1.5 w-1.5 bg-muted-foreground/40 rounded-full animate-bounce-dot [animation-delay:300ms]" />
                 </div>
               </div>
             </div>
@@ -259,11 +259,12 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
           {/* Follow-up chips */}
           {!isTyping && messages.length > 0 && (
             <div className="flex flex-wrap gap-2 pt-1">
-              {followUpChips.map((chip) => (
+              {followUpChips.map((chip, idx) => (
                 <button
                   key={chip.label}
                   onClick={() => handleChip(chip.label)}
-                  className="flex items-center gap-1.5 text-[12px] font-sans text-muted-foreground/70 border border-border/80 px-3 py-1.5 rounded-full hover:text-foreground hover:border-border hover:bg-muted/40 transition-all duration-200 active:scale-[0.96]"
+                  className="flex items-center gap-1.5 text-[12px] font-sans text-muted-foreground/70 border border-border/80 px-3 py-1.5 rounded-full hover:text-foreground hover:border-border hover:bg-muted/40 transition-all duration-200 active:scale-[0.96] animate-fade-in-fast [animation-fill-mode:backwards]"
+                  style={{ animationDelay: `${idx * 40}ms` }}
                 >
                   <chip.icon className="h-3 w-3" strokeWidth={1.5} />
                   {chip.label}
@@ -277,7 +278,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
       </div>
 
       {/* Input area */}
-      <div className="px-8 pb-6 pt-3">
+      <div className="px-8 pb-5 pt-3">
         <div className="max-w-[640px] mx-auto">
           {/* Voice listening overlay */}
           {isListening && (
@@ -343,7 +344,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
               <Send className="h-3.5 w-3.5" strokeWidth={1.5} />
             </button>
           </div>
-          <p className="text-[10px] font-sans text-muted-foreground/70 mt-2.5 text-center tracking-[-0.01em]">
+          <p className="text-[11px] font-sans text-muted-foreground/70 mt-2.5 text-center tracking-[-0.01em]">
             Grounded in your course materials · Responses may not always be accurate
           </p>
         </div>
