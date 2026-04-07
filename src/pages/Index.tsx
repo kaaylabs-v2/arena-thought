@@ -1,4 +1,5 @@
 import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar, Bell, X, Sparkles, AlertCircle } from "lucide-react";
+import { getTopInsights, getInsightIcon } from "@/lib/nexi-insights-data";
 import { Link } from "react-router-dom";
 import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
