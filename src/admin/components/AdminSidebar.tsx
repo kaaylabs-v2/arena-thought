@@ -33,8 +33,7 @@ const navItems = [
   { title: "Courses", url: "/admin/courses", icon: GraduationCap },
   { title: "People", url: "/admin/people", icon: Users },
   { title: "Insights", url: "/admin/insights", icon: BarChart3 },
-  { title: "Announcements", url: "/admin/announcements", icon: Megaphone },
-  { title: "Messages", url: "/admin/messages", icon: MessageSquare },
+  { title: "Communication", url: "/admin/communication", icon: MessageSquare },
 ];
 
 export function AdminSidebar() {
