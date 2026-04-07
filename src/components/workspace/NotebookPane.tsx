@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ChevronLeft,
   ChevronRight,
@@ -25,6 +26,7 @@ interface NotebookPaneProps {
 type PaneTab = "notes" | "vocab";
 
 export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps) {
+  const navigate = useNavigate();
   const isMini = state === "mini";
   const [quickNote, setQuickNote] = useState("");
   const [activeTab, setActiveTab] = useState<PaneTab>("notes");
@@ -148,8 +150,8 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
             <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={1.5} />
           </button>
           <div>
-            <h2 className="text-[11px] font-sans text-muted-foreground/80 uppercase tracking-widest">Notebook</h2>
-            <p className="text-[11px] font-sans text-muted-foreground/70">
+            <h2 className="text-[11px] font-sans text-muted-foreground uppercase tracking-widest">Notebook</h2>
+            <p className="text-[11px] font-sans text-muted-foreground/80">
               {activeTab === "notes" ? `${notebookEntries.length} notes` : `${courseVocab.length} terms`}
             </p>
           </div>
@@ -188,15 +190,15 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
         <>
           {/* Quick capture */}
           <div className="p-3 border-b border-border">
-            <div className="flex items-center gap-2 bg-muted/40 rounded-lg px-3 py-2 transition-colors focus-within:bg-muted/60">
-              <Plus className="h-3.5 w-3.5 text-muted-foreground/70 shrink-0" strokeWidth={1.5} />
+            <div className="flex items-center gap-2 bg-muted/60 dark:bg-muted/50 rounded-lg px-3 py-2 transition-colors focus-within:bg-muted/80 dark:focus-within:bg-muted/70">
+              <Plus className="h-3.5 w-3.5 text-muted-foreground shrink-0" strokeWidth={1.5} />
               <input
                 type="text"
                 value={quickNote}
                 onChange={(e) => setQuickNote(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleQuickCapture()}
                 placeholder="Quick capture..."
-                className="flex-1 bg-transparent text-[12px] font-sans text-foreground placeholder:text-muted-foreground/70 focus:outline-none"
+                className="flex-1 bg-transparent text-[12px] font-sans text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
               />
             </div>
           </div>
@@ -206,16 +208,17 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
             {notebookEntries.length === 0 ? (
               <div className="text-center py-14 px-4">
                 <BookOpen className="h-8 w-8 text-muted-foreground/20 mx-auto mb-2.5" strokeWidth={1} />
-                <p className="text-[11px] font-sans text-muted-foreground/70 leading-relaxed">Save insights from Nexi or capture your own notes.</p>
+                <p className="text-[11px] font-sans text-muted-foreground leading-relaxed">Save insights from Nexi or capture your own notes.</p>
               </div>
             ) : (
               notebookEntries.map((note) => (
                 <div
                   key={note.id}
+                  onClick={() => navigate("/notebook")}
                   className="rounded-lg border border-border/80 bg-background p-3 hover:border-border hover:shadow-soft transition-all duration-200 cursor-pointer animate-fade-in-fast"
                 >
                   <h4 className="text-[12px] font-sans font-medium text-foreground mb-1 line-clamp-1">{note.title}</h4>
-                  <p className="text-[11px] font-sans text-muted-foreground/80 leading-relaxed line-clamp-2 mb-2">{note.snippet}</p>
+                  <p className="text-[11px] font-sans text-muted-foreground leading-relaxed line-clamp-2 mb-2">{note.snippet}</p>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       {note.tags.slice(0, 2).map((tag) => (
@@ -354,7 +357,7 @@ export function NotebookPane({ state, onToggle, courseTitle }: NotebookPaneProps
                       <Trash2 className="h-3 w-3" strokeWidth={1.5} />
                     </button>
                   </div>
-                  <p className="text-[11px] font-sans text-muted-foreground/80 leading-relaxed mt-1">{v.definition}</p>
+                  <p className="text-[11px] font-sans text-muted-foreground leading-relaxed mt-1">{v.definition}</p>
                   {v.example && (
                     <p className="text-[10px] font-sans text-accent/70 bg-accent/5 rounded px-2 py-1 mt-2 leading-relaxed italic">
                       "{v.example}"
