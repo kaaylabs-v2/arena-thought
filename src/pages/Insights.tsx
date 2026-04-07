@@ -4,6 +4,11 @@ import { TrendingUp, BookOpen, Library, ArrowRight, BarChart3, Activity, Sparkle
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
 import {
+  getTopInsights, getInsightIcon, getInsightTypeLabel,
+  getSeverityColor, getSeverityBorderColor,
+  type NexiInsight,
+} from "@/lib/nexi-insights-data";
+import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 
