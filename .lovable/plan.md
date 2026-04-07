@@ -1,51 +1,21 @@
 
 
-## Announcements Banner on Learner Home Page
+## Fix: Expandable Announcement Body in Notification Inbox
 
-### What we're building
+**Problem:** The announcement body uses `line-clamp-2`, cutting off longer content with no way to read the full text.
 
-A dismissible announcements section on the Home page (`Index.tsx`) that surfaces admin-created announcements. It sits between the greeting and the "Continue Learning" card.
+**Solution:** Add click-to-expand on each notification row. Clicking the row toggles the body between truncated (2 lines) and fully visible. This is the lightest fix — no modals, no new pages, no layout changes.
 
-### Single file change
+### Changes — `src/pages/Index.tsx` (NotificationInbox component only)
 
-**`src/pages/Index.tsx`**
+1. Add an `expandedIds` state: `useState<Set<string>>(new Set())`
 
-1. Import `Megaphone`, `X` from lucide-react and `useState` from React
-2. Pull `studioAnnouncements` from `useWorkspace()`
-3. Add `dismissedIds` state via `useState<Set<string>>`
-4. Filter announcements to show only non-dismissed, take latest 2 (sorted by `sentDate` descending)
-5. Render the section between the greeting `<div>` and the "Continue Learning" `<section>`:
+2. On the notification row `<div>`, add an `onClick` handler that toggles the notification's ID in `expandedIds` (only for non-dismissed items)
 
-```
-Section container: mb-8 space-y-2 animate-fade-in [animation-delay:80ms]
+3. On the body `<p>`, conditionally apply `line-clamp-2` only when the item is **not** expanded:
+   ```
+   className={`text-xs text-muted-foreground ${expandedIds.has(n.id) ? '' : 'line-clamp-2'}`}
+   ```
 
-Each card:
-  rounded-xl border border-accent/20 bg-accent/5 px-5 py-4
-  flex items-start gap-3
-
-  Left icon: Megaphone h-4 w-4 text-accent mt-0.5 shrink-0
-
-  Content (flex-1 min-w-0):
-    Title row (flex items-center gap-2):
-      Title: text-sm font-medium text-foreground truncate
-      Audience badge: text-[10px] bg-muted text-muted-foreground rounded-full px-2 py-0.5
-    Body: text-sm text-muted-foreground line-clamp-2 mt-1
-    Date: text-[11px] text-muted-foreground/60 mt-1.5
-
-  Dismiss button: text-muted-foreground hover:text-foreground p-1 rounded-md
-    X icon h-3.5 w-3.5
-
-If >2 announcements exist, show a "View all →" text link below the cards
-  text-[12px] text-accent hover:text-accent/80
-  (links to /messages since there's no dedicated announcements route)
-```
-
-### Theme safety
-
-All classes use semantic tokens (`text-foreground`, `bg-accent/5`, `border-accent/20`, `bg-muted`, `text-muted-foreground`). No hardcoded colors. Works in both light and dark mode automatically.
-
-### What stays untouched
-
-- WorkspaceContext, routing, sidebar, admin pages — zero changes
-- All existing Home page sections remain identical
+4. No other changes — dismiss button, styling, layout, and all other sections remain untouched.
 
