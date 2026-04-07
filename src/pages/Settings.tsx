@@ -272,8 +272,8 @@ function NexiPanel() {
               />
             }
           />
-          <SettingRow label="Show citations" description="Display source references in Nexi responses" action={<Toggle checked={citationsVisible} onChange={setCitationsVisible} />} />
-          <SettingRow label="Follow-up suggestions" description="Show suggested actions after each response" action={<Toggle checked={followUpChips} onChange={setFollowUpChips} />} />
+          <SettingRow label="Show citations" description="Display source references in Nexi responses" action={<Toggle checked={citationsVisible} onChange={(v) => updateAppSettings({ showCitations: v })} />} />
+          <SettingRow label="Follow-up suggestions" description="Show suggested actions after each response" action={<Toggle checked={followUpChips} onChange={(v) => updateAppSettings({ followUpChips: v })} />} />
         </div>
       </div>
 
