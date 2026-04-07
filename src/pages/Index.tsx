@@ -224,6 +224,7 @@ const Index = () => {
   const greetingSubtitle = useMemo(() => {
     const now = new Date();
     const todayStart = startOfDay(now);
+    const in48Hours = new Date(now.getTime() + 48 * 60 * 60 * 1000);
 
     const hasOverdue = tasks.some(
       (t) => !t.completed && t.dueDate && isBefore(new Date(t.dueDate), todayStart)
@@ -232,16 +233,21 @@ const Index = () => {
       return { text: "You have overdue tasks to catch up on.", className: "text-sm text-destructive" };
     }
 
+    const hasUrgent = tasks.some(
+      (t) =>
+        !t.completed &&
+        t.dueDate &&
+        t.priority === "high" &&
+        !isBefore(new Date(t.dueDate), now) &&
+        isBefore(new Date(t.dueDate), in48Hours)
+    );
+    if (hasUrgent) {
+      return { text: "You have high-priority tasks due soon.", className: "text-sm text-destructive" };
+    }
+
     const allDone = tasks.length === 0 || tasks.every((t) => t.completed);
     if (allDone) {
       return { text: "You're all caught up. Keep it going.", className: "text-sm text-muted-foreground" };
-    }
-
-    const hasCompletedToday = tasks.some(
-      (t) => t.completed && t.dueDate && !isBefore(new Date(t.dueDate), todayStart)
-    );
-    if (!hasCompletedToday) {
-      return { text: "Ready to study? Here's where you left off.", className: "text-sm text-muted-foreground" };
     }
 
     return { text: "Continue where you left off.", className: "text-sm text-muted-foreground" };
