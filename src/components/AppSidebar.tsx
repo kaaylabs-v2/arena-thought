@@ -40,8 +40,8 @@ const mainNav = [
   { title: "Study Plan", url: "/study-plan", icon: ListChecks },
   { title: "Notebook", url: "/notebook", icon: BookOpen },
   { title: "Insights", url: "/insights", icon: Sparkles },
-  { title: "Reflections", url: "/reflections", icon: Sparkles },
-  { title: "Messages", url: "/messages", icon: MessageSquare },
+  { title: "Reflections", url: "/reflections", icon: PenLine },
+  { title: "Communication", url: "/communication", icon: MessageSquare },
 ];
 
 export function AppSidebar() {
