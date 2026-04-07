@@ -201,7 +201,12 @@ export default function AdminMembersPage() {
                 <tr key={member.id} className="transition-colors duration-200 group relative border-b border-border/50 hover:bg-accent/5">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-medium shrink-0 bg-accent/15 text-accent">{initials(member.name)}</div>
+                      <div className="relative h-8 w-8 rounded-full flex items-center justify-center text-[11px] font-medium shrink-0 bg-accent/15 text-accent">
+                        {initials(member.name)}
+                        {getMemberStruggleTopics(member).length > 0 && (
+                          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400/60" title="Has learning signals — click to view" />
+                        )}
+                      </div>
                       <span className="text-[14px] font-medium text-foreground font-sans">{member.name}</span>
                     </div>
                   </td>
