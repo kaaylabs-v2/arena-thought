@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { TrendingUp, BookOpen, Library, ArrowRight, BarChart3, Activity } from "lucide-react";
+import { TrendingUp, BookOpen, Library, ArrowRight, BarChart3, Activity, Sparkles } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
 import {
@@ -345,7 +345,8 @@ function PatternsTab() {
           <h2 className="font-serif text-2xl text-foreground">Topics to revisit</h2>
           <BookOpen className="h-5 w-5 text-accent" strokeWidth={1.5} />
         </div>
-        <p className="text-sm text-muted-foreground mt-1 mb-4">
+        <p className="text-sm text-muted-foreground mt-1 mb-4 flex items-center gap-1.5">
+          <Sparkles className="h-3.5 w-3.5 text-accent flex-shrink-0" strokeWidth={1.5} />
           Nexi noticed these topics worth revisiting
         </p>
 
