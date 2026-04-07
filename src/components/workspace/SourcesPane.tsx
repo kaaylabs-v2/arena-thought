@@ -271,7 +271,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
     return (
       <div className="h-full flex flex-col animate-fade-in-gentle">
         {/* Viewer header */}
-        <div className="flex items-center gap-3 px-5 py-3 border-b border-border shrink-0">
+        <div className="flex items-center gap-3 px-5 py-3.5 border-b border-border shrink-0">
           <button
             onClick={handleDeselectSource}
             className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-secondary/70 transition-colors duration-200 shrink-0"
@@ -293,8 +293,8 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
 
         {/* Source metadata strip */}
         {sourceItem && (
-          <div className="px-5 py-2.5 border-b border-border/50 bg-muted/20 shrink-0">
-            <div className="flex items-center gap-3 text-[11px] font-sans text-muted-foreground/70">
+          <div className="px-5 py-2.5 border-b border-border/50 bg-muted/30 shrink-0">
+            <div className="flex items-center gap-3 text-[11px] font-sans text-muted-foreground/80">
               <span className="flex items-center gap-1.5">
                 <Icon className="h-3 w-3" strokeWidth={1.5} />
                 {typeLabel[sourceItem.type]}
@@ -369,7 +369,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
                         {section.body.split("```").map((block, bi) => {
                           if (bi % 2 === 0) {
                             return block.trim() ? (
-                              <p key={bi} className="text-[13px] font-sans text-foreground/85 leading-[1.8] whitespace-pre-line">{block.trim()}</p>
+                              <p key={bi} className="text-[13px] font-sans text-foreground leading-[1.8] whitespace-pre-line">{block.trim()}</p>
                             ) : null;
                           }
                           // Code block — strip language tag
@@ -378,7 +378,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
                           const hasLangTag = firstLine && /^[a-z]+$/.test(firstLine);
                           const codeContent = hasLangTag ? lines.slice(1).join("\n") : block;
                           return (
-                            <pre key={bi} className="rounded-lg bg-foreground/[0.03] border border-border/60 px-4 py-3 overflow-x-auto">
+                            <pre key={bi} className="rounded-lg bg-muted/40 border border-border/60 px-4 py-3 overflow-x-auto">
                               <code className="text-[12px] font-mono text-foreground/80 leading-relaxed whitespace-pre">
                                 {codeContent.trim()}
                               </code>
@@ -387,7 +387,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
                         })}
                       </div>
                     ) : (
-                      <p className={`text-[13px] text-foreground/85 leading-[1.8] whitespace-pre-line ${isCode ? "font-mono text-[12px] leading-[1.6]" : "font-sans"}`}>
+                      <p className={`text-[13px] text-foreground leading-[1.8] whitespace-pre-line ${isCode ? "font-mono text-[12px] leading-[1.6]" : "font-sans"}`}>
                         {section.body}
                       </p>
                     )}
@@ -411,10 +411,10 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
 
   // ─── List Mode ───
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col animate-fade-in-fast">
       <div className="flex items-center justify-between px-4 py-3.5 border-b border-border">
         <div className="min-w-0 flex-1">
-          <h2 className="text-[10px] font-sans text-muted-foreground/70 uppercase tracking-widest mb-0.5">Sources</h2>
+          <h2 className="text-[11px] font-sans text-muted-foreground/80 uppercase tracking-widest mb-0.5">Sources</h2>
           <p className="text-[13px] font-sans font-medium text-foreground truncate">{courseTitle}</p>
         </div>
         <button
@@ -429,7 +429,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
         {modules.map((module) => (
           <div key={module.id} className="mb-1">
             <div className="px-4 py-2">
-              <h3 className="text-[10px] font-sans font-medium text-muted-foreground/80 uppercase tracking-widest">
+              <h3 className="text-[11px] font-sans font-medium text-muted-foreground/80 uppercase tracking-widest">
                 {module.title}
               </h3>
             </div>
@@ -441,7 +441,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
                   <button
                     key={item.id}
                     onClick={() => handleSelectSource(item.id)}
-                    className={`w-full flex items-center gap-2.5 px-2.5 py-[7px] rounded-lg text-left transition-all duration-200 ${
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-all duration-200 ${
                       isSelected
                         ? "bg-secondary text-foreground"
                         : "text-foreground/75 hover:bg-secondary/80 hover:text-foreground"
