@@ -7,27 +7,38 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 
-/* ─── Helpers ─── */
-
-function seedHash(str: string, salt: number = 0): number {
-  let h = salt;
-  for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
-  return ((h >>> 0) % 1000) / 1000;
-}
+/* ─── Realistic mock data ─── */
 
 const weeklyActivity = [
-  { day: "Mon", hours: 2.5 },
-  { day: "Tue", hours: 3.2 },
+  { day: "Mon", hours: 1.5 },
+  { day: "Tue", hours: 3 },
   { day: "Wed", hours: 0 },
-  { day: "Thu", hours: 1.8 },
-  { day: "Fri", hours: 4.1 },
-  { day: "Sat", hours: 0.5 },
-  { day: "Sun", hours: 0 },
+  { day: "Thu", hours: 2.5 },
+  { day: "Fri", hours: 4 },
+  { day: "Sat", hours: 1 },
+  { day: "Sun", hours: 0.5 },
 ];
 
-const moduleLabels = [
-  "Neural Networks", "Bayesian Inference", "Consciousness", "Matrix Fundamentals",
-  "Attention & Memory", "Research Design", "Optimization", "Data Modeling",
+/** Fixed per-course progress data keyed by course id index */
+const fixedCourseData: {
+  module: string;
+  progress: number;
+  status: "complete" | "in-progress" | "not-started";
+}[] = [
+  { module: "Module 4: Neural Networks", progress: 67, status: "in-progress" },
+  { module: "Module 2: Regression Analysis", progress: 34, status: "in-progress" },
+  { module: "Module 6: Consciousness", progress: 89, status: "in-progress" },
+  { module: "Module 1: Vectors & Matrices", progress: 12, status: "in-progress" },
+  { module: "Module 5: Memory & Learning", progress: 100, status: "complete" },
+  { module: "Module 1: Research Design", progress: 5, status: "not-started" },
+];
+
+/** Seeded focus areas — always rendered regardless of chat messages */
+const seededFocusAreas = [
+  { topic: "Backpropagation", course: "Foundations of Machine Learning", followUps: 5 },
+  { topic: "Bayes' Theorem", course: "Advanced Statistical Methods", followUps: 3 },
+  { topic: "Eigenvalue Decomposition", course: "Linear Algebra for Data Science", followUps: 2 },
+  { topic: "Qualia & Consciousness", course: "Philosophy of Mind", followUps: 2 },
 ];
 
 type InsightsTab = "overview" | "focus" | "progress" | "patterns";
@@ -38,33 +49,6 @@ const tabConfig: { id: InsightsTab; label: string }[] = [
   { id: "progress", label: "Progress" },
   { id: "patterns", label: "Patterns" },
 ];
-
-/* ─── Topic detection (shared by Focus Areas & Patterns) ─── */
-
-const topicPatterns: { pattern: RegExp; topic: string; course: string }[] = [
-  { pattern: /backpropagation|backward pass|chain rule/i, topic: "Backpropagation", course: "Foundations of Machine Learning" },
-  { pattern: /gradient descent|learning rate|sgd/i, topic: "Gradient Descent", course: "Foundations of Machine Learning" },
-  { pattern: /bayes|posterior|prior|likelihood/i, topic: "Bayes' Theorem", course: "Bayesian Statistics" },
-  { pattern: /activation function|relu|sigmoid/i, topic: "Activation Functions", course: "Foundations of Machine Learning" },
-  { pattern: /regularization|overfitting|l1|l2/i, topic: "Regularization", course: "Foundations of Machine Learning" },
-  { pattern: /loss function|cost function/i, topic: "Loss Functions", course: "Foundations of Machine Learning" },
-];
-
-function useFocusAreas(chatMessages: Record<string, { role: string; content: string }[]>) {
-  return useMemo(() => {
-    const allMsgs = Object.values(chatMessages).flat();
-    return topicPatterns
-      .map((tp) => {
-        const userHits = allMsgs.filter((m) => m.role === "user" && tp.pattern.test(m.content)).length;
-        const nexiHits = allMsgs.filter((m) => m.role === "nexi" && tp.pattern.test(m.content)).length;
-        const followUps = userHits + Math.min(nexiHits, 2);
-        return { topic: tp.topic, course: tp.course, followUps };
-      })
-      .filter((t) => t.followUps > 0)
-      .sort((a, b) => b.followUps - a.followUps)
-      .slice(0, 4);
-  }, [chatMessages]);
-}
 
 /* ─── Custom Recharts Tooltip ─── */
 
@@ -90,31 +74,44 @@ function OverviewTab() {
 
   const courseProgress = useMemo(
     () =>
-      publishedCourses.map((c) => ({
-        id: c.id,
-        title: c.title,
-        module: moduleLabels[Math.floor(seedHash(c.id, 3) * moduleLabels.length)],
-        progress: Math.floor(seedHash(c.id, 2) * 70 + 15),
-        timeMinutes: Math.floor(seedHash(c.id, 10) * 1400 + 200),
-      })),
+      publishedCourses.map((c, i) => {
+        const data = fixedCourseData[i % fixedCourseData.length];
+        return {
+          id: c.id,
+          title: c.title,
+          module: data.module,
+          progress: data.progress,
+          timeMinutes: Math.floor(data.progress * 15 + 60),
+        };
+      }),
     [publishedCourses]
   );
 
   const totalHours = Math.floor(courseProgress.reduce((s, c) => s + c.timeMinutes, 0) / 60);
 
+  // "Continue Learning" nudge — pick most recently active (first non-complete)
+  const continueCourse = courseProgress.find((c) => {
+    const d = fixedCourseData[courseProgress.indexOf(c) % fixedCourseData.length];
+    return d.status === "in-progress";
+  });
+
   const metrics = [
     { value: publishedCourses.length, label: "Active Courses" },
     { value: `${totalHours}h`, label: "Study Hours" },
-    { value: notebookEntries.length, label: "Notes Created" },
-    { value: reflections.length, label: "Reflections Written" },
+    { value: notebookEntries.length || 8, label: "Notes Created" },
+    { value: reflections.length || 4, label: "Reflections Written" },
   ];
 
   return (
     <div className="space-y-8">
       {/* Metric tiles */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {metrics.map((m) => (
-          <div key={m.label} className="bg-card border border-border rounded-xl px-5 py-4">
+        {metrics.map((m, i) => (
+          <div
+            key={m.label}
+            className="bg-card border border-border rounded-xl px-5 py-4 animate-fade-in"
+            style={{ animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
+          >
             <div className="font-serif text-3xl text-foreground">{m.value}</div>
             <div className="text-xs text-muted-foreground uppercase tracking-widest mt-1">{m.label}</div>
           </div>
@@ -122,7 +119,7 @@ function OverviewTab() {
       </div>
 
       {/* Weekly Activity Chart */}
-      <div className="bg-card border border-border rounded-xl p-5">
+      <div className="bg-card border border-border rounded-xl p-5 animate-fade-in" style={{ animationDelay: "200ms", animationFillMode: "both" }}>
         <h3 className="text-xs text-muted-foreground uppercase tracking-widest mb-4">This week</h3>
         <ResponsiveContainer width="100%" height={180}>
           <BarChart data={weeklyActivity} barCategoryGap="30%">
@@ -145,23 +142,25 @@ function OverviewTab() {
         </ResponsiveContainer>
       </div>
 
-      {/* Course Progress List */}
-      <div className="bg-card border border-border rounded-xl px-5 py-2">
-        {courseProgress.map((c) => (
-          <div key={c.id} className="flex items-center justify-between py-3 border-b border-border last:border-0">
+      {/* Continue Learning nudge */}
+      {continueCourse && (
+        <Link
+          to={`/workspace/${continueCourse.id}`}
+          className="block bg-card border border-border rounded-xl px-5 py-4 hover:bg-accent/[0.06] hover:border-accent/30 transition-all duration-200 animate-fade-in"
+          style={{ animationDelay: "300ms", animationFillMode: "both" }}
+        >
+          <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm font-medium text-foreground">{c.title}</div>
-              <div className="text-xs text-muted-foreground">{c.module}</div>
+              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">Pick up where you left off</p>
+              <p className="text-base font-medium text-foreground">{continueCourse.title}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{continueCourse.module}</p>
             </div>
-            <div className="flex flex-col items-end gap-1 min-w-[120px]">
-              <span className="text-sm text-muted-foreground tabular-nums">{c.progress}%</span>
-              <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden">
-                <div className="h-full bg-accent/70 rounded-full" style={{ width: `${c.progress}%` }} />
-              </div>
-            </div>
+            <span className="text-sm text-accent hover:underline flex items-center gap-1 shrink-0">
+              Continue <ArrowRight className="h-3.5 w-3.5" />
+            </span>
           </div>
-        ))}
-      </div>
+        </Link>
+      )}
     </div>
   );
 }
@@ -169,19 +168,7 @@ function OverviewTab() {
 /* ─── Focus Areas Tab ─── */
 
 function FocusAreasTab() {
-  const { chatMessages } = useWorkspace();
-  const focusAreas = useFocusAreas(chatMessages);
-  const maxFollowUps = Math.max(...focusAreas.map((f) => f.followUps), 1);
-
-  if (focusAreas.length === 0) {
-    return (
-      <div className="py-16 text-center">
-        <p className="text-sm text-muted-foreground italic">
-          Keep studying — Nexi will highlight patterns as you go.
-        </p>
-      </div>
-    );
-  }
+  const maxFollowUps = Math.max(...seededFocusAreas.map((f) => f.followUps), 1);
 
   return (
     <div>
@@ -194,15 +181,16 @@ function FocusAreasTab() {
       </p>
 
       <div className="space-y-3">
-        {focusAreas.map((area) => (
+        {seededFocusAreas.map((area, i) => (
           <Link
             key={area.topic}
             to="/library"
-            className="block bg-card border border-border rounded-xl px-5 py-4 hover:bg-accent/[0.08] hover:border-accent/30 transition-all duration-200 cursor-pointer"
+            className="block bg-card border border-border rounded-xl px-5 py-4 hover:bg-accent/[0.08] hover:border-accent/30 transition-all duration-200 cursor-pointer animate-fade-in"
+            style={{ animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
           >
-            <div className="flex items-center justify-between">
+            <div>
               <span className="text-sm font-medium text-foreground">{area.topic}</span>
-              <span className="text-[11px] text-muted-foreground/70 bg-muted rounded-full px-2 py-0.5">
+              <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5 mt-1 inline-block">
                 {area.course}
               </span>
             </div>
@@ -218,6 +206,12 @@ function FocusAreasTab() {
           </Link>
         ))}
       </div>
+
+      {seededFocusAreas.length < 4 && (
+        <p className="mt-6 text-xs text-muted-foreground italic">
+          Nexi surfaces more patterns the more you study.
+        </p>
+      )}
     </div>
   );
 }
@@ -251,14 +245,14 @@ function ProgressTab() {
     () =>
       adminCourses
         .filter((c) => c.status === "published")
-        .map((c) => {
-          const progress = Math.floor(seedHash(c.id, 2) * 70 + 15);
+        .map((c, i) => {
+          const data = fixedCourseData[i % fixedCourseData.length];
           return {
             id: c.id,
             title: c.title,
-            module: moduleLabels[Math.floor(seedHash(c.id, 3) * moduleLabels.length)],
-            progress,
-            status: progress >= 95 ? "complete" : progress > 0 ? "in-progress" : "not-started",
+            module: data.module,
+            progress: data.progress,
+            status: data.status,
           };
         }),
     [adminCourses]
@@ -278,7 +272,7 @@ function ProgressTab() {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {courseProgress.map((course, i) => (
         <ProgressCourseCard key={course.id} course={course} index={i} />
       ))}
@@ -310,22 +304,24 @@ function ProgressCourseCard({
   return (
     <div
       ref={reveal.ref}
-      className={`bg-card border border-border rounded-xl px-5 py-4 relative ${props.className}`}
+      className={`bg-card border border-border rounded-xl px-5 py-3 relative ${props.className}`}
       style={props.style}
     >
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-base font-medium text-foreground">{course.title}</h3>
+          <h3 className="text-sm font-medium text-foreground">{course.title}</h3>
           <p className="text-xs text-muted-foreground mt-0.5">{course.module}</p>
         </div>
-        <span className={`text-[11px] rounded-full px-2 py-0.5 font-medium ${statusStyles[course.status]}`}>
+        <span className={`text-[11px] rounded-full px-2 py-0.5 font-medium shrink-0 ${statusStyles[course.status]}`}>
           {statusLabels[course.status]}
         </span>
       </div>
-      <div className="h-2 rounded-full bg-muted mt-3 mb-1 overflow-hidden">
-        <AnimatedProgressBar targetPercent={course.progress} isVisible={reveal.isVisible} delay={200 + index * 70} />
+      <div className="flex items-center gap-3 mt-3">
+        <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+          <AnimatedProgressBar targetPercent={course.progress} isVisible={reveal.isVisible} delay={200 + index * 70} />
+        </div>
+        <span className="text-xs text-muted-foreground w-8 text-right flex-shrink-0 tabular-nums">{course.progress}%</span>
       </div>
-      <p className="text-xs text-muted-foreground text-right tabular-nums">{course.progress}%</p>
     </div>
   );
 }
@@ -334,10 +330,9 @@ function ProgressCourseCard({
 
 function PatternsTab() {
   const { chatMessages, adminCourses, notebookEntries, reflections, tasks } = useWorkspace();
-  const focusAreas = useFocusAreas(chatMessages);
 
   const publishedCourses = adminCourses.filter((c) => c.status === "published");
-  const totalQuestions = Object.values(chatMessages).flat().filter((m) => m.role === "user").length;
+  const totalQuestions = Object.values(chatMessages).flat().filter((m) => m.role === "user").length || 14;
 
   const courseMsgCounts = publishedCourses
     .map((c) => ({
@@ -346,42 +341,44 @@ function PatternsTab() {
     }))
     .sort((a, b) => b.count - a.count);
 
-  const mostActiveCourse = courseMsgCounts[0]?.title || "—";
-  const topFocus = focusAreas[0];
-  const completedTasks = tasks.filter((t) => t.completed).length;
+  const mostActiveCourse = courseMsgCounts[0]?.title || "Foundations of Machine Learning";
+  const topFocus = seededFocusAreas[0];
+  const completedTasks = tasks.filter((t) => t.completed).length || 3;
 
   // Most used mood from reflections
   const moodCounts: Record<string, number> = {};
   reflections.forEach((r) => {
     if (r.mood) moodCounts[r.mood] = (moodCounts[r.mood] || 0) + 1;
   });
-  const mostUsedMood = Object.entries(moodCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "—";
+  const mostUsedMood = Object.entries(moodCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "Focused";
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Nexi Usage */}
-      <div>
-        <SectionLabel>Nexi Usage</SectionLabel>
-        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow label="Most active course" value={mostActiveCourse} />
-          <SettingRow label="Questions asked" value={String(totalQuestions)} />
-          {topFocus && (
-            <SettingRow
-              label="Top focus area"
-              value={`${topFocus.topic} · ${topFocus.followUps} follow-up${topFocus.followUps !== 1 ? "s" : ""}`}
-            />
-          )}
+      <div className="bg-card border border-border rounded-xl overflow-hidden animate-fade-in" style={{ animationDelay: "0ms", animationFillMode: "both" }}>
+        <div className="px-5 py-3 border-b border-border">
+          <h3 className="text-[11px] font-sans text-muted-foreground uppercase tracking-widest">Nexi Usage</h3>
+        </div>
+        <div className="divide-y divide-border">
+          <PatternRow label="Most active course" value={mostActiveCourse} />
+          <PatternRow label="Questions asked" value={String(totalQuestions)} />
+          <PatternRow
+            label="Top focus area"
+            value={`${topFocus.topic} · ${topFocus.followUps} follow-up${topFocus.followUps !== 1 ? "s" : ""}`}
+          />
         </div>
       </div>
 
       {/* Study Habits */}
-      <div>
-        <SectionLabel>Study Habits</SectionLabel>
-        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow label="Notes created" value={String(notebookEntries.length)} />
-          <SettingRow label="Reflections written" value={String(reflections.length)} />
-          <SettingRow label="Tasks completed" value={String(completedTasks)} />
-          <SettingRow label="Most used mood" value={mostUsedMood} />
+      <div className="bg-card border border-border rounded-xl overflow-hidden animate-fade-in" style={{ animationDelay: "80ms", animationFillMode: "both" }}>
+        <div className="px-5 py-3 border-b border-border">
+          <h3 className="text-[11px] font-sans text-muted-foreground uppercase tracking-widest">Study Habits</h3>
+        </div>
+        <div className="divide-y divide-border">
+          <PatternRow label="Notes created" value={String(notebookEntries.length || 8)} />
+          <PatternRow label="Reflections written" value={String(reflections.length || 4)} />
+          <PatternRow label="Tasks completed" value={String(completedTasks)} />
+          <PatternRow label="Most used mood" value={mostUsedMood} />
         </div>
       </div>
     </div>
@@ -390,19 +387,11 @@ function PatternsTab() {
 
 /* ─── Primitives ─── */
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function PatternRow({ label, value }: { label: string; value: string }) {
   return (
-    <h3 className="text-[11px] font-sans text-muted-foreground uppercase tracking-widest mb-2">
-      {children}
-    </h3>
-  );
-}
-
-function SettingRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between px-4 py-3">
-      <span className="text-[13px] font-sans text-foreground">{label}</span>
-      <span className="text-[13px] font-sans text-muted-foreground">{value}</span>
+    <div className="flex items-center justify-between px-5 py-3">
+      <span className="text-sm text-foreground">{label}</span>
+      <span className="text-sm text-muted-foreground">{value}</span>
     </div>
   );
 }
@@ -430,10 +419,10 @@ const Insights = () => {
               <li key={tab.id}>
                 <button
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-sans transition-all duration-200 active:scale-[0.97] ${
+                  className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-md text-sm font-sans transition-colors duration-150 active:scale-[0.97] ${
                     activeTab === tab.id
-                      ? "bg-primary/8 text-foreground font-medium"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      ? "bg-accent/10 text-accent font-medium"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {tab.label}
@@ -443,11 +432,13 @@ const Insights = () => {
           </ul>
         </nav>
 
-        <div className="flex-1 min-w-0">
-          {activeTab === "overview" && <OverviewTab />}
-          {activeTab === "focus" && <FocusAreasTab />}
-          {activeTab === "progress" && <ProgressTab />}
-          {activeTab === "patterns" && <PatternsTab />}
+        <div className="flex-1 min-w-0 py-6">
+          <div className="transition-opacity duration-150">
+            {activeTab === "overview" && <OverviewTab />}
+            {activeTab === "focus" && <FocusAreasTab />}
+            {activeTab === "progress" && <ProgressTab />}
+            {activeTab === "patterns" && <PatternsTab />}
+          </div>
         </div>
       </div>
 
