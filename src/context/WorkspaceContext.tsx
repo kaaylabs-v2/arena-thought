@@ -395,6 +395,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         studioCurrentAdmin: seedCurrentAdmin,
         // Direct messaging
         directMessages, addDirectMessage, markMessageRead,
+        // Announcement dismiss
+        dismissedAnnouncementIds, dismissAnnouncement,
       }}
     >
       {children}
