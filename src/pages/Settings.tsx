@@ -227,7 +227,7 @@ function GeneralPanel() {
       <div>
         <SectionLabel>Voice & Input</SectionLabel>
         <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow label="Voice input" description="Enable microphone for voice-to-text in Nexi" action={<Toggle checked={voiceEnabled} onChange={setVoiceEnabled} />} />
+          <SettingRow label="Voice input" description="Enable microphone for voice-to-text in Nexi" action={<Toggle checked={appSettings.voiceInput} onChange={(v) => updateAppSettings({ voiceInput: v })} />} />
         </div>
       </div>
 
