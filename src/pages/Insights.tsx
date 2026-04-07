@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Sparkles, BookOpen, Library, ArrowRight, BarChart3, Activity } from "lucide-react";
+import { TrendingUp, BookOpen, Library, ArrowRight, BarChart3, Activity } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
 import {
@@ -46,7 +46,7 @@ const seededFocusAreas = [
 type InsightsTab = "overview" | "progress" | "patterns";
 
 const tabConfig: { id: InsightsTab; label: string; icon: React.ElementType }[] = [
-  { id: "overview", label: "Overview", icon: Sparkles },
+  { id: "overview", label: "Overview", icon: TrendingUp },
   { id: "progress", label: "Progress", icon: BarChart3 },
   { id: "patterns", label: "Patterns", icon: Activity },
 ];
@@ -206,7 +206,7 @@ function ProgressTab() {
   if (courseProgress.length === 0) {
     return (
       <div className="text-center py-24">
-        <Sparkles className="h-10 w-10 text-muted-foreground/70 mx-auto mb-3" strokeWidth={1} />
+        <BarChart3 className="h-10 w-10 text-muted-foreground/70 mx-auto mb-3" strokeWidth={1} />
         <p className="text-muted-foreground/70 font-sans text-sm mb-4">Start a course to see your progress here.</p>
         <Link to="/library" className="inline-flex items-center gap-2 text-sm font-sans text-accent hover:text-accent/80 transition-colors">
           <Library className="h-4 w-4" strokeWidth={1.5} />
@@ -343,7 +343,7 @@ function PatternsTab() {
       <div className="animate-fade-in" style={{ animationDelay: "160ms", animationFillMode: "both" }}>
         <div className="flex items-center gap-2 mb-1">
           <h2 className="font-serif text-2xl text-foreground">Topics to revisit</h2>
-          <Sparkles className="h-5 w-5 text-accent" strokeWidth={1.5} />
+          <BookOpen className="h-5 w-5 text-accent" strokeWidth={1.5} />
         </div>
         <p className="text-sm text-muted-foreground mt-1 mb-4">
           Nexi noticed these topics worth revisiting

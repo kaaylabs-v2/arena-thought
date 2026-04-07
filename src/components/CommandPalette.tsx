@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Home, Library, ListChecks, BookOpen, Sparkles, PenLine, MessageSquare, Settings, User,
+  Home, Library, ListChecks, BookOpen, TrendingUp, PenLine, MessageSquare, Settings, User,
 } from "lucide-react";
 import {
   CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem,
@@ -13,7 +13,7 @@ const pages = [
   { title: "Library", url: "/library", icon: Library },
   { title: "Study Plan", url: "/study-plan", icon: ListChecks },
   { title: "Notebook", url: "/notebook", icon: BookOpen },
-  { title: "Insights", url: "/insights", icon: Sparkles },
+  { title: "Insights", url: "/insights", icon: TrendingUp },
   { title: "Reflections", url: "/reflections", icon: PenLine },
   { title: "Communication", url: "/communication", icon: MessageSquare },
   { title: "Settings", url: "/settings", icon: Settings },

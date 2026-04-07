@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useWorkspace, mockUsers, type AdminCourse, type AdminModule, type AdminSourceItem, type SourceType } from "@/context/WorkspaceContext";
-import { Plus, Trash2, ArrowUp, ArrowDown, Shield, ChevronLeft, Globe, GlobeLock, Pencil, Sparkles, Users, BookOpen, FileText } from "lucide-react";
+import { Plus, Trash2, ArrowUp, ArrowDown, Shield, ChevronLeft, Globe, GlobeLock, Pencil, Users, BookOpen, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
