@@ -333,34 +333,6 @@ function NexiPanel() {
           />
         </div>
       </div>
-
-      {/* Learning Patterns */}
-      <div>
-        <SectionLabel>Learning patterns</SectionLabel>
-        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
-          <SettingRow
-            label="Most active course"
-            description="Course where you interact with Nexi the most"
-            action={<span className="text-[13px] font-sans text-foreground">{mostActiveCourse}</span>}
-          />
-          <SettingRow
-            label="Questions this week"
-            description="Total questions asked to Nexi across all courses"
-            action={<span className="text-[13px] font-sans text-foreground tabular-nums">{totalQuestions}</span>}
-          />
-          {topFocusAreas.length > 0 && (
-            <SettingRow
-              label="Top focus area"
-              description="Topic with the highest follow-up frequency"
-              action={
-                <span className="text-[13px] font-sans text-foreground">
-                  {topFocusAreas[0].topic} · {topFocusAreas[0].followUps} follow-up{topFocusAreas[0].followUps !== 1 ? "s" : ""}
-                </span>
-              }
-            />
-          )}
-        </div>
-      </div>
     </div>
   );
 }
