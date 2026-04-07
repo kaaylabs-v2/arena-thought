@@ -316,7 +316,7 @@ const Index = () => {
 
         {/* Fix 2 — Nexi suggestion line */}
         {topFocus && focusCourseId && (
-          <div className="flex items-center gap-2 mt-3 mb-1 animate-fade-in [animation-delay:120ms] [animation-fill-mode:backwards]">
+          <div className="flex items-center gap-2 mt-2 animate-fade-in [animation-delay:120ms] [animation-fill-mode:backwards]">
             <Sparkles className="w-3.5 h-3.5 text-accent flex-shrink-0" strokeWidth={1.5} />
             <p className="text-sm text-muted-foreground">
               Nexi suggests reviewing <span className="text-foreground font-medium">{topFocus.topic}</span> today based on your recent sessions.{" "}
