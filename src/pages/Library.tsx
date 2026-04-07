@@ -5,46 +5,6 @@ import { useWorkspace } from "@/context/WorkspaceContext";
 
 type FilterTab = "all" | "active" | "completed" | "pinned";
 
-// Generate deterministic sparkline data from course ID
-function generateSparkline(id: string): number[] {
-  let seed = 0;
-  for (let i = 0; i < id.length; i++) seed += id.charCodeAt(i);
-  const points: number[] = [];
-  for (let i = 0; i < 7; i++) {
-    seed = (seed * 9301 + 49297) % 233280;
-    points.push(seed / 233280);
-  }
-  return points;
-}
-
-function SparklineSVG({ data, className }: { data: number[]; className?: string }) {
-  const w = 80;
-  const h = 20;
-  const padding = 2;
-  const maxVal = Math.max(...data);
-  const minVal = Math.min(...data);
-  const range = maxVal - minVal || 1;
-
-  const points = data.map((v, i) => {
-    const x = padding + (i / (data.length - 1)) * (w - padding * 2);
-    const y = h - padding - ((v - minVal) / range) * (h - padding * 2);
-    return `${x},${y}`;
-  }).join(" ");
-
-  return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className={className} fill="none">
-      <polyline
-        points={points}
-        stroke="hsl(var(--accent))"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        opacity="0.5"
-      />
-    </svg>
-  );
-}
-
 const Library = () => {
   const { adminCourses } = useWorkspace();
   const [filter, setFilter] = useState<FilterTab>("all");
