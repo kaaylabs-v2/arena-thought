@@ -53,7 +53,7 @@ const engagementTrendByRange: Record<TimeRange, number> = {
   "all": 8,
 };
 
-export default function AdminAnalyticsPage() {
+export default function AdminAnalyticsPage({ embedded = false }: { embedded?: boolean }) {
   const { studioCourses: adminCourses, studioMembers: members, studioDepartments: departments, studioWeeklyActive: weeklyActiveData } = useWorkspace();
   const [timeRange, setTimeRange] = useState<TimeRange>("all");
   const [deptFilter, setDeptFilter] = useState<DeptFilter>("all");
