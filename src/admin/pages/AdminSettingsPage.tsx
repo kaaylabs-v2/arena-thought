@@ -37,10 +37,10 @@ export default function AdminSettingsPage() {
   const [activeTab, setActiveTab] = useState<AdminSettingsTab>("general");
 
   return (
-    <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-5xl mx-auto">
-      <div className="mb-8 animate-fade-in">
-        <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1] font-medium">Settings</h1>
-        <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Organization profile, branding, and configuration.</p>
+    <div className="h-full min-h-screen p-6 lg:p-8 max-w-[1200px] mx-auto">
+      <div className="mb-6 animate-fade-in">
+        <h1 className="font-serif text-[2rem] font-normal text-foreground">Settings</h1>
+        <p className="text-sm mt-0.5 text-muted-foreground">Organization profile, branding, and configuration.</p>
       </div>
 
       <div className="flex gap-8 lg:gap-12 animate-fade-in [animation-delay:80ms] [animation-fill-mode:backwards]">
