@@ -5,6 +5,7 @@ import { type Announcement } from "@/admin/data/mock-data";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 /* ─── Dynamic timestamp helpers ─── */
 function formatClockTime(ts: string): string {
