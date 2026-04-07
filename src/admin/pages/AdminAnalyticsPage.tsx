@@ -239,7 +239,7 @@ export default function AdminAnalyticsPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis dataKey="month" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
               <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))" }} />
+              <Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }} itemStyle={{ color: "hsl(var(--foreground))" }} />
               <Line type="monotone" dataKey="completions" stroke={AMBER} strokeWidth={2} dot={{ fill: AMBER, r: 4 }} animationDuration={500} />
             </LineChart>
           </ResponsiveContainer>
