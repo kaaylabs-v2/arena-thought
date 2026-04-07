@@ -412,34 +412,30 @@ function PatternsTab() {
         </p>
 
         <div className="space-y-3">
-          {seededFocusAreas.map((area, i) => {
-            // Match severity from insights if available
-            const matchingInsight = topInsights.find((ins) => ins.topic === area.topic);
-            const borderClass = matchingInsight
-              ? getSeverityBorderColor(matchingInsight.severity)
-              : "border-l-border";
+          {focusAreas.map((insight, i) => {
+            const borderClass = getSeverityBorderColor(insight.severity);
 
             return (
               <div
-                key={area.topic}
+                key={insight.id}
                 className={`bg-card border border-border border-l-2 ${borderClass} rounded-xl px-5 py-4 animate-fade-in`}
                 style={{ animationDelay: `${240 + i * 50}ms`, animationFillMode: "both" }}
               >
                 <div>
-                  <span className="text-sm font-medium text-foreground">{area.topic}</span>
+                  <span className="text-sm font-medium text-foreground">{insight.topic}</span>
                 </div>
                 <div className="mt-1">
                   <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5 inline-block">
-                    {area.course}
+                    {insight.course}
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  {area.followUps} follow-up question{area.followUps !== 1 ? "s" : ""}
+                  {insight.suggestion}
                 </p>
                 <div className="h-1 rounded-full bg-muted mt-3 overflow-hidden">
                   <div
                     className="h-full bg-accent rounded-full transition-all duration-700 ease-smooth"
-                    style={{ width: mounted ? `${(area.followUps / maxFollowUps) * 100}%` : "0%" }}
+                    style={{ width: mounted ? `${((focusAreas.length - i) / maxMetricValue) * 100}%` : "0%" }}
                   />
                 </div>
               </div>
