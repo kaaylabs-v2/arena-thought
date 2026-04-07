@@ -305,12 +305,14 @@ function NexiPanel() {
             description="Language Nexi uses for explanations"
             action={
               <select
-                value={preferredLanguage}
+                value={appSettings.language}
                 onChange={(e) => {
                   const val = e.target.value;
                   if (val !== "English") {
                     toast("Language support coming in a future update");
-                    setPreferredLanguage("English");
+                  } else {
+                    updateAppSettings({ language: val });
+                  }
                   }
                 }}
                 className="px-3 py-1.5 rounded-lg border border-border bg-background text-[12px] font-sans text-foreground focus:outline-none focus:ring-1 focus:ring-ring/30 cursor-pointer"
