@@ -103,8 +103,12 @@ export default {
           to: { height: "0", opacity: "0" },
         },
         "fade-in": {
-          from: { opacity: "0", transform: "translateY(8px)", filter: "blur(3px)" },
-          to: { opacity: "1", transform: "translateY(0)", filter: "blur(0px)" },
+          from: { opacity: "0", transform: "translateY(6px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "page-enter": {
+          from: { opacity: "0", transform: "translateY(4px) scale(0.999)" },
+          to: { opacity: "1", transform: "translateY(0) scale(1)" },
         },
         "fade-in-gentle": {
           from: { opacity: "0" },
