@@ -188,6 +188,41 @@ const Index = () => {
         </Link>
       </section>
 
+      {/* Nexi Noticed — Focus Areas */}
+      <section className="mb-14 animate-fade-in [animation-delay:150ms] [animation-fill-mode:backwards]">
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles className="h-4 w-4 text-accent" strokeWidth={1.5} />
+            <h2 className="font-serif text-lg text-foreground font-medium">Nexi noticed</h2>
+          </div>
+          <p className="text-xs text-muted-foreground">Topics worth revisiting based on your recent sessions</p>
+        </div>
+        {focusAreas.length >= 2 ? (
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin">
+            {focusAreas.map((area, i) => (
+              <Link
+                key={`${area.courseId}-${area.topic}`}
+                to={`/workspace/${area.courseId}`}
+                className="group flex-shrink-0 w-48 rounded-xl border border-border bg-card px-4 py-3 transition-all duration-200 hover:bg-accent/[0.08] hover:border-accent/30 cursor-pointer"
+                style={{ animationDelay: `${150 + i * 60}ms` }}
+              >
+                <p className="text-sm font-medium text-foreground truncate">{area.topic}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{area.course}</p>
+                <div className="mt-3 h-1 rounded-full bg-accent/30 overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-accent transition-all duration-700 ease-spring"
+                    style={{ width: `${Math.max(area.weight * 100, 25)}%` }}
+                  />
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-1.5">{area.followUps} follow-up question{area.followUps !== 1 ? "s" : ""}</p>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground italic">Keep studying — Nexi will highlight patterns as you go.</p>
+        )}
+      </section>
+
       {/* Upcoming Tasks Widget */}
       {upcomingTasks.length > 0 && (
         <section className="mb-14 animate-fade-in [animation-delay:200ms] [animation-fill-mode:backwards]">
