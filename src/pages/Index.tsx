@@ -85,6 +85,39 @@ const Index = () => {
         <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">Continue where you left off.</p>
       </div>
 
+      {/* Announcements */}
+      {visibleAnnouncements.length > 0 && (
+        <section className="mb-8 space-y-2 animate-fade-in [animation-delay:80ms] [animation-fill-mode:backwards]">
+          {visibleAnnouncements.map((ann) => (
+            <div
+              key={ann.id}
+              className="rounded-xl border border-accent/20 bg-accent/5 px-5 py-4 flex items-start gap-3"
+            >
+              <Megaphone className="h-4 w-4 text-accent mt-0.5 shrink-0" strokeWidth={1.5} />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-foreground truncate">{ann.title}</span>
+                  <span className="text-[10px] bg-muted text-muted-foreground rounded-full px-2 py-0.5 shrink-0">{ann.audience}</span>
+                </div>
+                <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{ann.body}</p>
+                <span className="text-[11px] text-muted-foreground/60 mt-1.5 block">{ann.sentDate}</span>
+              </div>
+              <button
+                onClick={() => setDismissedIds(prev => new Set(prev).add(ann.id))}
+                className="text-muted-foreground hover:text-foreground p-1 rounded-md shrink-0 transition-colors duration-200"
+              >
+                <X className="h-3.5 w-3.5" strokeWidth={1.5} />
+              </button>
+            </div>
+          ))}
+          {totalUndismissed > 2 && (
+            <Link to="/messages" className="text-[12px] font-sans text-accent hover:text-accent/80 transition-colors duration-250 ease-apple">
+              View all →
+            </Link>
+          )}
+        </section>
+      )}
+
       {/* Continue Learning */}
       <section className="mb-14 animate-fade-in [animation-delay:100ms] [animation-fill-mode:backwards]">
         <Link
