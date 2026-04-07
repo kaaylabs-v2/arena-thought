@@ -3,7 +3,6 @@ import {
   GraduationCap,
   Users,
   BarChart3,
-  Megaphone,
   MessageSquare,
   ChevronsLeft,
   ChevronsRight,
@@ -33,8 +32,7 @@ const navItems = [
   { title: "Courses", url: "/admin/courses", icon: GraduationCap },
   { title: "People", url: "/admin/people", icon: Users },
   { title: "Insights", url: "/admin/insights", icon: BarChart3 },
-  { title: "Announcements", url: "/admin/announcements", icon: Megaphone },
-  { title: "Messages", url: "/admin/messages", icon: MessageSquare },
+  { title: "Communication", url: "/admin/communication", icon: MessageSquare },
 ];
 
 export function AdminSidebar() {
@@ -101,7 +99,7 @@ export function AdminSidebar() {
                     >
                       <item.icon strokeWidth={1.5} />
                       <span className="text-sm font-sans flex-1">{item.title}</span>
-                      {item.title === "Messages" && unreadCount > 0 && (
+                      {item.title === "Communication" && unreadCount > 0 && (
                         <span className="flex items-center justify-center h-4 min-w-[16px] px-1 rounded-full bg-accent text-accent-foreground text-[9px] font-bold">
                           {unreadCount}
                         </span>

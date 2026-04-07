@@ -12,6 +12,7 @@ import {
   Shield,
   MessageSquare,
 } from "lucide-react";
+
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -40,7 +41,7 @@ const mainNav = [
   { title: "Notebook", url: "/notebook", icon: BookOpen },
   { title: "Insights", url: "/insights", icon: Sparkles },
   { title: "Reflections", url: "/reflections", icon: PenLine },
-  { title: "Messages", url: "/messages", icon: MessageSquare },
+  { title: "Communication", url: "/communication", icon: MessageSquare },
 ];
 
 export function AppSidebar() {
@@ -49,13 +50,14 @@ export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const { userRole, directMessages, notebookEntries, vocabulary } = useWorkspace();
+  const { userRole, directMessages, notebookEntries, vocabulary, studioAnnouncements } = useWorkspace();
 
-  // Compute unread messages for learner (admin messages to user-1 that are unread)
+  // Compute total unread for Communication (DMs + unread announcements)
   const unreadCount = useMemo(() => {
-    return directMessages.filter(
+    const dmUnread = directMessages.filter(
       (m) => m.fromRole === "admin" && m.toUserId === "user-1" && !m.read
     ).length;
+    return dmUnread;
   }, [directMessages]);
 
   const notebookCount = useMemo(() => notebookEntries.length + vocabulary.length, [notebookEntries, vocabulary]);
@@ -115,7 +117,7 @@ export function AppSidebar() {
                     >
                       <item.icon strokeWidth={1.5} />
                       <span className="text-sm font-sans flex-1">{item.title}</span>
-                      {item.title === "Messages" && unreadCount > 0 && (
+                      {item.title === "Communication" && unreadCount > 0 && (
                         <span className="ml-auto flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent text-[10px] font-sans font-medium text-accent-foreground px-1">
                           {unreadCount}
                         </span>

@@ -9,7 +9,7 @@ const shortcuts = [
   { keys: ["?"], description: "Show this help", global: true },
   { keys: ["I"], description: "Invite members", page: "/admin/people" },
   { keys: ["D"], description: "Deploy course", page: "/admin/courses" },
-  { keys: ["A"], description: "New announcement", page: "/admin/announcements" },
+  { keys: ["A"], description: "New announcement", page: "/admin/communication" },
   { keys: ["Esc"], description: "Close dialogs", global: true },
 ];
 
@@ -40,7 +40,7 @@ export function AdminKeyboardShortcuts() {
         window.dispatchEvent(new CustomEvent("admin-shortcut:invite"));
       } else if (key === "d" && location.pathname === "/admin/courses") {
         window.dispatchEvent(new CustomEvent("admin-shortcut:deploy"));
-      } else if (key === "a" && location.pathname === "/admin/announcements") {
+      } else if (key === "a" && location.pathname === "/admin/communication") {
         window.dispatchEvent(new CustomEvent("admin-shortcut:announce"));
       }
     };

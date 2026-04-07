@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard, GraduationCap, Users, BarChart3, Megaphone, MessageSquare,
+  LayoutDashboard, GraduationCap, Users, BarChart3, MessageSquare,
   Settings, HelpCircle, UserPlus, Rocket, Bell,
 } from "lucide-react";
 import {
@@ -15,8 +15,7 @@ const adminPages = [
   { title: "Courses", url: "/admin/courses", icon: GraduationCap },
   { title: "People", url: "/admin/people", icon: Users },
   { title: "Insights", url: "/admin/insights", icon: BarChart3 },
-  { title: "Announcements", url: "/admin/announcements", icon: Megaphone },
-  { title: "Messages", url: "/admin/messages", icon: MessageSquare },
+  { title: "Communication", url: "/admin/communication", icon: MessageSquare },
   { title: "Settings", url: "/admin/settings", icon: Settings },
   { title: "Help", url: "/admin/help", icon: HelpCircle },
 ];
@@ -24,7 +23,7 @@ const adminPages = [
 const quickActions = [
   { title: "Invite Members", url: "/admin/people", icon: UserPlus },
   { title: "Deploy Course", url: "/admin/courses", icon: Rocket },
-  { title: "New Announcement", url: "/admin/announcements", icon: Bell },
+  { title: "New Announcement", url: "/admin/communication", icon: Bell },
 ];
 
 export function AdminCommandPalette() {

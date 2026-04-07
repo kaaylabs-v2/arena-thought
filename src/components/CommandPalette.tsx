@@ -15,7 +15,7 @@ const pages = [
   { title: "Notebook", url: "/notebook", icon: BookOpen },
   { title: "Insights", url: "/insights", icon: Sparkles },
   { title: "Reflections", url: "/reflections", icon: PenLine },
-  { title: "Messages", url: "/messages", icon: MessageSquare },
+  { title: "Communication", url: "/communication", icon: MessageSquare },
   { title: "Settings", url: "/settings", icon: Settings },
   { title: "Profile", url: "/profile", icon: User },
 ];
