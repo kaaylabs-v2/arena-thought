@@ -36,6 +36,7 @@ function NotificationInbox({
   announcements: { id: string; title: string; body: string; sentDate: string; audience: string }[];
 }) {
   const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   const sorted = useMemo(() => {
     const items = announcements.map((a) => ({
