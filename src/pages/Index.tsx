@@ -2,7 +2,7 @@ import { ArrowRight, BookOpen, Library, Clock, ListChecks, Check, Calendar, Bell
 import { Link } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { useWorkspace } from "@/context/WorkspaceContext";
-import { toast } from "sonner";
+
 
 function seedHash(str: string, salt: number = 0): number {
   let h = salt;
