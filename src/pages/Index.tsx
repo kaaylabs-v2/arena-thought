@@ -315,14 +315,14 @@ const Index = () => {
           {greetingSubtitle.text}
         </p>
 
-        {/* Fix 2 — Nexi suggestion line */}
-        {topFocus && focusCourseId && (
+        {/* Nexi insight suggestion line */}
+        {topInsight && insightCourseId && (
           <div className="flex items-center gap-2 mt-2 animate-fade-in [animation-delay:120ms] [animation-fill-mode:backwards]">
             <Sparkles className="w-3.5 h-3.5 text-accent flex-shrink-0" strokeWidth={1.5} />
             <p className="text-sm text-muted-foreground">
-              Nexi suggests reviewing <span className="text-foreground font-medium">{topFocus.topic}</span> today based on your recent sessions.{" "}
+              {topInsight.message}{" "}
               <Link
-                to={`/workspace/${focusCourseId}`}
+                to={`/workspace/${insightCourseId}`}
                 className="text-sm text-accent hover:underline"
               >
                 Review →
