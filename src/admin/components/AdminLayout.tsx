@@ -16,7 +16,7 @@ export function AdminLayout() {
         <SidebarInset className="flex-1 flex flex-col">
           <AdminTopBar />
           <main className="flex-1 overflow-y-auto">
-            <div key={location.pathname} className="animate-fade-in">
+            <div key={location.pathname} className="animate-page-enter will-change-[transform,opacity]">
               <Outlet />
             </div>
             <ScrollToTop />
