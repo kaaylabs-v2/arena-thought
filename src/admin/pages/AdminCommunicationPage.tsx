@@ -5,6 +5,7 @@ import { type Announcement } from "@/admin/data/mock-data";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 /* ─── Dynamic timestamp helpers ─── */
 function formatClockTime(ts: string): string {
@@ -81,56 +82,47 @@ const AdminCommunicationPage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)] animate-fade-in">
-      <div className="flex-shrink-0 px-8 pt-8 pb-0">
-        <h1 className="font-serif text-4xl text-foreground font-medium leading-[1.1]">Communication</h1>
-        <p className="text-sm text-muted-foreground mt-1">Direct messages and announcements for your learners</p>
+    <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
+      <div className="mb-6">
+        <h1 className="font-serif text-[2rem] font-normal text-foreground">Communication</h1>
+        <p className="text-sm mt-0.5 text-muted-foreground">Direct messages and announcements for your learners</p>
       </div>
 
-      <div className="flex-shrink-0 border-b border-border px-8 mt-6">
-        <div className="flex gap-6">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "pb-3 text-sm font-medium transition-colors relative",
-                activeTab === tab.id
-                  ? "text-foreground border-b-2 border-accent"
-                  : "text-muted-foreground hover:text-foreground"
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as AdminTab)}>
+        <TabsList className="mb-6 bg-muted/50">
+          <TabsTrigger value="messages" className="text-[13px]">
+            <span className="flex items-center gap-1.5">
+              Direct Messages
+              {unreadDMs > 0 && (
+                <span className="bg-accent text-accent-foreground rounded-full text-[10px] px-1.5 font-medium">
+                  {unreadDMs}
+                </span>
               )}
-            >
-              <span className="flex items-center gap-1.5">
-                {tab.label}
-                {tab.badge && (
-                  <span className="bg-accent text-accent-foreground rounded-full text-[10px] px-1.5 font-medium">
-                    {tab.badge}
-                  </span>
-                )}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="announcements" className="text-[13px]">Announcements</TabsTrigger>
+          <TabsTrigger value="compose" className="text-[13px]">Compose</TabsTrigger>
+        </TabsList>
 
-      <div className="flex-1 min-h-0 overflow-hidden">
-        <div key={activeTab} className="animate-fade-in h-full flex flex-col">
-          {activeTab === "messages" && <AdminDMTab />}
-          {activeTab === "announcements" && (
-            <AdminAnnouncementsTab
-              onCompose={() => setActiveTab("compose")}
-              drafts={drafts}
-              onDeleteDraft={handleDeleteDraft}
-            />
-          )}
-          {activeTab === "compose" && (
-            <ComposeTab
-              onSent={() => setActiveTab("announcements")}
-              onSaveDraft={handleSaveDraft}
-            />
-          )}
-        </div>
-      </div>
+        <TabsContent value="messages" className="mt-0">
+          <div className="h-[calc(100vh-220px)] flex flex-col border border-border rounded-xl overflow-hidden">
+            <AdminDMTab />
+          </div>
+        </TabsContent>
+        <TabsContent value="announcements" className="mt-0">
+          <AdminAnnouncementsTab
+            onCompose={() => setActiveTab("compose")}
+            drafts={drafts}
+            onDeleteDraft={handleDeleteDraft}
+          />
+        </TabsContent>
+        <TabsContent value="compose" className="mt-0">
+          <ComposeTab
+            onSent={() => setActiveTab("announcements")}
+            onSaveDraft={handleSaveDraft}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
@@ -399,7 +391,7 @@ function AdminAnnouncementsTab({
   const { studioAnnouncements } = useWorkspace();
 
   return (
-    <div className="overflow-y-auto h-full px-8 py-6">
+    <div className="overflow-y-auto max-h-[calc(100vh-220px)] py-4">
       <div className="max-w-3xl">
         <div className="flex justify-between items-center mb-4">
           <p className="text-xs uppercase tracking-widest text-muted-foreground">All Announcements</p>
@@ -540,7 +532,7 @@ function ComposeTab({
   };
 
   return (
-    <div className="overflow-y-auto h-full px-8 py-6">
+    <div className="overflow-y-auto max-h-[calc(100vh-220px)] py-4">
       <div className="max-w-2xl mx-auto">
         <h2 className="font-serif text-2xl text-foreground">New Announcement</h2>
         <p className="text-sm text-muted-foreground mt-1 mb-8">Broadcast a message to your learners</p>
