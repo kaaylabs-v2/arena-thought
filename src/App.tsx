@@ -11,7 +11,7 @@ import Library from "./pages/Library";
 import Workspace from "./pages/Workspace";
 import Notebook from "./pages/Notebook";
 import Reflections from "./pages/Reflections";
-import Progress from "./pages/Progress";
+import Insights from "./pages/Insights";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import StudyPlan from "./pages/StudyPlan";

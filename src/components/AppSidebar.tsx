@@ -38,7 +38,7 @@ const mainNav = [
   { title: "Library", url: "/library", icon: Library },
   { title: "Study Plan", url: "/study-plan", icon: ListChecks },
   { title: "Notebook", url: "/notebook", icon: BookOpen },
-  { title: "Progress", url: "/progress", icon: BarChart3 },
+  { title: "Insights", url: "/insights", icon: Sparkles },
   { title: "Reflections", url: "/reflections", icon: Sparkles },
   { title: "Messages", url: "/messages", icon: MessageSquare },
 ];
