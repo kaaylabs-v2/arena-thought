@@ -429,7 +429,7 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
         {modules.map((module) => (
           <div key={module.id} className="mb-1">
             <div className="px-4 py-2">
-              <h3 className="text-[11px] font-sans font-medium text-muted-foreground/80 uppercase tracking-widest">
+              <h3 className="text-[11px] font-sans font-medium text-muted-foreground uppercase tracking-widest">
                 {module.title}
               </h3>
             </div>
@@ -444,10 +444,10 @@ export function SourcesPane({ mode, onToggle, selectedSource, onSelectSource, on
                     className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-all duration-200 ${
                       isSelected
                         ? "bg-secondary text-foreground"
-                        : "text-foreground/75 hover:bg-secondary/80 hover:text-foreground"
+                        : "text-foreground hover:bg-secondary/80"
                     }`}
                   >
-                    <ItemIcon className="h-3.5 w-3.5 text-muted-foreground/70 shrink-0" strokeWidth={1.5} />
+                    <ItemIcon className="h-3.5 w-3.5 text-muted-foreground shrink-0" strokeWidth={1.5} />
                     <span className="text-[12px] font-sans flex-1 truncate">{item.title}</span>
                     {item.completed && (
                       <Check className="h-3 w-3 text-accent shrink-0" strokeWidth={2} />

@@ -182,7 +182,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                 </div>
               ) : (
                 <div className="max-w-full" data-nexi-msg>
-                  <div className="bg-card border border-border rounded-2xl rounded-bl-sm px-5 py-4 shadow-soft">
+                  <div className="bg-card border border-border dark:border-border/80 rounded-2xl rounded-bl-sm px-5 py-4 shadow-soft dark:shadow-none">
                     <div className="text-[13.5px] font-sans text-foreground leading-[1.7] whitespace-pre-line">
                       {msg.content.split(/(\*\*.*?\*\*|\*.*?\*)/g).map((part, i) => {
                         if (part.startsWith("**") && part.endsWith("**")) {
@@ -263,7 +263,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
                 <button
                   key={chip.label}
                   onClick={() => handleChip(chip.label)}
-                  className="flex items-center gap-1.5 text-[12px] font-sans text-muted-foreground/70 border border-border/80 px-3 py-1.5 rounded-full hover:text-foreground hover:border-border hover:bg-muted/40 transition-all duration-200 active:scale-[0.96] animate-fade-in-fast [animation-fill-mode:backwards]"
+                  className="flex items-center gap-1.5 text-[12px] font-sans text-muted-foreground border border-border px-3 py-1.5 rounded-full hover:text-foreground hover:border-foreground/20 hover:bg-muted/50 transition-all duration-200 active:scale-[0.96] animate-fade-in-fast [animation-fill-mode:backwards]"
                   style={{ animationDelay: `${idx * 40}ms` }}
                 >
                   <chip.icon className="h-3 w-3" strokeWidth={1.5} />
@@ -309,7 +309,7 @@ export function NexiPane({ courseId, courseTitle, currentModule }: NexiPaneProps
             </div>
           )}
 
-          <div className="flex items-end gap-3 bg-card border border-border rounded-xl px-4 py-3 shadow-soft focus-within:shadow-lifted focus-within:border-ring/30 transition-all duration-200">
+          <div className="flex items-end gap-3 bg-card border border-border rounded-xl px-4 py-3 shadow-soft focus-within:shadow-lifted focus-within:border-border transition-all duration-200">
             <textarea
               ref={textareaRef}
               value={input}
