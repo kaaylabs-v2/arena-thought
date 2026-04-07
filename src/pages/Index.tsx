@@ -56,6 +56,49 @@ const Index = () => {
   const activeCourse = recentCourses[0];
   const upcomingTasks = tasks.filter((t) => !t.completed).slice(0, 4);
 
+  // Derive focus areas from chat messages — topics where learner asked follow-ups
+  const focusAreas = useMemo(() => {
+    const topicSignals: { topic: string; course: string; courseId: string; followUps: number; weight: number }[] = [];
+    const publishedCourses = adminCourses.filter(c => c.status === "published");
+
+    for (const course of publishedCourses) {
+      const msgs = chatMessages[course.id] || [];
+      const userMsgs = msgs.filter(m => m.role === "user");
+      const nexiMsgs = msgs.filter(m => m.role === "nexi");
+
+      // Detect topics from nexi responses that contain clarification/expansion patterns
+      const clarifyPatterns = /let me clarify|to expand|let me walk|key insight|think of|chain rule|gradient/i;
+      const topicPatterns: { pattern: RegExp; topic: string }[] = [
+        { pattern: /backpropagation|backward pass|chain rule/i, topic: "Backpropagation" },
+        { pattern: /gradient descent|learning rate|sgd|mini.?batch/i, topic: "Gradient Descent" },
+        { pattern: /bayes|posterior|prior|likelihood/i, topic: "Bayes' Theorem" },
+        { pattern: /activation function|relu|sigmoid|tanh/i, topic: "Activation Functions" },
+        { pattern: /consciousness|hard problem|qualia/i, topic: "Consciousness" },
+        { pattern: /regularization|overfitting|l1|l2/i, topic: "Regularization" },
+        { pattern: /loss function|cost function|optimization/i, topic: "Loss Functions" },
+      ];
+
+      for (const tp of topicPatterns) {
+        const relevantNexi = nexiMsgs.filter(m => tp.pattern.test(m.content));
+        const relevantUser = userMsgs.filter(m => tp.pattern.test(m.content));
+        const followUps = relevantUser.length + (relevantNexi.some(m => clarifyPatterns.test(m.content)) ? 1 : 0);
+
+        if (followUps > 0) {
+          topicSignals.push({
+            topic: tp.topic,
+            course: course.title,
+            courseId: course.id,
+            followUps,
+            weight: Math.min(followUps / 4, 1),
+          });
+        }
+      }
+    }
+
+    return topicSignals
+      .sort((a, b) => b.followUps - a.followUps)
+      .slice(0, 4);
+  }, [chatMessages, adminCourses]);
   if (recentCourses.length === 0) {
     return (
       <div className="h-full min-h-screen p-8 lg:p-12 xl:p-16 max-w-3xl mx-auto flex flex-col items-center justify-center">
