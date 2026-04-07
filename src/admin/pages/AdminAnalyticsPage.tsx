@@ -109,7 +109,7 @@ export default function AdminAnalyticsPage({ embedded = false }: { embedded?: bo
       value: d.memberCount,
       fill: deptColors[i % deptColors.length],
     }));
-  }, []);
+  }, [departments]);
 
   // Engagement over time (area chart)
   const engagementOverTime = useMemo(() => {
