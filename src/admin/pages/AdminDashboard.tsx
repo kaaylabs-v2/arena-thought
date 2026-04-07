@@ -108,7 +108,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 stagger-children animate-fade-in [animation-delay:50ms] [animation-fill-mode:backwards]">
         {stats.map((stat, i) => (
           <Link key={stat.label} to={statLinks[i]} className="card-interactive p-5 group cursor-pointer hover:border-accent/20 transition-colors">
             <div className="flex items-center justify-between mb-3">
