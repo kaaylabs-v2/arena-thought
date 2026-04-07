@@ -368,6 +368,12 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     setDirectMessages((prev) => prev.map((m) => (m.id === id ? { ...m, read: true } : m)));
   }, []);
 
+  // ─── Shared announcement dismiss ───
+  const [dismissedAnnouncementIds, setDismissedAnnouncementIds] = useState<Set<string>>(new Set());
+  const dismissAnnouncement = useCallback((id: string) => {
+    setDismissedAnnouncementIds((prev) => new Set(prev).add(id));
+  }, []);
+
   return (
     <WorkspaceContext.Provider
       value={{
