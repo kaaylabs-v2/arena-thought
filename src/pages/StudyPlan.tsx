@@ -45,10 +45,14 @@ const StudyPlan = () => {
   const activeTasks = useMemo(() => tasks.filter((t) => !t.completed), [tasks]);
   const completedTasks = useMemo(() => tasks.filter((t) => t.completed), [tasks]);
 
+  // Show tasks in their natural order — only sort by priority if user hasn't dragged
+  const [hasManualOrder, setHasManualOrder] = useState(false);
+
   const sortedActive = useMemo(() => {
+    if (hasManualOrder) return activeTasks;
     const order: Record<TaskPriority, number> = { high: 0, medium: 1, low: 2 };
     return [...activeTasks].sort((a, b) => order[a.priority] - order[b.priority]);
-  }, [activeTasks]);
+  }, [activeTasks, hasManualOrder]);
 
   // Listen for keyboard shortcut
   useEffect(() => {

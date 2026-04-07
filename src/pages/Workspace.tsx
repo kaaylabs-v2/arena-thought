@@ -38,8 +38,24 @@ function pxToPercent(px: number, containerWidth: number) {
 
 const Workspace = () => {
   const { id } = useParams();
+  const { adminCourses } = useWorkspace();
   const courseId = id || "1";
-  const course = courseData[courseId] || courseData["1"];
+
+  // Dynamically resolve course data from published courses
+  const course = (() => {
+    const published = adminCourses.filter((c) => c.status === "published");
+    const match = published.find((c) => c.id === courseId);
+    if (match) {
+      const idx = published.indexOf(match);
+      const progress = getCourseProgress(idx);
+      return { title: match.title, module: progress.module };
+    }
+    // Fallback for first published course
+    if (published.length > 0) {
+      return { title: published[0].title, module: getCourseProgress(0).module };
+    }
+    return { title: "Course", module: "Module 1" };
+  })();
   const isMobile = useIsMobile();
 
   const [sourcesMode, setSourcesMode] = useState<SourcesMode>("list");

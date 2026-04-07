@@ -487,7 +487,7 @@ const Notebook = () => {
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = "translateY(-2px) scale(1.01)";
-                      e.currentTarget.style.boxShadow = "0 6px 20px -6px hsl(222 28% 14% / 0.1), 0 2px 6px -2px hsl(222 28% 14% / 0.05)";
+                      e.currentTarget.style.boxShadow = "0 6px 20px -6px hsl(var(--foreground) / 0.08), 0 2px 6px -2px hsl(var(--foreground) / 0.04)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = "";

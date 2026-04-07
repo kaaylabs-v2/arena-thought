@@ -443,7 +443,7 @@ function PatternsTab() {
           })}
         </div>
 
-        {seededFocusAreas.length < 4 && (
+        {focusAreas.length < 4 && (
           <p className="mt-6 text-xs text-muted-foreground italic">
             Nexi surfaces more patterns the more you study.
           </p>
