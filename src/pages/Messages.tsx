@@ -1,20 +1,33 @@
-import { useState } from "react";
-import { MessageSquare, Send, ArrowLeft, Circle, Mail } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Send, Circle, Mail } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+
+/** Map relative timestamp strings to fake clock times for display */
+const clockTimeMap: Record<string, string> = {
+  "Just now": new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }),
+  "1 hour ago": (() => { const d = new Date(); d.setHours(d.getHours() - 1); return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); })(),
+  "2 hours ago": (() => { const d = new Date(); d.setHours(d.getHours() - 2); return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); })(),
+  "Yesterday": "4:12 PM",
+};
+const getClockTime = (ts: string) => clockTimeMap[ts] || "3:00 PM";
+
+const getListTime = (ts: string) => {
+  if (ts === "Just now" || ts.includes("hour")) return getClockTime(ts);
+  if (ts === "Yesterday") return "Yesterday";
+  return ts;
+};
 
 const Messages = () => {
   const { directMessages, addDirectMessage, markMessageRead, userProfile } = useWorkspace();
   const [selectedThread, setSelectedThread] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Messages relevant to this learner (to or from them)
   const myMessages = directMessages.filter(
     (m) => m.toUserId === "user-1" || (m.fromRole === "learner" && m.fromName === userProfile.name)
   );
 
-  // Group by admin sender to create threads
   const threads = myMessages.reduce<Record<string, typeof myMessages>>((acc, msg) => {
     const key = msg.fromRole === "admin" ? msg.fromName : "Dr. Sarah Mitchell";
     if (!acc[key]) acc[key] = [];
@@ -22,7 +35,6 @@ const Messages = () => {
     return acc;
   }, {});
 
-  // Sort messages in thread by order
   Object.values(threads).forEach(t => t.sort((a, b) => {
     const idxA = directMessages.indexOf(a);
     const idxB = directMessages.indexOf(b);
@@ -52,9 +64,16 @@ const Messages = () => {
     setReplyText("");
   };
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [activeMessages.length, activeThread]);
+
   return (
-    <div className="w-full max-w-5xl mx-auto py-10 px-6 lg:px-12 xl:px-16 animate-fade-in">
-      <div className="mb-8">
+    <div className="flex flex-col h-[calc(100vh-64px)] animate-fade-in">
+      {/* Header */}
+      <div className="flex-shrink-0 px-6 lg:px-12 xl:px-16 pt-8 pb-4">
         <h1 className="font-serif text-4xl text-foreground mb-1.5 leading-[1.1] font-medium">Messages</h1>
         <p className="text-muted-foreground font-sans text-sm tracking-[-0.01em]">
           Direct messages from your instructors
@@ -62,28 +81,25 @@ const Messages = () => {
       </div>
 
       {threadKeys.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24">
+        <div className="flex-1 flex items-center justify-center px-6">
           <div className="rounded-2xl border-2 border-dashed border-border p-8 flex flex-col items-center max-w-sm">
             <div className="h-14 w-14 rounded-xl bg-muted/50 flex items-center justify-center mb-4">
               <Mail className="h-7 w-7 text-muted-foreground/40" strokeWidth={1.5} />
             </div>
             <h3 className="font-serif text-lg text-foreground font-medium mb-1.5">No conversations yet</h3>
             <p className="text-[13px] font-sans text-muted-foreground/70 text-center leading-relaxed">
-              When your instructor sends you a message, it will appear here. You'll also be able to reply directly.
+              When your instructor sends you a message, it will appear here.
             </p>
           </div>
         </div>
       ) : (
-        <div
-          className="flex border border-border rounded-xl overflow-hidden bg-card animate-fade-in"
-          style={{ animationDelay: "80ms", animationFillMode: "backwards", minHeight: "calc(100vh - 260px)" }}
-        >
-          {/* Thread list */}
-          <div className="w-[280px] shrink-0 border-r border-border bg-muted/30 flex flex-col">
-            <div className="p-3 border-b border-border">
+        <div className="flex flex-1 min-h-0 mx-6 lg:mx-12 xl:mx-16 mb-6 border border-border rounded-xl overflow-hidden bg-card">
+          {/* Conversation list */}
+          <div className="w-72 flex-shrink-0 border-r border-border flex flex-col bg-muted/20">
+            <div className="flex-shrink-0 px-4 py-3 border-b border-border">
               <p className="text-[11px] font-sans uppercase tracking-widest text-muted-foreground">Conversations</p>
             </div>
-            <ScrollArea className="flex-1">
+            <div className="flex-1 overflow-y-auto scrollbar-thin">
               {threadKeys.map((key) => {
                 const msgs = threads[key];
                 const lastMsg = msgs[msgs.length - 1];
@@ -93,69 +109,81 @@ const Messages = () => {
                     key={key}
                     onClick={() => handleSelectThread(key)}
                     className={cn(
-                      "w-full text-left px-4 py-3 border-b border-border/50 transition-colors",
-                      activeThread === key ? "bg-secondary" : "hover:bg-secondary/50"
+                      "w-full text-left px-4 py-3 border-b border-border/50 transition-colors cursor-pointer",
+                      activeThread === key
+                        ? "bg-accent/15 border-l-2 border-l-accent"
+                        : "hover:bg-accent/10"
                     )}
                   >
-                    <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center justify-between mb-0.5">
                       <span className="text-sm font-medium text-foreground truncate">{key}</span>
-                      {unread > 0 && (
-                        <span className="flex items-center justify-center h-5 w-5 rounded-full bg-accent text-accent-foreground text-[10px] font-bold">
-                          {unread}
-                        </span>
-                      )}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-[11px] text-muted-foreground/70">{getListTime(lastMsg.timestamp)}</span>
+                        {unread > 0 && (
+                          <span className="flex items-center justify-center h-5 min-w-[20px] rounded-full bg-accent text-accent-foreground text-[10px] font-bold px-1.5">
+                            {unread}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-xs text-muted-foreground truncate">{lastMsg.content.slice(0, 60)}...</p>
-                    <p className="text-[10px] text-muted-foreground/80 mt-1">{lastMsg.timestamp}</p>
+                    <p className="text-xs text-muted-foreground truncate mt-0.5">{lastMsg.content.slice(0, 60)}…</p>
                   </button>
                 );
               })}
-            </ScrollArea>
+            </div>
           </div>
 
-          {/* Conversation view */}
-          <div className="flex-1 flex flex-col min-w-0">
+          {/* Thread area */}
+          <div className="flex flex-col flex-1 min-w-0">
             {activeThread ? (
               <>
-                <div className="px-5 py-4 border-b border-border">
+                {/* Thread header */}
+                <div className="flex-shrink-0 px-6 py-4 border-b border-border">
                   <h3 className="font-serif text-lg text-foreground leading-snug">{activeThread}</h3>
                   <p className="text-[11px] font-sans text-muted-foreground/80 uppercase tracking-widest mt-0.5">Instructor</p>
                 </div>
-                <ScrollArea className="flex-1 p-5">
-                  <div className="space-y-4">
-                    {activeMessages.map((msg) => (
-                      <div
-                        key={msg.id}
-                        className={cn(
-                          "max-w-[80%] rounded-xl px-4 py-3",
-                          msg.fromRole === "admin"
-                            ? "bg-secondary border border-border mr-auto"
-                            : "bg-accent/15 border border-accent/25 ml-auto"
-                        )}
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-medium text-foreground">{msg.fromName}</span>
+
+                {/* Messages scroll area */}
+                <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-4 scrollbar-thin">
+                  <div className="space-y-3">
+                    {activeMessages.map((msg) => {
+                      const isMe = msg.fromRole === "learner";
+                      return (
+                        <div key={msg.id} className={cn("flex flex-col", isMe ? "items-end" : "items-start")}>
+                          <p className={cn("text-xs text-muted-foreground mb-1", isMe ? "text-right" : "text-left")}>
+                            {!isMe && <>{msg.fromName} · </>}{getClockTime(msg.timestamp)}
+                          </p>
+                          <div
+                            className={cn(
+                              "max-w-[72%] px-4 py-2.5",
+                              isMe
+                                ? "bg-accent/20 text-foreground rounded-2xl rounded-tr-sm"
+                                : "bg-muted text-foreground rounded-2xl rounded-tl-sm"
+                            )}
+                          >
+                            {msg.subject && (
+                              <p className="text-xs font-medium text-foreground mb-1">{msg.subject}</p>
+                            )}
+                            <p className="text-sm text-foreground leading-relaxed">{msg.content}</p>
+                          </div>
                           {!msg.read && msg.fromRole === "admin" && (
-                            <Circle className="h-2 w-2 fill-accent text-accent" />
+                            <Circle className="h-2 w-2 fill-accent text-accent mt-1" />
                           )}
                         </div>
-                        {msg.subject && (
-                          <p className="text-xs font-medium text-foreground mb-1">{msg.subject}</p>
-                        )}
-                        <p className="text-sm text-foreground leading-relaxed">{msg.content}</p>
-                        <p className="text-[10px] text-muted-foreground/80 mt-2">{msg.timestamp}</p>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
-                </ScrollArea>
-                <div className="px-5 py-4 border-t border-border">
+                </div>
+
+                {/* Composer */}
+                <div className="flex-shrink-0 px-6 py-4 border-t border-border">
                   <div className="flex gap-2 items-end">
                     <textarea
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
-                      placeholder="Type your reply..."
+                      placeholder="Type your reply…"
                       rows={1}
-                      className="flex-1 bg-transparent border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring resize-none min-h-[44px] max-h-[120px]"
+                      className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus-visible:shadow-none focus-visible:ring-0 border border-border rounded-lg px-3 py-2.5 min-h-[44px] max-h-[120px]"
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                           e.preventDefault();
