@@ -27,27 +27,6 @@ const weeklyActivity = [
 
 const weeklyTotalHours = weeklyActivity.reduce((s, d) => s + d.hours, 0);
 
-/** Fixed per-course progress data keyed by course id index */
-const fixedCourseData: {
-  module: string;
-  progress: number;
-  status: "complete" | "in-progress" | "not-started";
-}[] = [
-  { module: "Module 4: Neural Networks", progress: 67, status: "in-progress" },
-  { module: "Module 2: Regression Analysis", progress: 34, status: "in-progress" },
-  { module: "Module 6: Consciousness", progress: 89, status: "in-progress" },
-  { module: "Module 1: Vectors & Matrices", progress: 12, status: "in-progress" },
-  { module: "Module 5: Memory & Learning", progress: 100, status: "complete" },
-  { module: "Module 1: Research Design", progress: 5, status: "not-started" },
-];
-
-/** Seeded focus areas */
-const seededFocusAreas = [
-  { topic: "Backpropagation", course: "Foundations of Machine Learning", followUps: 5 },
-  { topic: "Bayes' Theorem", course: "Advanced Statistical Methods", followUps: 3 },
-  { topic: "Eigenvalue Decomposition", course: "Linear Algebra for Data Science", followUps: 2 },
-  { topic: "Qualia & Consciousness", course: "Philosophy of Mind", followUps: 2 },
-];
 
 type InsightsTab = "overview" | "progress" | "patterns";
 
