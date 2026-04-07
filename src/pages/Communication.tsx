@@ -362,20 +362,19 @@ function DirectMessagesTab() {
    Tab B — Announcements (Learner — read-only)
    ═══════════════════════════════════════════ */
 function AnnouncementsTab() {
-  const { studioAnnouncements } = useWorkspace();
-  const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
+  const { studioAnnouncements, dismissedAnnouncementIds, dismissAnnouncement } = useWorkspace();
 
   const sorted = useMemo(() => {
     const items = studioAnnouncements.map((a) => ({
       ...a,
-      dismissed: dismissedIds.has(a.id),
+      dismissed: dismissedAnnouncementIds.has(a.id),
     }));
     items.sort((a, b) => {
       if (a.dismissed !== b.dismissed) return a.dismissed ? 1 : -1;
       return new Date(b.sentDate).getTime() - new Date(a.sentDate).getTime();
     });
     return items;
-  }, [studioAnnouncements, dismissedIds]);
+  }, [studioAnnouncements, dismissedAnnouncementIds]);
 
   const allDismissed = sorted.every((n) => n.dismissed);
 
@@ -410,7 +409,7 @@ function AnnouncementsTab() {
                     <span className="text-[11px] text-muted-foreground/60">{ann.sentDate}</span>
                     {!ann.dismissed && (
                       <button
-                        onClick={() => setDismissedIds((prev) => new Set(prev).add(ann.id))}
+                        onClick={() => dismissAnnouncement(ann.id)}
                         className="text-muted-foreground hover:text-foreground transition-colors active:scale-90"
                       >
                         <X className="h-3.5 w-3.5" />
