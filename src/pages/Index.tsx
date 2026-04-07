@@ -17,13 +17,6 @@ const fixedCourseData = [
   { module: "Module 1: Research Design", progress: 5, status: "not-started" as const },
 ];
 
-const seededFocusAreas = [
-  { topic: "Backpropagation", course: "Foundations of Machine Learning", followUps: 5 },
-  { topic: "Bayes' Theorem", course: "Advanced Statistical Methods", followUps: 3 },
-  { topic: "Eigenvalue Decomposition", course: "Linear Algebra for Data Science", followUps: 2 },
-  { topic: "Qualia & Consciousness", course: "Philosophy of Mind", followUps: 2 },
-];
-
 /** Seeded last-studied offsets per course index (hours ago) */
 const lastStudiedOffsets = [2, 72, 18, 120, 168, 336];
 
