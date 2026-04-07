@@ -226,7 +226,7 @@ export default function AdminAnalyticsPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis dataKey="week" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
               <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))" }} />
+              <Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }} itemStyle={{ color: "hsl(var(--foreground))" }} />
               <Bar dataKey="active" fill={AMBER} radius={[4, 4, 0, 0]} animationDuration={500} />
             </BarChart>
           </ResponsiveContainer>
