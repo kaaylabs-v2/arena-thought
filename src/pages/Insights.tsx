@@ -345,7 +345,10 @@ function PatternsTab() {
   const rawMood = Object.entries(moodCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "focused";
   const mostUsedMood = rawMood.charAt(0).toUpperCase() + rawMood.slice(1);
 
-  const maxFollowUps = Math.max(...seededFocusAreas.map((f) => f.followUps), 1);
+  const completedTasks = Math.max(tasks.filter((t) => t.completed).length, 3);
+  const topInsights = allInsights.slice(0, 2);
+  const focusAreas = allInsights.filter((ins) => ins.type === "struggle" || ins.type === "repeated-question" || ins.type === "confidence-decay");
+  const maxMetricValue = Math.max(focusAreas.length, 1);
 
   return (
     <div className="space-y-6">
