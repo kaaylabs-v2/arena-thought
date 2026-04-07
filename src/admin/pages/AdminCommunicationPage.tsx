@@ -105,7 +105,7 @@ const AdminCommunicationPage = () => {
         </TabsList>
 
         <TabsContent value="messages" className="mt-0">
-          <div className="h-[calc(100vh-220px)] flex flex-col border border-border rounded-xl overflow-hidden">
+          <div className="h-[calc(100vh-280px)] flex flex-col border border-border rounded-xl overflow-hidden">
             <AdminDMTab />
           </div>
         </TabsContent>
@@ -391,7 +391,7 @@ function AdminAnnouncementsTab({
   const { studioAnnouncements } = useWorkspace();
 
   return (
-    <div className="overflow-y-auto max-h-[calc(100vh-220px)] py-4">
+    <div className="overflow-y-auto max-h-[calc(100vh-280px)] py-4">
       <div className="max-w-3xl">
         <div className="flex justify-between items-center mb-4">
           <p className="text-xs uppercase tracking-widest text-muted-foreground">All Announcements</p>
