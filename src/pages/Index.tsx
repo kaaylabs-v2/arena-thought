@@ -150,8 +150,8 @@ function NotificationInbox({
                   <p className="text-xs text-muted-foreground leading-relaxed">{n.body}</p>
                 </div>
               </div>
-              {!expandedIds.has(n.id) && (
-                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{n.body}</p>
+              {!expandedIds.has(n.id) && !n.dismissed && (
+                <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed">{n.body}</p>
               )}
               <span className="text-[11px] text-muted-foreground/60 mt-0.5">{formatNotificationDate(n.sentDate)}</span>
             </div>
