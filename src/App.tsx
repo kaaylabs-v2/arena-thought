@@ -11,7 +11,7 @@ import Library from "./pages/Library";
 import Workspace from "./pages/Workspace";
 import Notebook from "./pages/Notebook";
 import Reflections from "./pages/Reflections";
-import Progress from "./pages/Progress";
+import Insights from "./pages/Insights";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import StudyPlan from "./pages/StudyPlan";
@@ -56,7 +56,7 @@ const App = () => (
                 <Route path="/workspace/:id" element={<Workspace />} />
                 <Route path="/notebook" element={<Notebook />} />
                 <Route path="/reflections" element={<Reflections />} />
-                <Route path="/progress" element={<Progress />} />
+                <Route path="/insights" element={<Insights />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/study-plan" element={<StudyPlan />} />
