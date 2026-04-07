@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Sparkles, BookOpen, Library, ArrowRight } from "lucide-react";
+import { Sparkles, BookOpen, Library, ArrowRight, BarChart3, Activity } from "lucide-react";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import { useScrollReveal, revealProps } from "@/hooks/use-scroll-reveal";
 import {
@@ -19,6 +19,8 @@ const weeklyActivity = [
   { day: "Sun", hours: 0.5 },
 ];
 
+const weeklyTotalHours = weeklyActivity.reduce((s, d) => s + d.hours, 0);
+
 /** Fixed per-course progress data keyed by course id index */
 const fixedCourseData: {
   module: string;
@@ -33,7 +35,7 @@ const fixedCourseData: {
   { module: "Module 1: Research Design", progress: 5, status: "not-started" },
 ];
 
-/** Seeded focus areas — always rendered regardless of chat messages */
+/** Seeded focus areas */
 const seededFocusAreas = [
   { topic: "Backpropagation", course: "Foundations of Machine Learning", followUps: 5 },
   { topic: "Bayes' Theorem", course: "Advanced Statistical Methods", followUps: 3 },
@@ -41,13 +43,12 @@ const seededFocusAreas = [
   { topic: "Qualia & Consciousness", course: "Philosophy of Mind", followUps: 2 },
 ];
 
-type InsightsTab = "overview" | "focus" | "progress" | "patterns";
+type InsightsTab = "overview" | "progress" | "patterns";
 
-const tabConfig: { id: InsightsTab; label: string }[] = [
-  { id: "overview", label: "Overview" },
-  { id: "focus", label: "Focus Areas" },
-  { id: "progress", label: "Progress" },
-  { id: "patterns", label: "Patterns" },
+const tabConfig: { id: InsightsTab; label: string; icon: React.ElementType }[] = [
+  { id: "overview", label: "Overview", icon: Sparkles },
+  { id: "progress", label: "Progress", icon: BarChart3 },
+  { id: "patterns", label: "Patterns", icon: Activity },
 ];
 
 /* ─── Custom Recharts Tooltip ─── */
@@ -81,25 +82,20 @@ function OverviewTab() {
           title: c.title,
           module: data.module,
           progress: data.progress,
-          timeMinutes: Math.floor(data.progress * 15 + 60),
+          status: data.status,
         };
       }),
     [publishedCourses]
   );
 
-  const totalHours = Math.floor(courseProgress.reduce((s, c) => s + c.timeMinutes, 0) / 60);
-
-  // "Continue Learning" nudge — pick most recently active (first non-complete)
-  const continueCourse = courseProgress.find((c) => {
-    const d = fixedCourseData[courseProgress.indexOf(c) % fixedCourseData.length];
-    return d.status === "in-progress";
-  });
+  // "Continue Learning" nudge — pick first in-progress course
+  const continueCourse = courseProgress.find((c) => c.status === "in-progress");
 
   const metrics = [
     { value: publishedCourses.length, label: "Active Courses" },
-    { value: `${totalHours}h`, label: "Study Hours" },
-    { value: notebookEntries.length || 8, label: "Notes Created" },
-    { value: reflections.length || 4, label: "Reflections Written" },
+    { value: `${weeklyTotalHours}h`, label: "Study Hours" },
+    { value: Math.max(notebookEntries.length, 8), label: "Notes Created" },
+    { value: Math.max(reflections.length, 4), label: "Reflections Written" },
   ];
 
   return (
@@ -165,57 +161,6 @@ function OverviewTab() {
   );
 }
 
-/* ─── Focus Areas Tab ─── */
-
-function FocusAreasTab() {
-  const maxFollowUps = Math.max(...seededFocusAreas.map((f) => f.followUps), 1);
-
-  return (
-    <div>
-      <div className="flex items-center gap-2 mb-1">
-        <h2 className="font-serif text-2xl text-foreground">Nexi noticed</h2>
-        <Sparkles className="h-5 w-5 text-accent" strokeWidth={1.5} />
-      </div>
-      <p className="text-sm text-muted-foreground mt-1 mb-6">
-        Topics worth revisiting based on your recent sessions
-      </p>
-
-      <div className="space-y-3">
-        {seededFocusAreas.map((area, i) => (
-          <Link
-            key={area.topic}
-            to="/library"
-            className="block bg-card border border-border rounded-xl px-5 py-4 hover:bg-accent/[0.08] hover:border-accent/30 transition-all duration-200 cursor-pointer animate-fade-in"
-            style={{ animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
-          >
-            <div>
-              <span className="text-sm font-medium text-foreground">{area.topic}</span>
-              <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5 mt-1 inline-block">
-                {area.course}
-              </span>
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              {area.followUps} follow-up question{area.followUps !== 1 ? "s" : ""}
-            </p>
-            <div className="h-1 rounded-full bg-muted mt-3 overflow-hidden">
-              <div
-                className="h-full bg-accent rounded-full transition-all duration-500"
-                style={{ width: `${(area.followUps / maxFollowUps) * 100}%` }}
-              />
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {seededFocusAreas.length < 4 && (
-        <p className="mt-6 text-xs text-muted-foreground italic">
-          Nexi surfaces more patterns the more you study.
-        </p>
-      )}
-    </div>
-  );
-}
-
 /* ─── Progress Tab ─── */
 
 function AnimatedProgressBar({ targetPercent, isVisible, delay }: { targetPercent: number; isVisible: boolean; delay: number }) {
@@ -261,8 +206,8 @@ function ProgressTab() {
   if (courseProgress.length === 0) {
     return (
       <div className="text-center py-24">
-        <BookOpen className="h-10 w-10 text-muted-foreground/70 mx-auto mb-3" strokeWidth={1} />
-        <p className="text-muted-foreground/70 font-sans text-sm mb-4">No courses started yet.</p>
+        <Sparkles className="h-10 w-10 text-muted-foreground/70 mx-auto mb-3" strokeWidth={1} />
+        <p className="text-muted-foreground/70 font-sans text-sm mb-4">Start a course to see your progress here.</p>
         <Link to="/library" className="inline-flex items-center gap-2 text-sm font-sans text-accent hover:text-accent/80 transition-colors">
           <Library className="h-4 w-4" strokeWidth={1.5} />
           Browse Library
@@ -326,13 +271,22 @@ function ProgressCourseCard({
   );
 }
 
-/* ─── Patterns Tab ─── */
+/* ─── Patterns Tab (merged with Focus Areas) ─── */
 
 function PatternsTab() {
   const { chatMessages, adminCourses, notebookEntries, reflections, tasks } = useWorkspace();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const publishedCourses = adminCourses.filter((c) => c.status === "published");
-  const totalQuestions = Object.values(chatMessages).flat().filter((m) => m.role === "user").length || 14;
+  const totalQuestions = Math.max(
+    Object.values(chatMessages).flat().filter((m) => m.role === "user").length,
+    14
+  );
 
   const courseMsgCounts = publishedCourses
     .map((c) => ({
@@ -343,14 +297,17 @@ function PatternsTab() {
 
   const mostActiveCourse = courseMsgCounts[0]?.title || "Foundations of Machine Learning";
   const topFocus = seededFocusAreas[0];
-  const completedTasks = tasks.filter((t) => t.completed).length || 3;
+  const completedTasks = Math.max(tasks.filter((t) => t.completed).length, 3);
 
   // Most used mood from reflections
   const moodCounts: Record<string, number> = {};
   reflections.forEach((r) => {
     if (r.mood) moodCounts[r.mood] = (moodCounts[r.mood] || 0) + 1;
   });
-  const mostUsedMood = Object.entries(moodCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "Focused";
+  const rawMood = Object.entries(moodCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "focused";
+  const mostUsedMood = rawMood.charAt(0).toUpperCase() + rawMood.slice(1);
+
+  const maxFollowUps = Math.max(...seededFocusAreas.map((f) => f.followUps), 1);
 
   return (
     <div className="space-y-6">
@@ -375,11 +332,56 @@ function PatternsTab() {
           <h3 className="text-[11px] font-sans text-muted-foreground uppercase tracking-widest">Study Habits</h3>
         </div>
         <div className="divide-y divide-border">
-          <PatternRow label="Notes created" value={String(notebookEntries.length || 8)} />
-          <PatternRow label="Reflections written" value={String(reflections.length || 4)} />
+          <PatternRow label="Notes created" value={String(Math.max(notebookEntries.length, 8))} />
+          <PatternRow label="Reflections written" value={String(Math.max(reflections.length, 4))} />
           <PatternRow label="Tasks completed" value={String(completedTasks)} />
           <PatternRow label="Most used mood" value={mostUsedMood} />
         </div>
+      </div>
+
+      {/* Topics to Revisit (merged Focus Areas) */}
+      <div className="animate-fade-in" style={{ animationDelay: "160ms", animationFillMode: "both" }}>
+        <div className="flex items-center gap-2 mb-1">
+          <h2 className="font-serif text-2xl text-foreground">Topics to revisit</h2>
+          <Sparkles className="h-5 w-5 text-accent" strokeWidth={1.5} />
+        </div>
+        <p className="text-sm text-muted-foreground mt-1 mb-4">
+          Nexi noticed these topics worth revisiting
+        </p>
+
+        <div className="space-y-3">
+          {seededFocusAreas.map((area, i) => (
+            <div
+              key={area.topic}
+              className="bg-card border border-border rounded-xl px-5 py-4 animate-fade-in"
+              style={{ animationDelay: `${200 + i * 50}ms`, animationFillMode: "both" }}
+            >
+              <div>
+                <span className="text-sm font-medium text-foreground">{area.topic}</span>
+              </div>
+              <div className="mt-1">
+                <span className="text-[11px] text-muted-foreground bg-muted rounded-full px-2 py-0.5 inline-block">
+                  {area.course}
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                {area.followUps} follow-up question{area.followUps !== 1 ? "s" : ""}
+              </p>
+              <div className="h-1 rounded-full bg-muted mt-3 overflow-hidden">
+                <div
+                  className="h-full bg-accent rounded-full transition-all duration-700 ease-smooth"
+                  style={{ width: mounted ? `${(area.followUps / maxFollowUps) * 100}%` : "0%" }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {seededFocusAreas.length < 4 && (
+          <p className="mt-6 text-xs text-muted-foreground italic">
+            Nexi surfaces more patterns the more you study.
+          </p>
+        )}
       </div>
     </div>
   );
@@ -419,12 +421,13 @@ const Insights = () => {
               <li key={tab.id}>
                 <button
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-1.5 rounded-md text-sm font-sans transition-colors duration-150 active:scale-[0.97] ${
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-sans transition-all duration-200 active:scale-[0.97] ${
                     activeTab === tab.id
-                      ? "bg-accent/10 text-accent font-medium"
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "bg-primary/8 text-foreground font-medium"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   }`}
                 >
+                  <tab.icon className="h-4 w-4 shrink-0" strokeWidth={1.5} />
                   {tab.label}
                 </button>
               </li>
@@ -432,10 +435,9 @@ const Insights = () => {
           </ul>
         </nav>
 
-        <div className="flex-1 min-w-0 py-6">
+        <div className="flex-1 min-w-0">
           <div className="transition-opacity duration-150">
             {activeTab === "overview" && <OverviewTab />}
-            {activeTab === "focus" && <FocusAreasTab />}
             {activeTab === "progress" && <ProgressTab />}
             {activeTab === "patterns" && <PatternsTab />}
           </div>
