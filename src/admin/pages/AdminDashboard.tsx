@@ -1,4 +1,4 @@
-import { Users, Activity, GraduationCap, Award, UserPlus, Rocket, Upload, ChevronRight, AlertTriangle, Sparkles } from "lucide-react";
+import { Users, Activity, GraduationCap, Award, UserPlus, Rocket, Upload, ChevronRight, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useWorkspace } from "@/context/WorkspaceContext";
 import {
