@@ -161,6 +161,9 @@ interface WorkspaceState {
   directMessages: DirectMessage[];
   addDirectMessage: (msg: Omit<DirectMessage, "id" | "timestamp" | "read">) => void;
   markMessageRead: (id: string) => void;
+  // Announcement dismiss (shared across Home + Communication)
+  dismissedAnnouncementIds: Set<string>;
+  dismissAnnouncement: (id: string) => void;
 }
 
 const WorkspaceContext = createContext<WorkspaceState | null>(null);
