@@ -37,6 +37,41 @@ const seedMembers: Member[] = [
 ];
 
 const AMBER = "#C9963A";
+
+// Per-learner struggle topics — seeded deterministically from member id + courseProgress
+const struggleTopicPool = [
+  { topic: "Backpropagation", course: "Python Fundamentals" },
+  { topic: "Gradient Descent", course: "Python Fundamentals" },
+  { topic: "Regularization", course: "Data Privacy & Compliance" },
+  { topic: "Bayes' Theorem", course: "Leadership Basics" },
+  { topic: "Activation Functions", course: "Python Fundamentals" },
+  { topic: "Loss Functions", course: "Data Privacy & Compliance" },
+  { topic: "Hypothesis Testing", course: "Leadership Basics" },
+];
+
+function getMemberStruggleTopics(member: Member): { topic: string; course: string; weight: number }[] {
+  if (member.role !== "learner" || member.status !== "active") return [];
+  const incompleteCourses = (member.courseProgress || []).filter(cp => !cp.mastery && cp.progress > 10);
+  if (incompleteCourses.length === 0) return [];
+
+  // Deterministic pick based on member id hash
+  let h = 0;
+  for (let i = 0; i < member.id.length; i++) h = ((h << 5) - h + member.id.charCodeAt(i)) | 0;
+  const idx = ((h >>> 0) % struggleTopicPool.length);
+
+  const count = Math.min(incompleteCourses.length, 3);
+  const results: { topic: string; course: string; weight: number }[] = [];
+  for (let i = 0; i < count; i++) {
+    const t = struggleTopicPool[(idx + i) % struggleTopicPool.length];
+    const cp = incompleteCourses[i % incompleteCourses.length];
+    results.push({
+      topic: t.topic,
+      course: cp.name,
+      weight: Math.max(0.3, Math.min(1, (100 - cp.progress) / 80)),
+    });
+  }
+  return results;
+}
 type TabFilter = "all" | "learners" | "admins" | "invited" | "inactive";
 let nextId = 100;
 
