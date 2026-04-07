@@ -313,7 +313,6 @@ function NexiPanel() {
                   } else {
                     updateAppSettings({ language: val });
                   }
-                  }
                 }}
                 className="px-3 py-1.5 rounded-lg border border-border bg-background text-[12px] font-sans text-foreground focus:outline-none focus:ring-1 focus:ring-ring/30 cursor-pointer"
               >
