@@ -8,6 +8,15 @@ import { toast } from "sonner";
 const AMBER = "#C9963A";
 const AMBER_LIGHT = "hsl(var(--accent) / 0.15)";
 
+const chartTooltipStyle = {
+  fontSize: 12,
+  borderRadius: 8,
+  border: "1px solid hsl(var(--border))",
+  backgroundColor: "hsl(var(--popover))",
+  color: "hsl(var(--foreground))",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+};
+
 type TimeRange = "7d" | "30d" | "90d" | "all";
 type DeptFilter = "all" | string;
 
@@ -217,7 +226,7 @@ export default function AdminAnalyticsPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis dataKey="week" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
               <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))" }} />
+              <Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }} itemStyle={{ color: "hsl(var(--foreground))" }} />
               <Bar dataKey="active" fill={AMBER} radius={[4, 4, 0, 0]} animationDuration={500} />
             </BarChart>
           </ResponsiveContainer>
@@ -230,7 +239,7 @@ export default function AdminAnalyticsPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis dataKey="month" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
               <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
-              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))" }} />
+              <Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }} itemStyle={{ color: "hsl(var(--foreground))" }} />
               <Line type="monotone" dataKey="completions" stroke={AMBER} strokeWidth={2} dot={{ fill: AMBER, r: 4 }} animationDuration={500} />
             </LineChart>
           </ResponsiveContainer>
@@ -246,7 +255,7 @@ export default function AdminAnalyticsPage() {
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis dataKey="period" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
               <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} unit="h" />
-              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))" }} formatter={(val: number) => [`${val}h/wk`, "Engagement"]} />
+              <Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }} itemStyle={{ color: "hsl(var(--foreground))" }} formatter={(val: number) => [`${val}h/wk`, "Engagement"]} />
               <Area type="monotone" dataKey="hours" stroke={AMBER} fill={AMBER} fillOpacity={0.12} strokeWidth={2} animationDuration={500} />
             </AreaChart>
           </ResponsiveContainer>
@@ -268,7 +277,7 @@ export default function AdminAnalyticsPage() {
                   <Cell key={i} fill={entry.fill} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", backgroundColor: "hsl(var(--card))", color: "hsl(var(--foreground))" }} />
+              <Tooltip contentStyle={chartTooltipStyle} labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }} itemStyle={{ color: "hsl(var(--foreground))" }} />
             </PieChart>
           </ResponsiveContainer>
           <div className="flex flex-wrap justify-center gap-3 mt-2">

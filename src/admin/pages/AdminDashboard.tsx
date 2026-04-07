@@ -13,6 +13,15 @@ import {
 
 const AMBER = "#C9963A";
 
+const chartTooltipStyle = {
+  fontSize: 12,
+  borderRadius: 8,
+  border: "1px solid hsl(var(--border))",
+  backgroundColor: "hsl(var(--popover))",
+  color: "hsl(var(--foreground))",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+};
+
 const pendingActions = [
   { text: "2 members haven't started any course in 14 days" },
   { text: "1 course has no mastery outcome defined" },
@@ -152,7 +161,9 @@ export default function AdminDashboard() {
               <XAxis type="number" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
               <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} width={140} />
               <Tooltip
-                contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", backgroundColor: "hsl(var(--card))" }}
+                contentStyle={chartTooltipStyle}
+                labelStyle={{ color: "hsl(var(--foreground))", fontWeight: 500 }}
+                itemStyle={{ color: "hsl(var(--foreground))" }}
                 cursor={{ fill: "hsl(var(--accent) / 0.06)" }}
               />
               <Bar dataKey="achieved" stackId="a" radius={[0, 0, 0, 0]} name="Mastery Achieved">
