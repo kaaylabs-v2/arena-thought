@@ -2,7 +2,7 @@ import {
   Home,
   Library,
   BookOpen,
-  Sparkles,
+  TrendingUp,
   PenLine,
   Moon,
   Sun,

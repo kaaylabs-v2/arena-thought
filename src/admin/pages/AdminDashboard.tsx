@@ -61,7 +61,7 @@ export default function AdminDashboard() {
       <div className="p-6 lg:p-8 max-w-[1200px] mx-auto animate-fade-in">
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <div className="h-16 w-16 rounded-2xl flex items-center justify-center bg-accent/10 mb-6">
-            <Sparkles className="h-8 w-8 text-accent" strokeWidth={1.5} />
+            <Rocket className="h-8 w-8 text-accent" strokeWidth={1.5} />
           </div>
           <h1 className="font-serif text-[2rem] font-normal text-foreground mb-2">Welcome to Admin Studio</h1>
           <p className="text-sm text-muted-foreground max-w-md mb-8">

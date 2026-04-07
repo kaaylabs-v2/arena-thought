@@ -343,7 +343,7 @@ function PatternsTab() {
       <div className="animate-fade-in" style={{ animationDelay: "160ms", animationFillMode: "both" }}>
         <div className="flex items-center gap-2 mb-1">
           <h2 className="font-serif text-2xl text-foreground">Topics to revisit</h2>
-          <Sparkles className="h-5 w-5 text-accent" strokeWidth={1.5} />
+          <BookOpen className="h-5 w-5 text-accent" strokeWidth={1.5} />
         </div>
         <p className="text-sm text-muted-foreground mt-1 mb-4">
           Nexi noticed these topics worth revisiting
