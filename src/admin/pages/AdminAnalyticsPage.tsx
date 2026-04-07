@@ -14,7 +14,7 @@ const chartTooltipStyle = {
   border: "1px solid hsl(var(--border))",
   backgroundColor: "hsl(var(--popover))",
   color: "hsl(var(--foreground))",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+  boxShadow: "0 4px 12px hsl(var(--foreground) / 0.1)",
 };
 
 type TimeRange = "7d" | "30d" | "90d" | "all";
