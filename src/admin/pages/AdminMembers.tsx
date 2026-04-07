@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect, KeyboardEvent } from "react";
+import { useState, useRef, useEffect, KeyboardEvent, useMemo } from "react";
 import {
   Search, X, Mail, MoreHorizontal, Shield, Upload,
   UserPlus, Pencil, UserCog, UserMinus, Play, FileText,
-  BookOpen, Award, ChevronRight,
+  BookOpen, Award, ChevronRight, Lightbulb,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useWorkspace } from "@/context/WorkspaceContext";
