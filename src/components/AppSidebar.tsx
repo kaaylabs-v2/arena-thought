@@ -11,6 +11,7 @@ import {
   Shield,
   MessageSquare,
 } from "lucide-react";
+import { type Announcement } from "@/admin/data/mock-data";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
