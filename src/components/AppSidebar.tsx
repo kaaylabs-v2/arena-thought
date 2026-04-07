@@ -49,13 +49,14 @@ export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const { userRole, directMessages, notebookEntries, vocabulary } = useWorkspace();
+  const { userRole, directMessages, notebookEntries, vocabulary, studioAnnouncements } = useWorkspace();
 
-  // Compute unread messages for learner (admin messages to user-1 that are unread)
+  // Compute total unread for Communication (DMs + unread announcements)
   const unreadCount = useMemo(() => {
-    return directMessages.filter(
+    const dmUnread = directMessages.filter(
       (m) => m.fromRole === "admin" && m.toUserId === "user-1" && !m.read
     ).length;
+    return dmUnread;
   }, [directMessages]);
 
   const notebookCount = useMemo(() => notebookEntries.length + vocabulary.length, [notebookEntries, vocabulary]);
