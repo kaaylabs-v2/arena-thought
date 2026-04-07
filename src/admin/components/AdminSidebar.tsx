@@ -4,7 +4,6 @@ import {
   Users,
   BarChart3,
   MessageSquare,
-  HelpCircle,
   ChevronsLeft,
   ChevronsRight,
   Moon,
